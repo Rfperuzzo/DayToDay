@@ -10,6 +10,7 @@ import '../features/activities/application/activity_creator.dart';
 import '../features/activities/domain/activity_repositories.dart';
 import '../features/alarms/application/alarm_event_processor.dart';
 import '../features/alarms/application/alarm_reconciler.dart';
+import '../features/alarms/application/alarm_response_service.dart';
 import '../features/alarms/domain/alarm_gateway.dart';
 import '../features/alarms/domain/alarm_permission_gateway.dart';
 import '../features/alarms/infrastructure/android_alarm_gateway.dart';
@@ -69,6 +70,17 @@ final activityCreatorProvider = Provider<ActivityCreator>(
     activities: ref.watch(activityRepositoryProvider),
     occurrences: ref.watch(occurrenceRepositoryProvider),
     timeZone: ref.watch(timeZoneServiceProvider),
+    alarmReconciler: ref.watch(alarmReconcilerProvider),
+    clock: const SystemClock(),
+    preferences: ref.watch(userPreferencesProvider),
+  ),
+);
+final alarmResponseServiceProvider = Provider<AlarmResponseService>(
+  (ref) => AlarmResponseService(
+    occurrences: ref.watch(occurrenceRepositoryProvider),
+    events: ref.watch(activityEventRepositoryProvider),
+    alarms: ref.watch(alarmGatewayProvider),
+    planner: ref.watch(routinePlannerProvider),
     alarmReconciler: ref.watch(alarmReconcilerProvider),
     clock: const SystemClock(),
     preferences: ref.watch(userPreferencesProvider),

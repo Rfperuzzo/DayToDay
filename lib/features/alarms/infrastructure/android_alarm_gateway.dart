@@ -16,6 +16,27 @@ final class AndroidAlarmGateway implements AlarmGateway {
   Stream<AlarmPlatformEvent> get events => _events.stream;
 
   @override
+  Stream<List<RingingAlarmBinding>> get ringing => alarm.Alarm.ringing.map((
+    alarmSet,
+  ) {
+    final bindings =
+        [
+          for (final item in alarmSet.alarms)
+            if (_occurrenceIdFromPayload(item.payload) case final occurrenceId?)
+              RingingAlarmBinding(
+                occurrenceId: occurrenceId,
+                nativeAlarmId: item.id,
+                scheduledAtUtc: item.dateTime.toUtc(),
+                title: item.notificationSettings.title,
+                body: item.notificationSettings.body,
+              ),
+        ]..sort(
+          (left, right) => left.scheduledAtUtc.compareTo(right.scheduledAtUtc),
+        );
+    return List.unmodifiable(bindings);
+  });
+
+  @override
   Future<void> initialize() async {
     if (_initialized) {
       return;

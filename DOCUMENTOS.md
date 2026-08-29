@@ -71,6 +71,8 @@ Android.
 - `AlarmGateway`: agenda, cancela e reconcilia alarmes sem expor o plugin.
 - `AlarmPermissionGateway`: relata capacidade exata, notificações, tela cheia
   e Não Perturbe.
+- `AlarmResponseService`: aplica **Concluir**, **Agora não** e **Pular hoje**,
+  encerra o toque, registra o histórico e reconcilia o Resgate de rotina.
 - `RoutinePlanner`: gera recorrências e encontra o próximo espaço livre.
 - `ActivityCreator`: salva uma atividade, materializa o horizonte de ocorrências
   e tenta reconciliar os alarmes sem perder o cadastro em caso de degradação.
@@ -149,6 +151,7 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Persistência SQLite.
 - [x] Motor de reagendamento.
 - [x] Adaptador de alarmes Android.
+- [x] Casos de uso das três respostas do alarme.
 - [x] Testes e build validados.
 
 ## Última validação

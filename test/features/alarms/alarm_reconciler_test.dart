@@ -148,6 +148,9 @@ final class _FakeAlarmGateway implements AlarmGateway {
   Stream<AlarmPlatformEvent> get events => const Stream.empty();
 
   @override
+  Stream<List<RingingAlarmBinding>> get ringing => const Stream.empty();
+
+  @override
   Future<void> acknowledge(AlarmPlatformEvent event) async {}
 
   @override

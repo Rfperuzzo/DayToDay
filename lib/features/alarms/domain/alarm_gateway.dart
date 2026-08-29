@@ -28,6 +28,22 @@ final class ScheduledAlarmBinding {
   final DateTime scheduledAtUtc;
 }
 
+final class RingingAlarmBinding {
+  const RingingAlarmBinding({
+    required this.occurrenceId,
+    required this.nativeAlarmId,
+    required this.scheduledAtUtc,
+    required this.title,
+    required this.body,
+  });
+
+  final String occurrenceId;
+  final int nativeAlarmId;
+  final DateTime scheduledAtUtc;
+  final String title;
+  final String body;
+}
+
 final class AlarmPlatformEvent {
   const AlarmPlatformEvent({
     required this.key,
@@ -48,6 +64,8 @@ final class AlarmPlatformEvent {
 
 abstract interface class AlarmGateway {
   Stream<AlarmPlatformEvent> get events;
+
+  Stream<List<RingingAlarmBinding>> get ringing;
 
   Future<void> initialize();
 
