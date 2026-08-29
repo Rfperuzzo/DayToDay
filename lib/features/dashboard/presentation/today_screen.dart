@@ -376,65 +376,73 @@ final class _WeekStrip extends StatelessWidget {
     );
     return SizedBox(
       height: 82,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: 7,
-        separatorBuilder: (context, index) => const SizedBox(width: 12),
-        itemBuilder: (context, index) {
-          final day = dateOnly(weekStart.add(Duration(days: index)));
-          final selected = day == dateOnly(selectedDay);
-          return Semantics(
-            selected: selected,
-            label: _longDate(day),
-            child: InkWell(
-              onTap: () => onSelected(day),
-              borderRadius: BorderRadius.circular(20),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 220),
-                width: 64,
-                decoration: BoxDecoration(
-                  color: selected
-                      ? RotinaColors.primary
-                      : RotinaColors.surfaceStrong,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: selected
-                      ? const [
-                          BoxShadow(
-                            color: Color(0x40BA0034),
-                            blurRadius: 16,
-                            offset: Offset(0, 6),
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      _weekdayShort(day.weekday),
-                      style: TextStyle(
-                        color: selected
-                            ? const Color(0xFFFFDADA)
-                            : RotinaColors.textMuted,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
+      child: Row(
+        children: [
+          for (var index = 0; index < 7; index++) ...[
+            if (index > 0) const SizedBox(width: 8),
+            Expanded(
+              child: Builder(
+                builder: (context) {
+                  final day = dateOnly(weekStart.add(Duration(days: index)));
+                  final selected = day == dateOnly(selectedDay);
+                  return Semantics(
+                    selected: selected,
+                    label: _longDate(day),
+                    child: InkWell(
+                      onTap: () => onSelected(day),
+                      borderRadius: BorderRadius.circular(20),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 220),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? RotinaColors.primary
+                              : RotinaColors.surfaceStrong,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: selected
+                              ? const [
+                                  BoxShadow(
+                                    color: Color(0x40BA0034),
+                                    blurRadius: 16,
+                                    offset: Offset(0, 6),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _weekdayShort(day.weekday),
+                              style: TextStyle(
+                                color: selected
+                                    ? const Color(0xFFFFDADA)
+                                    : RotinaColors.textMuted,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${day.day}',
+                              style: TextStyle(
+                                color: selected
+                                    ? Colors.white
+                                    : RotinaColors.text,
+                                fontSize: 23,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${day.day}',
-                      style: TextStyle(
-                        color: selected ? Colors.white : RotinaColors.text,
-                        fontSize: 23,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
-          );
-        },
+          ],
+        ],
       ),
     );
   }
