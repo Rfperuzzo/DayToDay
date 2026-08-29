@@ -85,11 +85,19 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
       return;
     }
     final first = alarms.first;
-    if (first.occurrenceId == _activeAlarm?.occurrenceId) {
+    if (_isResponding) {
+      setState(() => _pendingAlarm = first);
       return;
     }
-    if (_isResponding || _result != null) {
-      setState(() => _pendingAlarm = first);
+    if (_result != null) {
+      setState(() {
+        _activeAlarm = first;
+        _result = null;
+        _errorMessage = null;
+      });
+      return;
+    }
+    if (first.occurrenceId == _activeAlarm?.occurrenceId) {
       return;
     }
     setState(() {
