@@ -1,17 +1,26 @@
-# rotina_jhenifer
+# Rotina da Jhenifer
 
-Organizador de rotina offline com alarmes inteligentes para Jhenifer.
+Aplicativo Android offline para organizar atividades e disparar alarmes fortes,
+com reagendamento inteligente quando Jhenifer escolhe **Agora não**.
 
-## Getting Started
+Esta etapa contém somente a fundação técnica. Nenhum layout de produto foi
+criado.
 
-This project is a starting point for a Flutter application.
+## Contexto do projeto
 
-A few resources to get you started if this is your first Flutter project:
+Leia [DOCUMENTOS.md](DOCUMENTOS.md) antes de alterar código. Esse arquivo é a
+memória viva das decisões, regras de negócio e próximos passos.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Comandos
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```powershell
+flutter pub get
+flutter analyze
+flutter test
+flutter build apk --debug
+```
+
+> Neste ambiente Codex, os metadados Git estão em `.gitdata` porque a pasta
+> `.git` é protegida pelo sandbox. Use
+> `git --git-dir=.gitdata --work-tree=. <comando>` enquanto essa proteção
+> estiver ativa.
