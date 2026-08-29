@@ -116,7 +116,8 @@ local e dias da semana para continuarem no mesmo horário após mudança de fuso
 O painel implementa desde já o conceito de **Pulso do dia** na forma de
 progresso e mensagem de ritmo, sem pontuação competitiva ou envio de dados.
 
-As duas últimas ideias não serão ativadas antes de uma decisão de interface.
+Detalhes de priorização estão em `docs/ROADMAP_PRODUTO.md`. A transcrição das
+decisões da referência Stitch está em `docs/REFERENCIA_VISUAL.md`.
 
 ## Estratégia de Git
 
@@ -155,7 +156,7 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 Executada em 29/08/2026:
 
 - `flutter analyze`: nenhum problema encontrado.
-- `flutter test`: 14 testes aprovados.
+- `flutter test`: 16 testes aprovados.
 - `flutter build apk --debug`: APK gerado com sucesso.
 - Manifest mesclado contém `USE_EXACT_ALARM`, `USE_FULL_SCREEN_INTENT`,
   notificações, reinício, vibração, wake lock, política de notificação e serviço
@@ -169,7 +170,6 @@ futura atualização grande do Flutter, revisar os changelogs desses plugins.
 
 ## Próxima etapa recomendada
 
-Criar o cadastro de atividades a partir do botão central da navegação. O fluxo
-deve pedir permissões de alarme de forma contextual e nunca esconder quando o
-Android estiver operando em modo degradado. Depois, criar a tela dedicada do
-alarme com **Concluir**, **Agora não** e **Pular hoje**.
+Criar a tela dedicada do alarme e ligar suas três respostas ao histórico e ao
+motor: **Concluir**, **Agora não** e **Pular hoje**. Em seguida, apresentar o
+resultado do Resgate de rotina de forma explicável no painel.
