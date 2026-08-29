@@ -19,6 +19,20 @@ desativada novamente. Uma atualização preserva os dados quando o APK anterior
 foi assinado pela mesma chave debug. Se houver outra assinatura, o Android exige
 desinstalar a versão anterior, o que apaga os dados locais dela.
 
+## APK atual
+
+- arquivo: `outputs/Rotina-da-Jhenifer-debug-android.apk`;
+- código-fonte: commit `a072074`;
+- tamanho: 182.550.404 bytes;
+- SHA-256:
+  `B1DA81EE9FC551145D6841A4EA543728E592F3990918DC59958DFA8DE47379A0`;
+- assinatura debug APK Signature Scheme v2 verificada;
+- pacote: `com.senhoritajhenifer.rotina`, versão `1.0.0`, Android mínimo 7.0.
+
+Esta compilação inclui edição e cancelamento, subtarefas, duração protegida,
+sequência diária, recuperação por importância, widget da tela inicial e o ícone
+oficial da Jhenifer.
+
 ## Objetivo
 
 O instalador portátil permite que uma pessoa no Windows instale ou atualize a

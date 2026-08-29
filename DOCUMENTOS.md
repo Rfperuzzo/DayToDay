@@ -255,9 +255,10 @@ Executada em 29/08/2026:
   entre múltiplos aparelhos apresentaram os resultados esperados.
 - ZIP portátil gerado com APK e ADB incluídos: 79,7 MB e SHA-256
   `FC4320BE33017D4682F20AF6725DADFFB6DF289B893DDEC7BBDD74A11A96885B`.
-- APK debug independente para instalação direta, sem celular conectado ao
-  Windows: assinatura APK v2 verificada, 182.461.163 bytes e SHA-256
-  `DC0368AFE252A48BED617D2A690DEFB8B3C5D8D2F55E5651EC462CA590BA36C1`.
+- APK debug independente atualizado a partir do commit `a072074`, para
+  instalação direta sem celular conectado ao Windows: assinatura APK v2
+  verificada, 182.550.404 bytes e SHA-256
+  `B1DA81EE9FC551145D6841A4EA543728E592F3990918DC59958DFA8DE47379A0`.
 - Edição e cancelamento: testes de domínio, substituição de alarmes, troca entre
   tarefa diária e tarefa única, folha de opções, formulário e toque na tarefa
   aprovados; análise estática sem erros.
@@ -273,11 +274,10 @@ Executada em 29/08/2026:
 - Ícone oficial: recursos legado, redondo e adaptativo foram processados com
   sucesso pelo Android Gradle Plugin em todas as densidades.
 
-Os APKs e o ZIP existentes foram gerados antes da edição/cancelamento,
-subtarefas, duração protegida, sequência diária, cascata por importância e
-widget da tela inicial e também antes do ícone oficial; portanto, não contêm
-essas funcionalidades nem a nova identidade no launcher. Um novo debug deve
-ser criado somente após o comando explícito do responsável pelo projeto.
+O APK `outputs/Rotina-da-Jhenifer-debug-android.apk` contém todas as
+funcionalidades e a identidade visual listadas acima. O ZIP portátil para
+Windows ainda pertence à compilação anterior e deve ser regenerado antes de ser
+usado para instalar esta versão por USB.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma
