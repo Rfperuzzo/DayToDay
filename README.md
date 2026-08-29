@@ -14,6 +14,8 @@ interface está em [docs/REFERENCIA_VISUAL.md](docs/REFERENCIA_VISUAL.md) e as
 ideias priorizadas em [docs/ROADMAP_PRODUTO.md](docs/ROADMAP_PRODUTO.md).
 Os resultados da rodada real no Motorola estão em
 [docs/VALIDACAO_DISPOSITIVO.md](docs/VALIDACAO_DISPOSITIVO.md).
+O instalador portátil para testes em outros celulares está documentado em
+[docs/INSTALADOR_DEBUG.md](docs/INSTALADOR_DEBUG.md).
 
 ## Comandos
 
@@ -22,6 +24,7 @@ flutter pub get
 flutter analyze
 flutter test
 flutter build apk --debug
+powershell -ExecutionPolicy Bypass -File scripts/package_debug_installer.ps1
 ```
 
 > Neste ambiente Codex, os metadados Git estão em `.gitdata` porque a pasta

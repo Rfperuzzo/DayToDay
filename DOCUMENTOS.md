@@ -17,6 +17,9 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - Application ID: `com.senhoritajhenifer.rotina`.
 - Android mínimo 24; compile/target SDK 36.
 - Dados somente locais, sem conta, backend, anúncios ou telemetria.
+- A distribuição de testes usa um instalador portátil para Windows com APK
+  debug e ADB incluídos; Flutter e Android Studio não são necessários na
+  máquina que fará a instalação por USB.
 - A experiência visual parte da referência Stitch **Vibrant Momentum**: rosa
   energético, superfícies claras, formas arredondadas e pouco ruído visual.
 - O primeiro layout de produto é o painel diário, com semana navegável,
@@ -124,7 +127,8 @@ progresso e mensagem de ritmo, sem pontuação competitiva ou envio de dados.
 
 Detalhes de priorização estão em `docs/ROADMAP_PRODUTO.md`. A transcrição das
 decisões da referência Stitch está em `docs/REFERENCIA_VISUAL.md`. A matriz e
-as evidências do teste real estão em `docs/VALIDACAO_DISPOSITIVO.md`.
+as evidências do teste real estão em `docs/VALIDACAO_DISPOSITIVO.md`. O fluxo
+de empacotamento e instalação está em `docs/INSTALADOR_DEBUG.md`.
 
 ## Estratégia de Git
 
@@ -161,6 +165,7 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Testes e build validados.
 - [x] Ciclo físico validado com tela bloqueada, processo encerrado e Não
   Perturbe.
+- [x] Instalador debug portátil para Windows e celulares Android por USB.
 
 ## Última validação
 
@@ -179,6 +184,11 @@ Executada em 29/08/2026:
   **Concluir**, persistência e cold start aprovados.
 - Não Perturbe em modo prioridade: `STREAM_ALARM` sem mute, volume 7/7 e rota
   para o alto-falante. O modo original foi restaurado após o teste.
+- Instalador debug: pacote extraído e executado no Windows PowerShell 5 em modo
+  simulado; instalação, abertura, aparelho não autorizado e seleção obrigatória
+  entre múltiplos aparelhos apresentaram os resultados esperados.
+- ZIP portátil gerado com APK e ADB incluídos: 79,7 MB e SHA-256
+  `FC4320BE33017D4682F20AF6725DADFFB6DF289B893DDEC7BBDD74A11A96885B`.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma
