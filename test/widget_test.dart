@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rotina_jhenifer/app/app_dependencies.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
 import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
 import 'package:rotina_jhenifer/features/dashboard/presentation/today_screen.dart';
+import 'package:rotina_jhenifer/features/alarms/application/alarm_response_service.dart';
+import 'package:rotina_jhenifer/features/alarms/domain/alarm_gateway.dart';
+import 'package:rotina_jhenifer/features/alarms/presentation/alarm_screen.dart';
+import 'package:rotina_jhenifer/features/alarms/presentation/alarm_router.dart';
 import 'package:rotina_jhenifer/main.dart';
 
 void main() {
@@ -69,4 +75,87 @@ void main() {
     expect(addRequested, isTrue);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('tela de alarme exige uma das três respostas', (tester) async {
+    AlarmResponse? response;
+    final scheduledAt = DateTime.now().toUtc();
+
+    await tester.pumpWidget(
+      RotinaJheniferApp(
+        home: AlarmRingingScreen(
+          alarm: RingingAlarmBinding(
+            occurrenceId: 'treino-1',
+            nativeAlarmId: 42,
+            scheduledAtUtc: scheduledAt,
+            title: 'Treino de pernas',
+            body: 'Hora da sua atividade. Abra para responder.',
+          ),
+          onRespond: (value) => response = value,
+        ),
+      ),
+    );
+
+    expect(find.text('Treino de pernas'), findsOneWidget);
+    expect(find.text('Concluir'), findsOneWidget);
+    expect(find.text('Agora não — reorganizar'), findsOneWidget);
+    expect(find.text('Pular somente hoje'), findsOneWidget);
+    await tester.tap(find.text('Agora não — reorganizar'));
+    expect(response, AlarmResponse.nowNot);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('roteador abre alarme já tocando na inicialização', (
+    tester,
+  ) async {
+    final alarm = RingingAlarmBinding(
+      occurrenceId: 'acordar-1',
+      nativeAlarmId: 84,
+      scheduledAtUtc: DateTime.now().toUtc(),
+      title: 'Hora de acordar',
+      body: 'Bom dia, Jhenifer!',
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          alarmGatewayProvider.overrideWithValue(_RingingAlarmGateway(alarm)),
+        ],
+        child: const RotinaJheniferApp(
+          home: AlarmRouter(child: Text('Painel diário')),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('Hora de acordar'), findsOneWidget);
+    expect(find.text('Painel diário'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+}
+
+final class _RingingAlarmGateway implements AlarmGateway {
+  const _RingingAlarmGateway(this.alarm);
+
+  final RingingAlarmBinding alarm;
+
+  @override
+  Stream<AlarmPlatformEvent> get events => const Stream.empty();
+
+  @override
+  Stream<List<RingingAlarmBinding>> get ringing => Stream.value([alarm]);
+
+  @override
+  Future<void> acknowledge(AlarmPlatformEvent event) async {}
+
+  @override
+  Future<void> cancel(String occurrenceId) async {}
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<void> schedule(AlarmRequest request) async {}
+
+  @override
+  Future<List<ScheduledAlarmBinding>> scheduled() async => const [];
 }

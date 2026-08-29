@@ -26,6 +26,10 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - Repetições disponíveis no primeiro fluxo: única, diária e dias úteis.
 - Permissões do alarme são explicadas e solicitadas no contexto do primeiro
   cadastro. A atividade continua salva se algum acesso for negado.
+- Quando o plugin informa que um alarme está tocando, o app substitui o painel
+  pela tela de resposta e impede voltar sem uma decisão explícita.
+- O resultado de **Agora não** mostra o novo horário e quantas atividades foram
+  ajustadas antes de retornar ao painel.
 - Atividades podem ser únicas, diárias ou repetidas em dias da semana.
 - Todo alarme é forte: áudio em loop, vibração, tela cheia quando autorizada e
   tentativa de tocar durante Não Perturbe.
@@ -152,6 +156,7 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Motor de reagendamento.
 - [x] Adaptador de alarmes Android.
 - [x] Casos de uso das três respostas do alarme.
+- [x] Tela dedicada do alarme e resultado explicável do Resgate de rotina.
 - [x] Testes e build validados.
 
 ## Última validação

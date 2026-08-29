@@ -15,7 +15,7 @@ apenas avisar que um horário passou. Todo aprendizado permanece no aparelho.
 
 ## Próxima prioridade
 
-### 1. Tela de alarme com decisão real
+### 1. Tela de alarme com decisão real — entregue
 
 Substituir a ação genérica da notificação por uma tela bloqueada e legível com:
 
@@ -23,14 +23,14 @@ Substituir a ação genérica da notificação por uma tela bloqueada e legível
 - **Agora não**: encerra e inicia o Resgate de rotina;
 - **Pular hoje**: encerra apenas a ocorrência atual.
 
-É a lacuna mais importante porque fecha o ciclo entre o alarme e o motor já
-implementado.
+O fluxo Flutter já fecha o ciclo entre o alarme e o motor. A validação final em
+aparelho físico continua necessária para diferentes fabricantes Android.
 
-### 2. Resgate de rotina explicável
+### 2. Resgate de rotina explicável — primeira versão entregue
 
-Depois de **Agora não**, mostrar uma frase curta como “Treino movido para 18:10;
-seu compromisso importante das 16:00 foi protegido”. A inovação não é apenas
-reagendar, mas explicar a decisão para gerar confiança.
+Depois de **Agora não**, a tela já mostra o novo horário e a quantidade de
+atividades ajustadas. A próxima evolução é nomear qual compromisso importante
+foi protegido para aumentar a confiança na decisão.
 
 ### 3. Radar de energia
 

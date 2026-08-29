@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'app/app_dependencies.dart';
 import 'core/presentation/rotina_theme.dart';
 import 'features/dashboard/presentation/today_screen.dart';
+import 'features/alarms/presentation/alarm_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,7 @@ class RotinaJheniferApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Rotina da Jhenifer',
       theme: RotinaTheme.light,
-      home: home ?? const TodayScreen(),
+      home: home ?? const AlarmRouter(child: TodayScreen()),
     );
   }
 }
