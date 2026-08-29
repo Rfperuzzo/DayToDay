@@ -21,6 +21,11 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
   energético, superfícies claras, formas arredondadas e pouco ruído visual.
 - O primeiro layout de produto é o painel diário, com semana navegável,
   progresso, próxima atividade e conclusão rápida.
+- O cadastro nasce do botão flutuante central e cobre título, observação, dia,
+  horário, duração, prioridade e repetição.
+- Repetições disponíveis no primeiro fluxo: única, diária e dias úteis.
+- Permissões do alarme são explicadas e solicitadas no contexto do primeiro
+  cadastro. A atividade continua salva se algum acesso for negado.
 - Atividades podem ser únicas, diárias ou repetidas em dias da semana.
 - Todo alarme é forte: áudio em loop, vibração, tela cheia quando autorizada e
   tentativa de tocar durante Não Perturbe.
@@ -67,6 +72,8 @@ Android.
 - `AlarmPermissionGateway`: relata capacidade exata, notificações, tela cheia
   e Não Perturbe.
 - `RoutinePlanner`: gera recorrências e encontra o próximo espaço livre.
+- `ActivityCreator`: salva uma atividade, materializa o horizonte de ocorrências
+  e tenta reconciliar os alarmes sem perder o cadastro em caso de degradação.
 - `Clock`: torna cálculos temporais determinísticos nos testes.
 
 Implementações atuais: Riverpod 3.4.2, Drift 2.34.3, `alarm` 5.12.0,
@@ -135,6 +142,7 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 
 - [x] Repositório e projeto Flutter Android criados.
 - [x] Identidade visual e painel diário responsivo.
+- [x] Cadastro contextual de atividades e preparação de alarmes.
 - [x] Identidade e versões Android configuradas.
 - [x] Domínio e recorrência.
 - [x] Persistência SQLite.

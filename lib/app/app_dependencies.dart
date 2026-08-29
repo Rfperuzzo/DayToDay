@@ -6,6 +6,7 @@ import '../core/time/clock.dart';
 import '../core/time/iana_time_zone_service.dart';
 import '../core/time/time_zone_service.dart';
 import '../features/activities/data/drift_activity_repositories.dart';
+import '../features/activities/application/activity_creator.dart';
 import '../features/activities/domain/activity_repositories.dart';
 import '../features/alarms/application/alarm_event_processor.dart';
 import '../features/alarms/application/alarm_reconciler.dart';
@@ -18,6 +19,7 @@ import '../features/history/domain/activity_event.dart';
 import '../features/dashboard/application/occurrence_actions.dart';
 import '../features/routine_engine/application/priority_routine_planner.dart';
 import '../features/routine_engine/domain/routine_planner.dart';
+import '../features/settings/domain/user_preferences.dart';
 
 final databaseProvider = Provider<AppDatabase>(
   (ref) => throw StateError('AppDatabase ainda não foi inicializado.'),
@@ -57,6 +59,19 @@ final occurrenceActionsProvider = Provider<OccurrenceActions>(
     events: ref.watch(activityEventRepositoryProvider),
     alarms: ref.watch(alarmGatewayProvider),
     clock: const SystemClock(),
+  ),
+);
+final userPreferencesProvider = Provider<UserPreferences>(
+  (ref) => const UserPreferences(),
+);
+final activityCreatorProvider = Provider<ActivityCreator>(
+  (ref) => ActivityCreator(
+    activities: ref.watch(activityRepositoryProvider),
+    occurrences: ref.watch(occurrenceRepositoryProvider),
+    timeZone: ref.watch(timeZoneServiceProvider),
+    alarmReconciler: ref.watch(alarmReconcilerProvider),
+    clock: const SystemClock(),
+    preferences: ref.watch(userPreferencesProvider),
   ),
 );
 

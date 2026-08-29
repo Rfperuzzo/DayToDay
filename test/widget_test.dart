@@ -44,6 +44,7 @@ void main() {
       status: OccurrenceStatus.scheduled,
     );
     ActivityOccurrence? completed;
+    var addRequested = false;
 
     await tester.pumpWidget(
       RotinaJheniferApp(
@@ -53,14 +54,19 @@ void main() {
           occurrences: [occurrence],
           onDaySelected: (_) {},
           onComplete: (value) => completed = value,
+          onAddRequested: () => addRequested = true,
         ),
       ),
     );
 
     expect(find.text('0 de 1 concluídas'), findsOneWidget);
     expect(find.text('Treino de pernas'), findsNWidgets(2));
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -300));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Concluir atividade'));
     expect(completed, same(occurrence));
+    await tester.tap(find.byTooltip('Adicionar atividade'));
+    expect(addRequested, isTrue);
     expect(tester.takeException(), isNull);
   });
 }

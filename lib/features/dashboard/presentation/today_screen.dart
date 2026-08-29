@@ -8,6 +8,7 @@ import '../../../app/app_dependencies.dart';
 import '../../../core/presentation/rotina_theme.dart';
 import '../../activities/domain/activity.dart';
 import '../../activities/domain/activity_occurrence.dart';
+import '../../activities/presentation/new_activity_sheet.dart';
 import '../application/day_providers.dart';
 
 final class TodayScreen extends ConsumerWidget {
@@ -26,6 +27,7 @@ final class TodayScreen extends ConsumerWidget {
           activities: activityItems,
           occurrences: occurrenceItems,
           onDaySelected: ref.read(selectedDayProvider.notifier).select,
+          onAddRequested: () => _openNewActivity(context, ref, selectedDay),
           onComplete: (occurrence) async {
             try {
               await HapticFeedback.mediumImpact();
@@ -48,6 +50,37 @@ final class TodayScreen extends ConsumerWidget {
       error: (error, stackTrace) => const _DashboardError(),
     );
   }
+
+  Future<void> _openNewActivity(
+    BuildContext context,
+    WidgetRef ref,
+    DateTime selectedDay,
+  ) async {
+    final outcome = await showModalBottomSheet<NewActivityOutcome>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: RotinaColors.background,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      builder: (context) => NewActivitySheet(
+        initialDay: selectedDay,
+        timeZone: ref.read(timeZoneServiceProvider),
+        permissions: ref.read(alarmPermissionGatewayProvider),
+        onCreate: ref.read(activityCreatorProvider).create,
+      ),
+    );
+    if (outcome == null || !context.mounted) {
+      return;
+    }
+    final message = outcome.fullyReady
+        ? 'Atividade salva e alarme preparado. ✨'
+        : 'Atividade salva. Revise os acessos para o alarme funcionar com força total.';
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
 }
 
 final class TodayDashboard extends StatelessWidget {
@@ -57,6 +90,7 @@ final class TodayDashboard extends StatelessWidget {
     required this.occurrences,
     required this.onDaySelected,
     required this.onComplete,
+    this.onAddRequested,
     super.key,
   });
 
@@ -65,6 +99,7 @@ final class TodayDashboard extends StatelessWidget {
   final List<ActivityOccurrence> occurrences;
   final ValueChanged<DateTime> onDaySelected;
   final ValueChanged<ActivityOccurrence> onComplete;
+  final VoidCallback? onAddRequested;
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +115,17 @@ final class TodayDashboard extends StatelessWidget {
     final next = _findNextOccurrence(sortedOccurrences);
 
     return Scaffold(
+      floatingActionButton: onAddRequested == null
+          ? null
+          : FloatingActionButton.large(
+              onPressed: onAddRequested,
+              tooltip: 'Adicionar atividade',
+              backgroundColor: RotinaColors.primary,
+              foregroundColor: Colors.white,
+              shape: const CircleBorder(),
+              child: const Icon(Icons.add_rounded, size: 34),
+            ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SafeArea(
         bottom: false,
         child: CustomScrollView(
