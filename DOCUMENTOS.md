@@ -127,6 +127,6 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Identidade e versões Android configuradas.
 - [x] Domínio e recorrência.
 - [x] Persistência SQLite.
-- [ ] Motor de reagendamento.
+- [x] Motor de reagendamento.
 - [ ] Adaptador de alarmes Android.
 - [ ] Testes e build validados.

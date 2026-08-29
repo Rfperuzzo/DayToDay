@@ -1,0 +1,156 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
+import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
+import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_jhenifer/features/routine_engine/application/priority_routine_planner.dart';
+import 'package:rotina_jhenifer/features/settings/domain/user_preferences.dart';
+
+void main() {
+  const planner = PriorityRoutinePlanner(_UtcTimeZone());
+  const preferences = UserPreferences();
+
+  test('reposiciona no próximo múltiplo de cinco minutos', () {
+    final plan = planner.replanNowNot(
+      occurrence: _occurrence('alvo', 10, priority: ActivityPriority.normal),
+      existingOccurrences: const [],
+      nowUtc: DateTime.utc(2026, 8, 31, 10, 2, 20),
+      preferences: preferences,
+    );
+
+    expect(
+      plan.rescheduled.scheduledStartUtc,
+      DateTime.utc(2026, 8, 31, 10, 5),
+    );
+    expect(plan.rescheduled.attempt, 1);
+  });
+
+  test('atividade menos prioritária espera a atividade importante', () {
+    final important = _occurrence(
+      'importante',
+      10,
+      minute: 5,
+      durationMinutes: 60,
+      priority: ActivityPriority.high,
+    );
+
+    final plan = planner.replanNowNot(
+      occurrence: _occurrence(
+        'alvo',
+        10,
+        durationMinutes: 30,
+        priority: ActivityPriority.normal,
+      ),
+      existingOccurrences: [important],
+      nowUtc: DateTime.utc(2026, 8, 31, 10, 2),
+      preferences: preferences,
+    );
+
+    expect(
+      plan.rescheduled.scheduledStartUtc,
+      DateTime.utc(2026, 8, 31, 11, 5),
+    );
+  });
+
+  test('atividade importante desloca conflito menos prioritário', () {
+    final lowerPriority = _occurrence(
+      'flexivel',
+      10,
+      minute: 15,
+      durationMinutes: 30,
+      priority: ActivityPriority.low,
+    );
+
+    final plan = planner.replanNowNot(
+      occurrence: _occurrence(
+        'alvo',
+        10,
+        durationMinutes: 60,
+        priority: ActivityPriority.high,
+      ),
+      existingOccurrences: [lowerPriority],
+      nowUtc: DateTime.utc(2026, 8, 31, 10, 2),
+      preferences: preferences,
+    );
+
+    expect(
+      plan.rescheduled.scheduledStartUtc,
+      DateTime.utc(2026, 8, 31, 10, 5),
+    );
+    final displaced = plan.adjustedOccurrences.singleWhere(
+      (item) => item.id == 'flexivel',
+    );
+    expect(displaced.scheduledStartUtc, DateTime.utc(2026, 8, 31, 11, 5));
+  });
+
+  test('quarta tentativa começa no dia seguinte', () {
+    final plan = planner.replanNowNot(
+      occurrence: _occurrence(
+        'alvo',
+        21,
+        attempt: 3,
+        priority: ActivityPriority.normal,
+      ),
+      existingOccurrences: const [],
+      nowUtc: DateTime.utc(2026, 8, 31, 21, 30),
+      preferences: preferences,
+    );
+
+    expect(plan.rescheduled.scheduledStartUtc, DateTime.utc(2026, 9, 1, 7));
+    expect(plan.rescheduled.attempt, 4);
+  });
+
+  test('atividade que não cabe hoje passa para amanhã', () {
+    final plan = planner.replanNowNot(
+      occurrence: _occurrence(
+        'alvo',
+        21,
+        durationMinutes: 90,
+        priority: ActivityPriority.normal,
+      ),
+      existingOccurrences: const [],
+      nowUtc: DateTime.utc(2026, 8, 31, 21, 30),
+      preferences: preferences,
+    );
+
+    expect(plan.rescheduled.scheduledStartUtc, DateTime.utc(2026, 9, 1, 7));
+  });
+}
+
+ActivityOccurrence _occurrence(
+  String id,
+  int hour, {
+  int minute = 0,
+  int durationMinutes = 30,
+  int attempt = 0,
+  required ActivityPriority priority,
+}) {
+  final start = DateTime.utc(2026, 8, 31, hour, minute);
+  return ActivityOccurrence(
+    id: id,
+    activityId: 'atividade-$id',
+    originalStartUtc: start,
+    scheduledStartUtc: start,
+    estimatedDuration: Duration(minutes: durationMinutes),
+    priority: priority,
+    status: OccurrenceStatus.scheduled,
+    attempt: attempt,
+  );
+}
+
+final class _UtcTimeZone implements TimeZoneService {
+  const _UtcTimeZone();
+
+  @override
+  DateTime localComponentsToUtc(DateTime localComponents) {
+    return DateTime.utc(
+      localComponents.year,
+      localComponents.month,
+      localComponents.day,
+      localComponents.hour,
+      localComponents.minute,
+    );
+  }
+
+  @override
+  DateTime toLocal(DateTime utc) => utc.toUtc();
+}
