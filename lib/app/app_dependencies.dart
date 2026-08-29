@@ -6,9 +6,12 @@ import '../core/time/clock.dart';
 import '../core/time/iana_time_zone_service.dart';
 import '../core/time/time_zone_service.dart';
 import '../features/activities/data/drift_activity_repositories.dart';
+import '../features/activities/data/drift_subtask_repository.dart';
 import '../features/activities/application/activity_creator.dart';
 import '../features/activities/application/activity_manager.dart';
+import '../features/activities/application/subtask_manager.dart';
 import '../features/activities/domain/activity_repositories.dart';
+import '../features/activities/domain/subtask_repository.dart';
 import '../features/alarms/application/alarm_event_processor.dart';
 import '../features/alarms/application/alarm_reconciler.dart';
 import '../features/alarms/application/alarm_response_service.dart';
@@ -40,6 +43,9 @@ final activityRepositoryProvider = Provider<ActivityRepository>(
 );
 final occurrenceRepositoryProvider = Provider<OccurrenceRepository>(
   (ref) => DriftOccurrenceRepository(ref.watch(databaseProvider)),
+);
+final subtaskRepositoryProvider = Provider<SubtaskRepository>(
+  (ref) => DriftSubtaskRepository(ref.watch(databaseProvider)),
 );
 final activityEventRepositoryProvider = Provider<ActivityEventRepository>(
   (ref) => DriftActivityEventRepository(ref.watch(databaseProvider)),
@@ -86,6 +92,12 @@ final activityManagerProvider = Provider<ActivityManager>(
     timeZone: ref.watch(timeZoneServiceProvider),
     clock: const SystemClock(),
     preferences: ref.watch(userPreferencesProvider),
+  ),
+);
+final subtaskManagerProvider = Provider<SubtaskManager>(
+  (ref) => SubtaskManager(
+    subtasks: ref.watch(subtaskRepositoryProvider),
+    clock: const SystemClock(),
   ),
 );
 final alarmResponseServiceProvider = Provider<AlarmResponseService>(

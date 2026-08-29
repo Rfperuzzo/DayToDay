@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/app_dependencies.dart';
 import '../../activities/domain/activity.dart';
 import '../../activities/domain/activity_occurrence.dart';
+import '../../activities/domain/subtask.dart';
 
 DateTime dateOnly(DateTime value) =>
     DateTime(value.year, value.month, value.day);
@@ -17,6 +18,11 @@ final activeActivitiesProvider = StreamProvider<List<Activity>>(
 
 final allActivitiesProvider = StreamProvider<List<Activity>>(
   (ref) => ref.watch(activityRepositoryProvider).watchAll(),
+);
+
+final subtasksProvider = StreamProvider.family<List<Subtask>, String>(
+  (ref, activityId) =>
+      ref.watch(subtaskRepositoryProvider).watchForActivity(activityId),
 );
 
 final dayOccurrencesProvider =

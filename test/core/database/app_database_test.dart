@@ -1,7 +1,10 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rotina_jhenifer/core/database/app_database.dart';
+import 'package:rotina_jhenifer/core/time/clock.dart';
+import 'package:rotina_jhenifer/features/activities/application/subtask_manager.dart';
 import 'package:rotina_jhenifer/features/activities/data/drift_activity_repositories.dart';
+import 'package:rotina_jhenifer/features/activities/data/drift_subtask_repository.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
 import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
@@ -10,11 +13,13 @@ void main() {
   late AppDatabase database;
   late DriftActivityRepository activities;
   late DriftOccurrenceRepository occurrences;
+  late DriftSubtaskRepository subtasks;
 
   setUp(() {
     database = AppDatabase(NativeDatabase.memory());
     activities = DriftActivityRepository(database);
     occurrences = DriftOccurrenceRepository(database);
+    subtasks = DriftSubtaskRepository(database);
   });
 
   tearDown(() async {
@@ -62,6 +67,37 @@ void main() {
     expect(loaded.status, OccurrenceStatus.postponed);
     expect(loaded.scheduledStartUtc, DateTime.utc(2026, 8, 31, 12));
   });
+
+  test('subtarefa permanece vinculada e pode ser concluída', () async {
+    final activity = _activity();
+    await activities.save(activity);
+    final manager = SubtaskManager(
+      subtasks: subtasks,
+      clock: const _FixedClock(),
+    );
+
+    final created = await manager.add(
+      activityId: activity.id,
+      title: 'Separar os comprimidos',
+    );
+    await manager.setCompleted(created, true);
+
+    final loaded = await subtasks.findForActivity(activity.id);
+    expect(loaded, hasLength(1));
+    expect(loaded.single.title, 'Separar os comprimidos');
+    expect(loaded.single.isCompleted, isTrue);
+    expect(loaded.single.completedAtUtc, DateTime.utc(2026, 8, 29, 10));
+
+    await manager.delete(loaded.single);
+    expect(await subtasks.findForActivity(activity.id), isEmpty);
+  });
+}
+
+final class _FixedClock implements Clock {
+  const _FixedClock();
+
+  @override
+  DateTime nowUtc() => DateTime.utc(2026, 8, 29, 10);
 }
 
 Activity _activity() {

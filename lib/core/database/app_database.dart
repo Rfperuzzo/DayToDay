@@ -40,6 +40,20 @@ class Occurrences extends Table {
   Set<Column<Object>> get primaryKey => {id};
 }
 
+@DataClassName('SubtaskRow')
+class Subtasks extends Table {
+  TextColumn get id => text()();
+  TextColumn get activityId => text().references(Activities, #id)();
+  TextColumn get title => text()();
+  BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
+  IntColumn get position => integer()();
+  DateTimeColumn get createdAtUtc => dateTime()();
+  DateTimeColumn get completedAtUtc => dateTime().nullable()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
 @DataClassName('ActivityEventRow')
 class ActivityEvents extends Table {
   TextColumn get id => text()();
@@ -81,6 +95,7 @@ class AppMetadataRows extends Table {
   tables: [
     Activities,
     Occurrences,
+    Subtasks,
     ActivityEvents,
     UserPreferenceRows,
     AppMetadataRows,
@@ -98,10 +113,15 @@ final class AppDatabase extends _$AppDatabase {
       );
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (migrator, from, to) async {
+      if (from < 2) {
+        await migrator.createTable(subtasks);
+      }
+    },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
