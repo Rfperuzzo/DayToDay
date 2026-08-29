@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rotina_jhenifer/app/app_dependencies.dart';
+import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
 import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
@@ -58,6 +59,7 @@ void main() {
           selectedDay: now,
           activities: [activity],
           occurrences: [occurrence],
+          timeZone: const DeviceTimeZoneService(),
           onDaySelected: (_) {},
           onComplete: (value) => completed = value,
           onAddRequested: () => addRequested = true,
@@ -104,6 +106,40 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('resultado do alarme usa o fuso configurado no app', (
+    tester,
+  ) async {
+    final scheduledAt = DateTime.utc(2026, 8, 29, 19, 5);
+    final occurrence = ActivityOccurrence(
+      id: 'treino-reorganizado',
+      activityId: 'treino',
+      originalStartUtc: scheduledAt,
+      scheduledStartUtc: scheduledAt,
+      estimatedDuration: const Duration(minutes: 30),
+      priority: ActivityPriority.normal,
+      status: OccurrenceStatus.scheduled,
+    );
+
+    await tester.pumpWidget(
+      RotinaJheniferApp(
+        home: AlarmResolvedScreen(
+          title: 'Treino',
+          result: AlarmResponseResult(
+            response: AlarmResponse.nowNot,
+            occurrence: occurrence,
+            adjustedOccurrences: [occurrence],
+            alarmsSynchronized: true,
+          ),
+          timeZone: const _SaoPauloTimeZone(),
+          onDone: () {},
+        ),
+      ),
+    );
+
+    expect(find.text('sábado, 16:05'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('roteador abre alarme já tocando na inicialização', (
     tester,
   ) async {
@@ -119,6 +155,9 @@ void main() {
       ProviderScope(
         overrides: [
           alarmGatewayProvider.overrideWithValue(_RingingAlarmGateway(alarm)),
+          timeZoneServiceProvider.overrideWithValue(
+            const DeviceTimeZoneService(),
+          ),
         ],
         child: const RotinaJheniferApp(
           home: AlarmRouter(child: Text('Painel diário')),
@@ -158,4 +197,30 @@ final class _RingingAlarmGateway implements AlarmGateway {
 
   @override
   Future<List<ScheduledAlarmBinding>> scheduled() async => const [];
+}
+
+final class _SaoPauloTimeZone implements TimeZoneService {
+  const _SaoPauloTimeZone();
+
+  @override
+  DateTime localComponentsToUtc(DateTime localComponents) => DateTime.utc(
+    localComponents.year,
+    localComponents.month,
+    localComponents.day,
+    localComponents.hour + 3,
+    localComponents.minute,
+  );
+
+  @override
+  DateTime toLocal(DateTime utc) {
+    final shifted = utc.toUtc().subtract(const Duration(hours: 3));
+    return DateTime(
+      shifted.year,
+      shifted.month,
+      shifted.day,
+      shifted.hour,
+      shifted.minute,
+      shifted.second,
+    );
+  }
 }

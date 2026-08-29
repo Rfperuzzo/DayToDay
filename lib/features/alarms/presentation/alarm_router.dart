@@ -60,6 +60,7 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
       return AlarmResolvedScreen(
         title: activeAlarm.title,
         result: result,
+        timeZone: ref.watch(timeZoneServiceProvider),
         onDone: _finishResolution,
       );
     }

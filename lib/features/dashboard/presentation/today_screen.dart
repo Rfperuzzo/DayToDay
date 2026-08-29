@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/app_dependencies.dart';
 import '../../../core/presentation/rotina_theme.dart';
+import '../../../core/time/time_zone_service.dart';
 import '../../activities/domain/activity.dart';
 import '../../activities/domain/activity_occurrence.dart';
 import '../../activities/presentation/new_activity_sheet.dart';
@@ -26,6 +27,7 @@ final class TodayScreen extends ConsumerWidget {
           selectedDay: selectedDay,
           activities: activityItems,
           occurrences: occurrenceItems,
+          timeZone: ref.watch(timeZoneServiceProvider),
           onDaySelected: ref.read(selectedDayProvider.notifier).select,
           onAddRequested: () => _openNewActivity(context, ref, selectedDay),
           onComplete: (occurrence) async {
@@ -88,6 +90,7 @@ final class TodayDashboard extends StatelessWidget {
     required this.selectedDay,
     required this.activities,
     required this.occurrences,
+    required this.timeZone,
     required this.onDaySelected,
     required this.onComplete,
     this.onAddRequested,
@@ -97,6 +100,7 @@ final class TodayDashboard extends StatelessWidget {
   final DateTime selectedDay;
   final List<Activity> activities;
   final List<ActivityOccurrence> occurrences;
+  final TimeZoneService timeZone;
   final ValueChanged<DateTime> onDaySelected;
   final ValueChanged<ActivityOccurrence> onComplete;
   final VoidCallback? onAddRequested;
@@ -159,6 +163,7 @@ final class TodayDashboard extends StatelessWidget {
                               ),
                               _NextActivityCard(
                                 occurrence: next,
+                                timeZone: timeZone,
                                 activity: next == null
                                     ? null
                                     : activitiesById[next.activityId],
@@ -205,6 +210,7 @@ final class TodayDashboard extends StatelessWidget {
                               padding: const EdgeInsets.only(bottom: 12),
                               child: _TaskTile(
                                 occurrence: occurrence,
+                                timeZone: timeZone,
                                 activity: activitiesById[occurrence.activityId],
                                 isNext: occurrence.id == next?.id,
                                 onComplete: () => onComplete(occurrence),
@@ -567,8 +573,14 @@ final class _ProgressRingPainter extends CustomPainter {
 }
 
 final class _NextActivityCard extends StatelessWidget {
-  const _NextActivityCard({this.occurrence, this.activity, this.onComplete});
+  const _NextActivityCard({
+    required this.timeZone,
+    this.occurrence,
+    this.activity,
+    this.onComplete,
+  });
 
+  final TimeZoneService timeZone;
   final ActivityOccurrence? occurrence;
   final Activity? activity;
   final VoidCallback? onComplete;
@@ -612,7 +624,7 @@ final class _NextActivityCard extends StatelessWidget {
                   Text(
                     occurrence == null
                         ? 'Agenda livre'
-                        : '${_relativeLabel(occurrence.scheduledStartUtc)} • ${_time(occurrence.scheduledStartUtc)}',
+                        : '${_relativeLabel(occurrence.scheduledStartUtc)} • ${_time(timeZone, occurrence.scheduledStartUtc)}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 13,
@@ -663,12 +675,14 @@ final class _NextActivityCard extends StatelessWidget {
 final class _TaskTile extends StatelessWidget {
   const _TaskTile({
     required this.occurrence,
+    required this.timeZone,
     required this.activity,
     required this.isNext,
     required this.onComplete,
   });
 
   final ActivityOccurrence occurrence;
+  final TimeZoneService timeZone;
   final Activity? activity;
   final bool isNext;
   final VoidCallback onComplete;
@@ -741,7 +755,7 @@ final class _TaskTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${_time(occurrence.scheduledStartUtc)} • ${occurrence.estimatedDuration.inMinutes} min',
+                    '${_time(timeZone, occurrence.scheduledStartUtc)} • ${occurrence.estimatedDuration.inMinutes} min',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: active
                           ? RotinaColors.primary
@@ -870,8 +884,8 @@ String _longDate(DateTime date) {
   return '${weekdays[date.weekday - 1]}, ${date.day} de ${months[date.month - 1]}';
 }
 
-String _time(DateTime utc) {
-  final local = utc.toLocal();
+String _time(TimeZoneService timeZone, DateTime utc) {
+  final local = timeZone.toLocal(utc);
   return '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
 }
 

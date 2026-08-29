@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/presentation/rotina_theme.dart';
+import '../../../core/time/time_zone_service.dart';
 import '../../activities/domain/activity_occurrence.dart';
 import '../application/alarm_response_service.dart';
 import '../domain/alarm_gateway.dart';
@@ -273,12 +274,14 @@ final class AlarmResolvedScreen extends StatelessWidget {
   const AlarmResolvedScreen({
     required this.title,
     required this.result,
+    required this.timeZone,
     required this.onDone,
     super.key,
   });
 
   final String title;
   final AlarmResponseResult result;
+  final TimeZoneService timeZone;
   final VoidCallback onDone;
 
   @override
@@ -343,7 +346,10 @@ final class AlarmResolvedScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              _dateAndTime(result.occurrence.scheduledStartUtc),
+                              _dateAndTime(
+                                timeZone,
+                                result.occurrence.scheduledStartUtc,
+                              ),
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headlineMedium
                                   ?.copyWith(color: RotinaColors.primary),
@@ -436,8 +442,8 @@ String _shortDate(DateTime date) {
   return '${weekdays[date.weekday - 1]}, ${date.day}';
 }
 
-String _dateAndTime(DateTime utc) {
-  final local = utc.toLocal();
+String _dateAndTime(TimeZoneService timeZone, DateTime utc) {
+  final local = timeZone.toLocal(utc);
   const weekdays = [
     'segunda',
     'terça',
