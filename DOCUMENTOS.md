@@ -125,7 +125,7 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Repositório e projeto Flutter Android criados.
 - [x] Bootstrap vazio, sem layout de produto.
 - [x] Identidade e versões Android configuradas.
-- [ ] Domínio e recorrência.
+- [x] Domínio e recorrência.
 - [ ] Persistência SQLite.
 - [ ] Motor de reagendamento.
 - [ ] Adaptador de alarmes Android.
