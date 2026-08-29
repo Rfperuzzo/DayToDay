@@ -23,6 +23,7 @@ import '../features/history/data/drift_activity_event_repository.dart';
 import '../features/history/domain/activity_event.dart';
 import '../features/dashboard/application/occurrence_actions.dart';
 import '../features/routine_engine/application/priority_routine_planner.dart';
+import '../features/routine_engine/application/missed_task_recovery_service.dart';
 import '../features/routine_engine/domain/routine_planner.dart';
 import '../features/settings/domain/user_preferences.dart';
 
@@ -114,6 +115,18 @@ final alarmResponseServiceProvider = Provider<AlarmResponseService>(
     preferences: ref.watch(userPreferencesProvider),
   ),
 );
+final missedTaskRecoveryServiceProvider = Provider<MissedTaskRecoveryService>(
+  (ref) => MissedTaskRecoveryService(
+    occurrences: ref.watch(occurrenceRepositoryProvider),
+    events: ref.watch(activityEventRepositoryProvider),
+    alarms: ref.watch(alarmGatewayProvider),
+    alarmReconciler: ref.watch(alarmReconcilerProvider),
+    planner: ref.watch(routinePlannerProvider),
+    timeZone: ref.watch(timeZoneServiceProvider),
+    clock: const SystemClock(),
+    preferences: ref.watch(userPreferencesProvider),
+  ),
+);
 
 final class AppDependencies {
   AppDependencies._({
@@ -135,12 +148,33 @@ final class AppDependencies {
     final timeZone = await IanaTimeZoneService.create();
     final alarmGateway = AndroidAlarmGateway();
     await alarmGateway.initialize();
+    final activities = DriftActivityRepository(database);
     final occurrences = DriftOccurrenceRepository(database);
     final events = DriftActivityEventRepository(database);
+    final planner = PriorityRoutinePlanner(timeZone);
+    const preferences = UserPreferences();
+    final alarmReconciler = AlarmReconciler(
+      activities: activities,
+      occurrences: occurrences,
+      alarms: alarmGateway,
+      clock: const SystemClock(),
+      timeZone: timeZone,
+    );
+    final missedTaskRecovery = MissedTaskRecoveryService(
+      occurrences: occurrences,
+      events: events,
+      alarms: alarmGateway,
+      alarmReconciler: alarmReconciler,
+      planner: planner,
+      timeZone: timeZone,
+      clock: const SystemClock(),
+      preferences: preferences,
+    );
     final eventProcessor = AlarmEventProcessor(
       occurrences: occurrences,
       events: events,
       alarms: alarmGateway,
+      missedTaskRecovery: missedTaskRecovery,
     )..start();
     return AppDependencies._(
       database: database,

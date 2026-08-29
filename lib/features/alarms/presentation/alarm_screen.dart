@@ -250,7 +250,7 @@ final class _AlarmRingingScreenState extends State<AlarmRingingScreen> {
                         ),
                         const SizedBox(height: 22),
                         Text(
-                          'O toque para quando você escolhe o que aconteceu.',
+                          'O toque para quando você escolhe. Sem resposta até o fim da duração, reorganizo a fila por importância.',
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(

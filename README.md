@@ -1,11 +1,13 @@
 # Rotina da Jhenifer
 
 Aplicativo Android offline para organizar atividades e disparar alarmes fortes,
-com reagendamento inteligente quando Jhenifer escolhe **Agora não**.
+com reagendamento inteligente ao escolher **Agora não** ou perder a janela de
+uma tarefa sem confirmação.
 
 O MVP já possui painel diário responsivo, conclusão antecipada, subtarefas,
 controle de duração, sequência diária e cadastro de atividades únicas ou
-recorrentes com preparação contextual dos alarmes.
+recorrentes com preparação contextual dos alarmes. A fila se reorganiza por
+importância sem criar sobreposições.
 
 ## Contexto do projeto
 

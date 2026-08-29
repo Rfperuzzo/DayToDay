@@ -36,8 +36,9 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - Atividades podem ser únicas, diárias ou repetidas em dias da semana.
 - Todo alarme é forte: áudio em loop, vibração, tela cheia quando autorizada e
   tentativa de tocar durante Não Perturbe.
-- O alarme toca até uma resposta explícita: **Concluir**, **Agora não** ou
-  **Pular hoje**.
+- O alarme toca até uma resposta explícita — **Concluir**, **Agora não** ou
+  **Pular hoje** — ou até o fim da duração reservada. Se a duração terminar sem
+  resposta, a tarefa entra automaticamente na recuperação por importância.
 - **Agora não** encerra o toque e o motor escolhe automaticamente o próximo
   espaço livre.
 - O dia útil padrão vai de 07h a 22h.
@@ -53,6 +54,13 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - Uma tarefa disponível pode ser concluída antes do horário ou do fim estimado.
   A conclusão antecipada libera imediatamente a próxima tarefa e reconcilia os
   alarmes do Android.
+- Quando a tarefa atual perde sua janela sem confirmação, ela é comparada com a
+  próxima. Se sua importância for maior, ocupa o próximo horário e desloca a
+  outra; a tarefa deslocada repete a comparação com o restante da fila.
+- Importância igual ou menor não toma o lugar de uma tarefa mais importante. Ao
+  chegar ao fim da sequência, a tarefa ainda não posicionada é marcada para 10
+  minutos depois do fim da fila — ou 10 minutos após a detecção quando não há
+  próxima tarefa. Todas as durações continuam protegidas contra sobreposição.
 - A recorrência original nunca é deslocada por um reagendamento; somente a
   ocorrência atual muda.
 - Tocar em uma tarefa abre ações para editar, gerenciar subtarefas ou cancelar.
@@ -101,6 +109,8 @@ Android.
   e Não Perturbe.
 - `AlarmResponseService`: aplica **Concluir**, **Agora não** e **Pular hoje**,
   encerra o toque, registra o histórico e reconcilia o Resgate de rotina.
+- `MissedTaskRecoveryService`: detecta a perda da janela, persiste a cascata por
+  importância, registra os deslocamentos e reconcilia o próximo alarme.
 - `RoutinePlanner`: gera recorrências e encontra o próximo espaço livre.
 - `ActivityCreator`: salva uma atividade, materializa o horizonte de ocorrências
   e tenta reconciliar os alarmes sem perder o cadastro em caso de degradação.
@@ -134,6 +144,10 @@ local e dias da semana para continuarem no mesmo horário após mudança de fuso
 - Para cada dia, somente a primeira ocorrência pendente fica agendada no
   Android. Ao concluir antecipadamente, pular ou cancelar, a reconciliação
   remove o alarme anterior e prepara a próxima ocorrência liberada.
+- O tempo de duração viaja no payload do alarme. A tela inicia a recuperação ao
+  final desse período sem resposta; um alarme expirado após reinício também
+  aciona a regra. Recusa técnica da plataforma não é tratada como omissão da
+  usuária.
 - Permissão negada é um estado operacional degradado, não uma exceção fatal.
 - Nunca afirmar que um alarme é garantido quando o fabricante ou o Android o
   bloqueou.
@@ -197,13 +211,15 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Edição de duração e proteção contra intervalos sobrepostos.
 - [x] Sequência diária com tarefas posteriores bloqueadas e conclusão
   antecipada liberando a próxima.
+- [x] Recuperação automática de tarefa sem resposta, com cascata por
+  importância e fallback de 10 minutos.
 
 ## Última validação
 
 Executada em 29/08/2026:
 
 - `flutter analyze`: nenhum problema encontrado.
-- `flutter test --no-pub`: 36 testes aprovados.
+- `flutter test --no-pub`: 41 testes aprovados.
 - `flutter build apk --debug`: APK gerado com sucesso.
 - Manifest mesclado contém `USE_EXACT_ALARM`, `USE_FULL_SCREEN_INTENT`,
   notificações, reinício, vibração, wake lock, política de notificação e serviço
@@ -229,11 +245,14 @@ Executada em 29/08/2026:
 - Subtarefas, persistência do schema 2, conflito por duração, sequência diária,
   bloqueio visual, liberação por conclusão antecipada e alarme exclusivo da
   primeira tarefa pendente foram validados por testes automatizados.
+- A recuperação de tarefa perdida foi validada para prioridade maior, menor,
+  cascata entre várias tarefas, preservação de duração, persistência, histórico
+  e ausência de próxima tarefa com reagendamento após 10 minutos.
 
 Os APKs e o ZIP existentes foram gerados antes da edição/cancelamento,
-subtarefas, duração protegida e sequência diária; portanto, não contêm essas
-funcionalidades. Um novo debug deve ser criado somente após o comando explícito
-do responsável pelo projeto.
+subtarefas, duração protegida, sequência diária e cascata por importância;
+portanto, não contêm essas funcionalidades. Um novo debug deve ser criado
+somente após o comando explícito do responsável pelo projeto.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma

@@ -6,12 +6,14 @@ final class AlarmRequest {
   const AlarmRequest({
     required this.occurrenceId,
     required this.scheduledAtUtc,
+    required this.estimatedDuration,
     required this.title,
     required this.body,
   });
 
   final String occurrenceId;
   final DateTime scheduledAtUtc;
+  final Duration estimatedDuration;
   final String title;
   final String body;
 }
@@ -35,6 +37,7 @@ final class RingingAlarmBinding {
     required this.scheduledAtUtc,
     required this.title,
     required this.body,
+    this.estimatedDuration,
   });
 
   final String occurrenceId;
@@ -42,6 +45,7 @@ final class RingingAlarmBinding {
   final DateTime scheduledAtUtc;
   final String title;
   final String body;
+  final Duration? estimatedDuration;
 }
 
 final class AlarmPlatformEvent {

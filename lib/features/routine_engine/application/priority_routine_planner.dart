@@ -78,6 +78,84 @@ final class PriorityRoutinePlanner implements RoutinePlanner {
     );
   }
 
+  @override
+  RoutinePlan replanMissed({
+    required ActivityOccurrence occurrence,
+    required Iterable<ActivityOccurrence> followingOccurrences,
+    required DateTime nowUtc,
+  }) {
+    final normalizedNow = nowUtc.toUtc();
+    final following =
+        followingOccurrences
+            .where(
+              (item) =>
+                  item.id != occurrence.id &&
+                  _blocksTime(item) &&
+                  item.scheduledStartUtc.isAfter(occurrence.scheduledStartUtc),
+            )
+            .toList()
+          ..sort(
+            (left, right) =>
+                left.scheduledStartUtc.compareTo(right.scheduledStartUtc),
+          );
+    var moving = occurrence.copyWith(
+      status: OccurrenceStatus.scheduled,
+      attempt: occurrence.attempt + 1,
+    );
+    DateTime? cursorUtc;
+    ActivityOccurrence? target;
+    final adjusted = <ActivityOccurrence>[];
+
+    for (final next in following) {
+      final slotUtc = _latestOf(
+        next.scheduledStartUtc.toUtc(),
+        normalizedNow,
+        cursorUtc,
+      );
+      final movingWins = moving.priority.index > next.priority.index;
+      final placedSource = movingWins ? moving : next;
+      final placed = placedSource.copyWith(
+        scheduledStartUtc: slotUtc,
+        status: OccurrenceStatus.scheduled,
+      );
+      cursorUtc = placed.scheduledEndUtc;
+      if (placed.id == occurrence.id) {
+        target = placed;
+      }
+      if (placed.id == occurrence.id ||
+          placed.scheduledStartUtc != placedSource.scheduledStartUtc) {
+        adjusted.add(placed);
+      }
+      if (movingWins) {
+        moving = next;
+      }
+    }
+
+    final fallbackBaseUtc = cursorUtc ?? normalizedNow;
+    final fallbackUtc = _latestOf(
+      normalizedNow.add(const Duration(minutes: 10)),
+      fallbackBaseUtc.add(const Duration(minutes: 10)),
+      null,
+    );
+    final fallback = moving.copyWith(
+      scheduledStartUtc: fallbackUtc,
+      status: OccurrenceStatus.scheduled,
+    );
+    adjusted.add(fallback);
+    if (fallback.id == occurrence.id) {
+      target = fallback;
+    }
+
+    adjusted.sort(
+      (left, right) =>
+          left.scheduledStartUtc.compareTo(right.scheduledStartUtc),
+    );
+    return RoutinePlan(
+      rescheduled: target!,
+      adjustedOccurrences: List.unmodifiable(adjusted),
+    );
+  }
+
   DateTime _findSlot({
     required DateTime earliestUtc,
     required Duration duration,
@@ -128,6 +206,14 @@ final class PriorityRoutinePlanner implements RoutinePlanner {
 
     throw StateError('Não há espaço livre dentro do horizonte configurado.');
   }
+}
+
+DateTime _latestOf(DateTime first, DateTime second, DateTime? third) {
+  var latest = first.isAfter(second) ? first : second;
+  if (third != null && third.isAfter(latest)) {
+    latest = third;
+  }
+  return latest;
 }
 
 final class _Candidate {

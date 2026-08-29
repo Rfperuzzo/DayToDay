@@ -18,4 +18,10 @@ abstract interface class RoutinePlanner {
     required DateTime nowUtc,
     required UserPreferences preferences,
   });
+
+  RoutinePlan replanMissed({
+    required ActivityOccurrence occurrence,
+    required Iterable<ActivityOccurrence> followingOccurrences,
+    required DateTime nowUtc,
+  });
 }

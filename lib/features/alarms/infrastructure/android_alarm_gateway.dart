@@ -29,6 +29,7 @@ final class AndroidAlarmGateway implements AlarmGateway {
                 scheduledAtUtc: item.dateTime.toUtc(),
                 title: item.notificationSettings.title,
                 body: item.notificationSettings.body,
+                estimatedDuration: _durationFromPayload(item.payload),
               ),
         ]..sort(
           (left, right) => left.scheduledAtUtc.compareTo(right.scheduledAtUtc),
@@ -63,7 +64,10 @@ final class AndroidAlarmGateway implements AlarmGateway {
         androidStopAlarmOnTermination: false,
         preferConnectedAudioDevice: false,
         androidStaleAfter: alarm.AlarmSettings.defaultStaleAfter,
-        payload: jsonEncode({'occurrenceId': request.occurrenceId}),
+        payload: jsonEncode({
+          'occurrenceId': request.occurrenceId,
+          'durationMinutes': request.estimatedDuration.inMinutes,
+        }),
         volumeSettings: alarm.VolumeSettings.fade(
           fadeDuration: Duration(seconds: 5),
           volume: 1.0,
@@ -155,6 +159,23 @@ final class AndroidAlarmGateway implements AlarmGateway {
       return decoded is Map<String, dynamic>
           ? decoded['occurrenceId'] as String?
           : null;
+    } on FormatException {
+      return null;
+    }
+  }
+
+  Duration? _durationFromPayload(String? payload) {
+    if (payload == null || payload.isEmpty) {
+      return null;
+    }
+    try {
+      final decoded = jsonDecode(payload);
+      final minutes = decoded is Map<String, dynamic>
+          ? decoded['durationMinutes'] as int?
+          : null;
+      return minutes == null || minutes <= 0
+          ? null
+          : Duration(minutes: minutes);
     } on FormatException {
       return null;
     }

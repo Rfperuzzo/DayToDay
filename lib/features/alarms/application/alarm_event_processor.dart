@@ -3,6 +3,7 @@ import 'dart:async';
 import '../../activities/domain/activity_occurrence.dart';
 import '../../activities/domain/activity_repositories.dart';
 import '../../history/domain/activity_event.dart';
+import '../../routine_engine/application/missed_task_recovery_service.dart';
 import '../domain/alarm_gateway.dart';
 
 final class AlarmEventProcessor {
@@ -10,13 +11,20 @@ final class AlarmEventProcessor {
     required OccurrenceRepository occurrences,
     required ActivityEventRepository events,
     required AlarmGateway alarms,
-  }) : this._(occurrences, events, alarms);
+    required MissedTaskRecoveryService missedTaskRecovery,
+  }) : this._(occurrences, events, alarms, missedTaskRecovery);
 
-  AlarmEventProcessor._(this._occurrences, this._events, this._alarms);
+  AlarmEventProcessor._(
+    this._occurrences,
+    this._events,
+    this._alarms,
+    this._missedTaskRecovery,
+  );
 
   final OccurrenceRepository _occurrences;
   final ActivityEventRepository _events;
   final AlarmGateway _alarms;
+  final MissedTaskRecoveryService _missedTaskRecovery;
   StreamSubscription<void>? _subscription;
 
   void start() {
@@ -32,6 +40,15 @@ final class AlarmEventProcessor {
       platformEvent.nativeAlarmId,
     );
     if (occurrence == null) {
+      await _alarms.acknowledge(platformEvent);
+      return;
+    }
+    if (platformEvent.type == AlarmPlatformEventType.dropped &&
+        platformEvent.cause == AlarmPlatformEventCause.staleAtBoot) {
+      await _missedTaskRecovery.recover(
+        occurrence.id,
+        detectedAtUtc: platformEvent.recordedAtUtc,
+      );
       await _alarms.acknowledge(platformEvent);
       return;
     }

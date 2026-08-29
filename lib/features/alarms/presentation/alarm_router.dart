@@ -19,6 +19,7 @@ final class AlarmRouter extends ConsumerStatefulWidget {
 
 final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
   StreamSubscription<List<RingingAlarmBinding>>? _subscription;
+  Timer? _missedTaskTimer;
   RingingAlarmBinding? _activeAlarm;
   RingingAlarmBinding? _pendingAlarm;
   AlarmResponseResult? _result;
@@ -46,6 +47,7 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
 
   @override
   void dispose() {
+    _missedTaskTimer?.cancel();
     _subscription?.cancel();
     super.dispose();
   }
@@ -77,6 +79,7 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
       return;
     }
     if (alarms.isEmpty) {
+      _missedTaskTimer?.cancel();
       if (!_isResponding && _result == null && _activeAlarm != null) {
         setState(() {
           _activeAlarm = null;
@@ -91,6 +94,7 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
       return;
     }
     if (_result != null) {
+      _scheduleMissedTaskRecovery(first);
       setState(() {
         _activeAlarm = first;
         _result = null;
@@ -101,6 +105,7 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
     if (first.occurrenceId == _activeAlarm?.occurrenceId) {
       return;
     }
+    _scheduleMissedTaskRecovery(first);
     setState(() {
       _activeAlarm = first;
       _errorMessage = null;
@@ -111,6 +116,7 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
     RingingAlarmBinding alarm,
     AlarmResponse response,
   ) async {
+    _missedTaskTimer?.cancel();
     setState(() {
       _isResponding = true;
       _errorMessage = null;
@@ -123,6 +129,7 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
         return;
       }
       if (_pendingAlarm case final pending?) {
+        _scheduleMissedTaskRecovery(pending);
         setState(() {
           _activeAlarm = pending;
           _pendingAlarm = null;
@@ -148,6 +155,7 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
 
   void _finishResolution() {
     if (_pendingAlarm case final pending?) {
+      _scheduleMissedTaskRecovery(pending);
       setState(() {
         _activeAlarm = pending;
         _pendingAlarm = null;
@@ -161,5 +169,52 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
       _result = null;
       _errorMessage = null;
     });
+  }
+
+  void _scheduleMissedTaskRecovery(RingingAlarmBinding alarm) {
+    _missedTaskTimer?.cancel();
+    final duration = alarm.estimatedDuration;
+    if (duration == null) {
+      return;
+    }
+    final deadline = alarm.scheduledAtUtc.add(duration);
+    final remaining = deadline.difference(DateTime.now().toUtc());
+    _missedTaskTimer = Timer(
+      remaining.isNegative ? Duration.zero : remaining,
+      () => unawaited(_recoverMissedTask(alarm)),
+    );
+  }
+
+  Future<void> _recoverMissedTask(RingingAlarmBinding alarm) async {
+    if (!mounted ||
+        _isResponding ||
+        _activeAlarm?.occurrenceId != alarm.occurrenceId) {
+      return;
+    }
+    setState(() {
+      _isResponding = true;
+      _errorMessage = null;
+    });
+    try {
+      await ref
+          .read(missedTaskRecoveryServiceProvider)
+          .recover(alarm.occurrenceId);
+      if (mounted) {
+        setState(() {
+          _activeAlarm = null;
+          _pendingAlarm = null;
+          _result = null;
+          _isResponding = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _isResponding = false;
+          _errorMessage =
+              'A tarefa perdeu o horário, mas não foi possível reorganizar a sequência.';
+        });
+      }
+    }
   }
 }

@@ -6,6 +6,7 @@ enum ActivityEventType {
   alarmDropped,
   edited,
   cancelled,
+  missed,
 }
 
 final class ActivityEvent {

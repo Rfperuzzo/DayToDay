@@ -22,6 +22,9 @@ apenas avisar que um horário passou. Todo aprendizado permanece no aparelho.
   reabertura e remoção;
 - fila diária: apenas a primeira tarefa pendente pode ser concluída e recebe
   alarme; concluir antecipadamente libera a próxima imediatamente;
+- recuperação automática quando a duração termina sem confirmação: a tarefa
+  mais importante pode tomar o próximo espaço, produzindo uma cascata de
+  comparações, e a última tarefa é movida 10 minutos adiante;
 - dados locais, sem conta, nuvem, anúncios ou telemetria.
 
 ## Próxima prioridade
@@ -61,7 +64,8 @@ reagendamento e proteger tarefas importantes. Quando o dia não comportar tudo,
 o app deve dizer isso claramente em vez de criar sobreposições invisíveis.
 
 A primeira versão já reserva toda a duração, recusa sobreposição, sugere o
-próximo horário livre e mantém as tarefas do dia em sequência. A evolução
+próximo horário livre, mantém as tarefas do dia em sequência e recupera uma
+tarefa sem resposta por meio de uma cascata estável de importância. A evolução
 seguinte é permitir buffers configuráveis de preparação e deslocamento.
 
 ### 6. Pulso do dia sem culpa
