@@ -11,6 +11,8 @@ apenas avisar que um horário passou. Todo aprendizado permanece no aparelho.
 - cadastro de atividade única, diária ou de segunda a sexta;
 - duração e prioridade usadas pelo motor de rotina;
 - solicitação contextual dos acessos de alarme;
+- tela de toque com **Concluir**, **Agora não** e **Pular hoje**;
+- confirmação do novo horário após o Resgate de rotina;
 - dados locais, sem conta, nuvem, anúncios ou telemetria.
 
 ## Próxima prioridade
