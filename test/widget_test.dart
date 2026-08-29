@@ -51,6 +51,7 @@ void main() {
       status: OccurrenceStatus.scheduled,
     );
     ActivityOccurrence? completed;
+    ActivityOccurrence? managed;
     var addRequested = false;
 
     await tester.pumpWidget(
@@ -62,6 +63,7 @@ void main() {
           timeZone: const DeviceTimeZoneService(),
           onDaySelected: (_) {},
           onComplete: (value) => completed = value,
+          onManage: (_, value) => managed = value,
           onAddRequested: () => addRequested = true,
         ),
       ),
@@ -71,6 +73,8 @@ void main() {
     expect(find.text('Treino de pernas'), findsNWidgets(2));
     await tester.drag(find.byType(CustomScrollView), const Offset(0, -300));
     await tester.pumpAndSettle();
+    await tester.tap(find.byKey(ValueKey('task-${occurrence.id}')));
+    expect(managed, same(occurrence));
     await tester.tap(find.text('Concluir atividade'));
     expect(completed, same(occurrence));
     await tester.tap(find.byTooltip('Adicionar atividade'));

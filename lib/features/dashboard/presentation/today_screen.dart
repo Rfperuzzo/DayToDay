@@ -7,8 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/app_dependencies.dart';
 import '../../../core/presentation/rotina_theme.dart';
 import '../../../core/time/time_zone_service.dart';
+import '../../activities/application/activity_manager.dart';
 import '../../activities/domain/activity.dart';
 import '../../activities/domain/activity_occurrence.dart';
+import '../../activities/presentation/activity_options_sheet.dart';
 import '../../activities/presentation/new_activity_sheet.dart';
 import '../application/day_providers.dart';
 
@@ -18,7 +20,7 @@ final class TodayScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedDay = ref.watch(selectedDayProvider);
-    final activities = ref.watch(activeActivitiesProvider);
+    final activities = ref.watch(allActivitiesProvider);
     final occurrences = ref.watch(dayOccurrencesProvider(selectedDay));
 
     return activities.when(
@@ -30,6 +32,8 @@ final class TodayScreen extends ConsumerWidget {
           timeZone: ref.watch(timeZoneServiceProvider),
           onDaySelected: ref.read(selectedDayProvider.notifier).select,
           onAddRequested: () => _openNewActivity(context, ref, selectedDay),
+          onManage: (activity, occurrence) =>
+              _openActivityOptions(context, ref, activity, occurrence),
           onComplete: (occurrence) async {
             try {
               await HapticFeedback.mediumImpact();
@@ -83,6 +87,142 @@ final class TodayScreen extends ConsumerWidget {
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
   }
+
+  Future<void> _openActivityOptions(
+    BuildContext context,
+    WidgetRef ref,
+    Activity activity,
+    ActivityOccurrence occurrence,
+  ) async {
+    await HapticFeedback.selectionClick();
+    if (!context.mounted) {
+      return;
+    }
+    final option = await showModalBottomSheet<ActivityOption>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: RotinaColors.background,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      builder: (context) => ActivityOptionsSheet(
+        activity: activity,
+        occurrence: occurrence,
+        timeZone: ref.read(timeZoneServiceProvider),
+      ),
+    );
+    if (option == null || !context.mounted) {
+      return;
+    }
+    switch (option) {
+      case ActivityOption.edit:
+        await _editActivity(context, ref, activity, occurrence);
+      case ActivityOption.cancel:
+        await _cancelActivity(context, ref, activity, occurrence);
+    }
+  }
+
+  Future<void> _editActivity(
+    BuildContext context,
+    WidgetRef ref,
+    Activity activity,
+    ActivityOccurrence occurrence,
+  ) async {
+    final draft = await showModalBottomSheet<ActivityEditDraft>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: RotinaColors.background,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      builder: (context) => EditActivitySheet(
+        activity: activity,
+        occurrence: occurrence,
+        timeZone: ref.read(timeZoneServiceProvider),
+      ),
+    );
+    if (draft == null || !context.mounted) {
+      return;
+    }
+    try {
+      final result = await ref
+          .read(activityManagerProvider)
+          .edit(selectedOccurrence: occurrence, draft: draft);
+      await HapticFeedback.mediumImpact();
+      if (context.mounted) {
+        final message = result.alarmsSynchronized
+            ? 'Atividade e próximos alarmes atualizados. ✨'
+            : 'Atividade atualizada. Revise os acessos do alarme.';
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Não foi possível atualizar esta atividade.'),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _cancelActivity(
+    BuildContext context,
+    WidgetRef ref,
+    Activity activity,
+    ActivityOccurrence occurrence,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.cancel_outlined, color: RotinaColors.danger),
+        title: const Text('Cancelar atividade?'),
+        content: Text(
+          '“${activity.title}” será desativada e todos os próximos alarmes serão removidos.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Voltar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: FilledButton.styleFrom(backgroundColor: RotinaColors.danger),
+            child: const Text('Cancelar atividade'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) {
+      return;
+    }
+    try {
+      final result = await ref
+          .read(activityManagerProvider)
+          .cancel(selectedOccurrence: occurrence);
+      await HapticFeedback.mediumImpact();
+      if (context.mounted) {
+        final message = result.alarmsSynchronized
+            ? 'Atividade cancelada e alarmes removidos.'
+            : 'Atividade cancelada. Revise os acessos do alarme.';
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Não foi possível cancelar esta atividade.'),
+          ),
+        );
+      }
+    }
+  }
 }
 
 final class TodayDashboard extends StatelessWidget {
@@ -93,6 +233,7 @@ final class TodayDashboard extends StatelessWidget {
     required this.timeZone,
     required this.onDaySelected,
     required this.onComplete,
+    this.onManage,
     this.onAddRequested,
     super.key,
   });
@@ -103,10 +244,12 @@ final class TodayDashboard extends StatelessWidget {
   final TimeZoneService timeZone;
   final ValueChanged<DateTime> onDaySelected;
   final ValueChanged<ActivityOccurrence> onComplete;
+  final void Function(Activity, ActivityOccurrence)? onManage;
   final VoidCallback? onAddRequested;
 
   @override
   Widget build(BuildContext context) {
+    final manageActivity = onManage;
     final activitiesById = {for (final item in activities) item.id: item};
     final sortedOccurrences = [...occurrences]
       ..sort(
@@ -170,6 +313,17 @@ final class TodayDashboard extends StatelessWidget {
                                 onComplete: next == null
                                     ? null
                                     : () => onComplete(next),
+                                onManage:
+                                    next == null ||
+                                        manageActivity == null ||
+                                        activitiesById[next.activityId]
+                                                ?.isActive !=
+                                            true
+                                    ? null
+                                    : () => manageActivity(
+                                        activitiesById[next.activityId]!,
+                                        next,
+                                      ),
                               ),
                             ];
                             if (constraints.maxWidth >= 700) {
@@ -214,6 +368,16 @@ final class TodayDashboard extends StatelessWidget {
                                 activity: activitiesById[occurrence.activityId],
                                 isNext: occurrence.id == next?.id,
                                 onComplete: () => onComplete(occurrence),
+                                onManage:
+                                    activitiesById[occurrence.activityId]
+                                                ?.isActive ==
+                                            true &&
+                                        manageActivity != null
+                                    ? () => manageActivity(
+                                        activitiesById[occurrence.activityId]!,
+                                        occurrence,
+                                      )
+                                    : null,
                               ),
                             ),
                           ),
@@ -586,12 +750,14 @@ final class _NextActivityCard extends StatelessWidget {
     this.occurrence,
     this.activity,
     this.onComplete,
+    this.onManage,
   });
 
   final TimeZoneService timeZone;
   final ActivityOccurrence? occurrence;
   final Activity? activity;
   final VoidCallback? onComplete;
+  final VoidCallback? onManage;
 
   @override
   Widget build(BuildContext context) {
@@ -613,35 +779,59 @@ final class _NextActivityCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.18),
-              borderRadius: BorderRadius.circular(99),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    Icons.schedule_rounded,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    occurrence == null
-                        ? 'Agenda livre'
-                        : '${_relativeLabel(occurrence.scheduledStartUtc)} • ${_time(timeZone, occurrence.scheduledStartUtc)}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
+          Row(
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.18),
+                      borderRadius: BorderRadius.circular(99),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 7,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.schedule_rounded,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            occurrence == null
+                                ? 'Agenda livre'
+                                : '${_relativeLabel(occurrence.scheduledStartUtc)} • ${_time(timeZone, occurrence.scheduledStartUtc)}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+              if (onManage != null) ...[
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: onManage,
+                  tooltip: 'Editar ou cancelar atividade',
+                  color: Colors.white,
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.white.withValues(alpha: 0.18),
+                  ),
+                  icon: const Icon(Icons.more_horiz_rounded),
+                ),
+              ],
+            ],
           ),
           const SizedBox(height: 24),
           Text(
@@ -687,6 +877,7 @@ final class _TaskTile extends StatelessWidget {
     required this.activity,
     required this.isNext,
     required this.onComplete,
+    this.onManage,
   });
 
   final ActivityOccurrence occurrence;
@@ -694,6 +885,7 @@ final class _TaskTile extends StatelessWidget {
   final Activity? activity;
   final bool isNext;
   final VoidCallback onComplete;
+  final VoidCallback? onManage;
 
   @override
   Widget build(BuildContext context) {
@@ -703,7 +895,7 @@ final class _TaskTile extends StatelessWidget {
       duration: const Duration(milliseconds: 220),
       opacity: completed ? 0.62 : 1,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: active ? RotinaColors.surfaceStrong : RotinaColors.surface,
           borderRadius: BorderRadius.circular(24),
@@ -711,75 +903,103 @@ final class _TaskTile extends StatelessWidget {
             color: active ? RotinaColors.primary : RotinaColors.outline,
           ),
         ),
-        child: Row(
-          children: [
-            Semantics(
-              button: !completed,
-              checked: completed,
-              label: completed ? 'Atividade concluída' : 'Concluir atividade',
-              child: InkWell(
-                onTap: completed ? null : onComplete,
-                customBorder: const CircleBorder(),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: 38,
-                  height: 38,
-                  decoration: BoxDecoration(
-                    color: completed
-                        ? RotinaColors.primary
-                        : Colors.transparent,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: completed
-                          ? RotinaColors.primary
-                          : RotinaColors.outline,
-                      width: 3,
-                    ),
-                  ),
-                  child: completed
-                      ? const Icon(
-                          Icons.check_rounded,
-                          color: Colors.white,
-                          size: 23,
-                        )
-                      : null,
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            key: ValueKey('task-${occurrence.id}'),
+            onTap: onManage,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+              child: Row(
                 children: [
-                  Text(
-                    activity?.title ?? 'Atividade',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: RotinaColors.text,
-                      fontWeight: active ? FontWeight.w800 : FontWeight.w600,
-                      decoration: completed ? TextDecoration.lineThrough : null,
+                  Semantics(
+                    button: !completed,
+                    checked: completed,
+                    label: completed
+                        ? 'Atividade concluída'
+                        : 'Concluir atividade',
+                    child: InkWell(
+                      onTap: completed ? null : onComplete,
+                      customBorder: const CircleBorder(),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: 38,
+                        height: 38,
+                        decoration: BoxDecoration(
+                          color: completed
+                              ? RotinaColors.primary
+                              : Colors.transparent,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: completed
+                                ? RotinaColors.primary
+                                : RotinaColors.outline,
+                            width: 3,
+                          ),
+                        ),
+                        child: completed
+                            ? const Icon(
+                                Icons.check_rounded,
+                                color: Colors.white,
+                                size: 23,
+                              )
+                            : null,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${_time(timeZone, occurrence.scheduledStartUtc)} • ${occurrence.estimatedDuration.inMinutes} min',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: active
-                          ? RotinaColors.primary
-                          : RotinaColors.textMuted,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          activity?.title ?? 'Atividade',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(
+                                color: RotinaColors.text,
+                                fontWeight: active
+                                    ? FontWeight.w800
+                                    : FontWeight.w600,
+                                decoration: completed
+                                    ? TextDecoration.lineThrough
+                                    : null,
+                              ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${_time(timeZone, occurrence.scheduledStartUtc)} • ${occurrence.estimatedDuration.inMinutes} min',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: active
+                                    ? RotinaColors.primary
+                                    : RotinaColors.textMuted,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
+                              ),
+                        ),
+                      ],
                     ),
                   ),
+                  Icon(
+                    _priorityIcon(occurrence.priority),
+                    color: active
+                        ? RotinaColors.primary
+                        : RotinaColors.textMuted,
+                  ),
+                  if (onManage != null) ...[
+                    const SizedBox(width: 2),
+                    IconButton(
+                      onPressed: onManage,
+                      tooltip: 'Editar ou cancelar atividade',
+                      icon: const Icon(Icons.more_vert_rounded),
+                    ),
+                  ],
                 ],
               ),
             ),
-            Icon(
-              _priorityIcon(occurrence.priority),
-              color: active ? RotinaColors.primary : RotinaColors.textMuted,
-            ),
-          ],
+          ),
         ),
       ),
     );

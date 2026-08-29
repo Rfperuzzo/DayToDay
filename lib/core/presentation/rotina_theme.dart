@@ -11,6 +11,7 @@ abstract final class RotinaColors {
   static const text = Color(0xFF321017);
   static const textMuted = Color(0xFF6B5A60);
   static const outline = Color(0xFFE6BCBD);
+  static const danger = Color(0xFFB3261E);
 }
 
 abstract final class RotinaTheme {
