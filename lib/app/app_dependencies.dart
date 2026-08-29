@@ -22,6 +22,8 @@ import '../features/alarms/infrastructure/android_alarm_permission_gateway.dart'
 import '../features/history/data/drift_activity_event_repository.dart';
 import '../features/history/domain/activity_event.dart';
 import '../features/dashboard/application/occurrence_actions.dart';
+import '../features/home_widget/domain/day_widget_gateway.dart';
+import '../features/home_widget/infrastructure/android_day_widget_gateway.dart';
 import '../features/routine_engine/application/priority_routine_planner.dart';
 import '../features/routine_engine/application/missed_task_recovery_service.dart';
 import '../features/routine_engine/domain/routine_planner.dart';
@@ -39,6 +41,11 @@ final alarmGatewayProvider = Provider<AlarmGateway>(
 final alarmPermissionGatewayProvider = Provider<AlarmPermissionGateway>(
   (ref) => throw StateError('AlarmPermissionGateway não foi inicializado.'),
 );
+final dayWidgetGatewayProvider = Provider<DayWidgetGateway>((ref) {
+  final gateway = AndroidDayWidgetGateway();
+  ref.onDispose(gateway.dispose);
+  return gateway;
+});
 final activityRepositoryProvider = Provider<ActivityRepository>(
   (ref) => DriftActivityRepository(ref.watch(databaseProvider)),
 );

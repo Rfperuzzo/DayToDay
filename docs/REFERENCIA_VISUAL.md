@@ -51,6 +51,8 @@ Os tokens de código ficam em `lib/core/presentation/rotina_theme.dart`.
   remoção de etapas;
 - estado bloqueado para tarefas posteriores, com cadeado e explicação de que a
   tarefa anterior precisa ser concluída primeiro.
+- widget nativo da tela inicial com fundo rosa, cartões claros, data, progresso,
+  horário, duração e importância de até quatro tarefas.
 
 ## Adaptações conscientes
 

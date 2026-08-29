@@ -71,6 +71,13 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - Subtarefas são etapas persistentes vinculadas à atividade principal. Podem
   ser adicionadas, concluídas, reabertas e removidas; não criam alarmes próprios
   nem alteram a recorrência da atividade.
+- O Android oferece o widget **Tarefas de hoje**, com data, progresso e até
+  quatro tarefas. Tocar em uma tarefa abre sua ocorrência no app para concluir
+  ou editar; uma tarefa bloqueada continua impedida de ser concluída fora da
+  ordem.
+- O widget recebe sete dias de resumo offline e escolhe o dia atual no Android,
+  permitindo a virada da data sem depender de o Flutter estar aberto à
+  meia-noite. Alterações no banco atualizam o resumo quando o app está ativo.
 - Edições e cancelamentos ficam registrados no histórico local. Se a
   sincronização com o Android falhar, a alteração permanece salva e o app
   comunica o estado degradado.
@@ -91,6 +98,7 @@ lib/
     history/            eventos imutáveis da rotina
     settings/           preferências locais
     dashboard/          leitura do dia, progresso e ações rápidas
+    home_widget/        resumo nativo e abertura direcionada da tarefa
 ```
 
 Cada funcionalidade pode ter `domain`, `application`, `data` e
@@ -115,6 +123,8 @@ Android.
 - `ActivityCreator`: salva uma atividade, materializa o horizonte de ocorrências
   e tenta reconciliar os alarmes sem perder o cadastro em caso de degradação.
 - `Clock`: torna cálculos temporais determinísticos nos testes.
+- `DayWidgetGateway`: sincroniza o resumo de sete dias com o widget Android e
+  entrega ao Flutter a tarefa tocada na tela inicial.
 
 Implementações atuais: Riverpod 3.4.2, Drift 2.34.3, `alarm` 5.12.0,
 `permission_handler` 12.0.1 e banco de fusos IANA 2025c.
@@ -167,7 +177,8 @@ progresso e mensagem de ritmo, sem pontuação competitiva ou envio de dados.
 Detalhes de priorização estão em `docs/ROADMAP_PRODUTO.md`. A transcrição das
 decisões da referência Stitch está em `docs/REFERENCIA_VISUAL.md`. A matriz e
 as evidências do teste real estão em `docs/VALIDACAO_DISPOSITIVO.md`. O fluxo
-de empacotamento e instalação está em `docs/INSTALADOR_DEBUG.md`.
+de empacotamento e instalação está em `docs/INSTALADOR_DEBUG.md`. A instalação
+e o comportamento do widget estão em `docs/WIDGET_TELA_INICIAL.md`.
 
 ## Estratégia de Git
 
@@ -213,13 +224,17 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
   antecipada liberando a próxima.
 - [x] Recuperação automática de tarefa sem resposta, com cascata por
   importância e fallback de 10 minutos.
+- [x] Widget Android com tarefas do dia e abertura direta para concluir ou
+  editar.
 
 ## Última validação
 
 Executada em 29/08/2026:
 
 - `flutter analyze`: nenhum problema encontrado.
-- `flutter test --no-pub`: 41 testes aprovados.
+- `flutter test --no-pub`: 43 testes aprovados.
+- `:app:compileDebugKotlin`: widget, recursos Android e canal nativo compilados
+  com sucesso usando o JBR 21 do Android Studio; nenhum APK foi gerado.
 - `flutter build apk --debug`: APK gerado com sucesso.
 - Manifest mesclado contém `USE_EXACT_ALARM`, `USE_FULL_SCREEN_INTENT`,
   notificações, reinício, vibração, wake lock, política de notificação e serviço
@@ -248,11 +263,15 @@ Executada em 29/08/2026:
 - A recuperação de tarefa perdida foi validada para prioridade maior, menor,
   cascata entre várias tarefas, preservação de duração, persistência, histórico
   e ausência de próxima tarefa com reagendamento após 10 minutos.
+- Widget: ordenação, progresso, bloqueio sequencial e ação **Concluir tarefa**
+  foram validados no Flutter; manifesto, `RemoteViews`, troca automática entre
+  os sete dias em cache e código Kotlin foram compilados sem erros.
 
 Os APKs e o ZIP existentes foram gerados antes da edição/cancelamento,
-subtarefas, duração protegida, sequência diária e cascata por importância;
-portanto, não contêm essas funcionalidades. Um novo debug deve ser criado
-somente após o comando explícito do responsável pelo projeto.
+subtarefas, duração protegida, sequência diária, cascata por importância e
+widget da tela inicial; portanto, não contêm essas funcionalidades. Um novo
+debug deve ser criado somente após o comando explícito do responsável pelo
+projeto.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma

@@ -14,6 +14,7 @@ import '../../activities/domain/activity_occurrence.dart';
 import '../../activities/presentation/activity_options_sheet.dart';
 import '../../activities/presentation/new_activity_sheet.dart';
 import '../../activities/presentation/subtasks_sheet.dart';
+import '../../home_widget/domain/day_widget_gateway.dart';
 import '../application/day_providers.dart';
 import '../application/daily_task_sequence.dart';
 
@@ -22,6 +23,15 @@ final class TodayScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final widgetRequest = ref.watch(dayWidgetOpenRequestProvider);
+    if (widgetRequest != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final request = ref.read(dayWidgetOpenRequestProvider.notifier).take();
+        if (request != null && context.mounted) {
+          _openWidgetTask(context, ref, request);
+        }
+      });
+    }
     final selectedDay = ref.watch(selectedDayProvider);
     final activities = ref.watch(allActivitiesProvider);
     final occurrences = ref.watch(dayOccurrencesProvider(selectedDay));
@@ -37,20 +47,8 @@ final class TodayScreen extends ConsumerWidget {
           onAddRequested: () => _openNewActivity(context, ref, selectedDay),
           onManage: (activity, occurrence) =>
               _openActivityOptions(context, ref, activity, occurrence),
-          onComplete: (occurrence) async {
-            try {
-              await HapticFeedback.mediumImpact();
-              await ref.read(occurrenceActionsProvider).complete(occurrence);
-            } catch (_) {
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Não foi possível concluir esta atividade.'),
-                  ),
-                );
-              }
-            }
-          },
+          onComplete: (occurrence) =>
+              _completeOccurrence(context, ref, occurrence),
         ),
         loading: () => const _DashboardLoading(),
         error: (error, stackTrace) => const _DashboardError(),
@@ -95,8 +93,9 @@ final class TodayScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     Activity activity,
-    ActivityOccurrence occurrence,
-  ) async {
+    ActivityOccurrence occurrence, {
+    bool showComplete = false,
+  }) async {
     await HapticFeedback.selectionClick();
     if (!context.mounted) {
       return;
@@ -113,18 +112,86 @@ final class TodayScreen extends ConsumerWidget {
         activity: activity,
         occurrence: occurrence,
         timeZone: ref.read(timeZoneServiceProvider),
+        showComplete: showComplete,
       ),
     );
     if (option == null || !context.mounted) {
       return;
     }
     switch (option) {
+      case ActivityOption.complete:
+        await _completeOccurrence(context, ref, occurrence);
       case ActivityOption.edit:
         await _editActivity(context, ref, activity, occurrence);
       case ActivityOption.subtasks:
         await _openSubtasks(context, activity);
       case ActivityOption.cancel:
         await _cancelActivity(context, ref, activity, occurrence);
+    }
+  }
+
+  Future<void> _openWidgetTask(
+    BuildContext context,
+    WidgetRef ref,
+    DayWidgetOpenRequest request,
+  ) async {
+    final occurrence = await ref
+        .read(occurrenceRepositoryProvider)
+        .findById(request.occurrenceId);
+    final activity = await ref
+        .read(activityRepositoryProvider)
+        .findById(request.activityId);
+    if (!context.mounted) {
+      return;
+    }
+    if (occurrence == null || activity == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Essa tarefa não está mais disponível.')),
+      );
+      return;
+    }
+    final timeZone = ref.read(timeZoneServiceProvider);
+    final local = timeZone.toLocal(occurrence.scheduledStartUtc);
+    final localDay = DateTime(local.year, local.month, local.day);
+    ref.read(selectedDayProvider.notifier).select(localDay);
+    final dayStartUtc = timeZone.localComponentsToUtc(localDay);
+    final dayEndUtc = timeZone.localComponentsToUtc(
+      localDay.add(const Duration(days: 1)),
+    );
+    final pending = await ref
+        .read(occurrenceRepositoryProvider)
+        .findScheduledBetween(dayStartUtc, dayEndUtc);
+    final available = DailyTaskSequence.firstAvailable(pending);
+    final showComplete =
+        occurrence.status == OccurrenceStatus.scheduled &&
+        available?.id == occurrence.id;
+    if (context.mounted) {
+      await _openActivityOptions(
+        context,
+        ref,
+        activity,
+        occurrence,
+        showComplete: showComplete,
+      );
+    }
+  }
+
+  Future<void> _completeOccurrence(
+    BuildContext context,
+    WidgetRef ref,
+    ActivityOccurrence occurrence,
+  ) async {
+    try {
+      await HapticFeedback.mediumImpact();
+      await ref.read(occurrenceActionsProvider).complete(occurrence);
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Não foi possível concluir esta atividade.'),
+          ),
+        );
+      }
     }
   }
 

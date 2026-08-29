@@ -3,6 +3,7 @@ import 'app/app_dependencies.dart';
 import 'core/presentation/rotina_theme.dart';
 import 'features/dashboard/presentation/today_screen.dart';
 import 'features/alarms/presentation/alarm_router.dart';
+import 'features/home_widget/presentation/day_widget_bridge.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,9 @@ class RotinaJheniferApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Rotina da Jhenifer',
       theme: RotinaTheme.light,
-      home: home ?? const AlarmRouter(child: TodayScreen()),
+      home:
+          home ??
+          const DayWidgetBridge(child: AlarmRouter(child: TodayScreen())),
     );
   }
 }

@@ -25,6 +25,9 @@ apenas avisar que um horário passou. Todo aprendizado permanece no aparelho.
 - recuperação automática quando a duração termina sem confirmação: a tarefa
   mais importante pode tomar o próximo espaço, produzindo uma cascata de
   comparações, e a última tarefa é movida 10 minutos adiante;
+- widget Android offline com progresso e até quatro tarefas do dia; o toque
+  abre a ocorrência exata para conclusão ou edição, preservando o bloqueio da
+  sequência;
 - dados locais, sem conta, nuvem, anúncios ou telemetria.
 
 ## Próxima prioridade

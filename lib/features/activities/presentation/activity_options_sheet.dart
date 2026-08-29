@@ -9,19 +9,21 @@ import '../domain/activity_occurrence.dart';
 import '../domain/activity_recurrence_preset.dart';
 import '../domain/recurrence_rule.dart';
 
-enum ActivityOption { edit, subtasks, cancel }
+enum ActivityOption { complete, edit, subtasks, cancel }
 
 final class ActivityOptionsSheet extends StatelessWidget {
   const ActivityOptionsSheet({
     required this.activity,
     required this.occurrence,
     required this.timeZone,
+    this.showComplete = false,
     super.key,
   });
 
   final Activity activity;
   final ActivityOccurrence occurrence;
   final TimeZoneService timeZone;
+  final bool showComplete;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +78,15 @@ final class ActivityOptionsSheet extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
+            if (showComplete) ...[
+              _OptionTile(
+                icon: Icons.check_circle_rounded,
+                title: 'Concluir tarefa',
+                subtitle: 'Registra a conclusão e libera a próxima tarefa.',
+                onTap: () => Navigator.pop(context, ActivityOption.complete),
+              ),
+              const SizedBox(height: 10),
+            ],
             _OptionTile(
               icon: Icons.edit_calendar_rounded,
               title: 'Editar nome ou horário',

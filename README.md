@@ -7,7 +7,8 @@ uma tarefa sem confirmação.
 O MVP já possui painel diário responsivo, conclusão antecipada, subtarefas,
 controle de duração, sequência diária e cadastro de atividades únicas ou
 recorrentes com preparação contextual dos alarmes. A fila se reorganiza por
-importância sem criar sobreposições.
+importância sem criar sobreposições, e um widget Android mostra as tarefas do
+dia na tela inicial.
 
 ## Contexto do projeto
 
@@ -19,6 +20,8 @@ Os resultados da rodada real no Motorola estão em
 [docs/VALIDACAO_DISPOSITIVO.md](docs/VALIDACAO_DISPOSITIVO.md).
 O instalador portátil para testes em outros celulares está documentado em
 [docs/INSTALADOR_DEBUG.md](docs/INSTALADOR_DEBUG.md).
+As instruções do widget Android estão em
+[docs/WIDGET_TELA_INICIAL.md](docs/WIDGET_TELA_INICIAL.md).
 
 ## Comandos
 

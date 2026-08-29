@@ -94,6 +94,42 @@ void main() {
     expect(draft?.estimatedDuration, const Duration(minutes: 60));
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('abertura pelo widget oferece conclusão direta', (tester) async {
+    ActivityOption? selected;
+    final data = _Data();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => FilledButton(
+              onPressed: () async {
+                selected = await showModalBottomSheet<ActivityOption>(
+                  context: context,
+                  builder: (context) => ActivityOptionsSheet(
+                    activity: data.activity,
+                    occurrence: data.occurrence,
+                    timeZone: const _UtcTimeZone(),
+                    showComplete: true,
+                  ),
+                );
+              },
+              child: const Text('Abrir pelo widget'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Abrir pelo widget'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Concluir tarefa'));
+    await tester.pumpAndSettle();
+
+    expect(selected, ActivityOption.complete);
+    expect(tester.takeException(), isNull);
+  });
 }
 
 final class _Data {
