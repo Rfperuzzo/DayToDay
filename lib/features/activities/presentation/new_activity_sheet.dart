@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/presentation/rotina_theme.dart';
+import '../../../core/time/clock.dart';
 import '../../../core/time/time_zone_service.dart';
 import '../../alarms/domain/alarm_permission_gateway.dart';
 import '../application/activity_creator.dart';
@@ -30,6 +31,7 @@ final class NewActivitySheet extends StatefulWidget {
     required this.timeZone,
     required this.permissions,
     required this.onCreate,
+    this.clock = const SystemClock(),
     super.key,
   });
 
@@ -37,6 +39,7 @@ final class NewActivitySheet extends StatefulWidget {
   final TimeZoneService timeZone;
   final AlarmPermissionGateway permissions;
   final Future<ActivityCreationResult> Function(ActivityDraft draft) onCreate;
+  final Clock clock;
 
   @override
   State<NewActivitySheet> createState() => _NewActivitySheetState();
@@ -56,10 +59,11 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
   @override
   void initState() {
     super.initState();
-    final today = DateUtils.dateOnly(DateTime.now());
+    final now = widget.timeZone.toLocal(widget.clock.nowUtc());
+    final today = DateUtils.dateOnly(now);
     final initial = DateUtils.dateOnly(widget.initialDay);
     _day = initial.isBefore(today) ? today : initial;
-    final suggested = DateTime.now().add(const Duration(minutes: 30));
+    final suggested = now.add(const Duration(minutes: 30));
     if (_day == today && DateUtils.dateOnly(suggested).isAfter(today)) {
       _day = DateUtils.dateOnly(suggested);
     }
@@ -339,18 +343,24 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
       localComponents,
     );
     if (_recurrence == RecurrencePreset.once &&
-        !scheduledAtUtc.isAfter(DateTime.now().toUtc())) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Escolha um horário que ainda não passou.'),
-        ),
-      );
+        !scheduledAtUtc.isAfter(widget.clock.nowUtc())) {
+      _showPassedTimeMessage();
       return;
     }
 
     setState(() => _saving = true);
     try {
       final capabilities = await _ensureAlarmAccess();
+      if (_recurrence == RecurrencePreset.once &&
+          !scheduledAtUtc.isAfter(widget.clock.nowUtc())) {
+        if (mounted) {
+          setState(() => _saving = false);
+          _showPassedTimeMessage(
+            'O horário passou enquanto os acessos eram liberados. Escolha um novo horário.',
+          );
+        }
+        return;
+      }
       final recurrence = switch (_recurrence) {
         RecurrencePreset.once => OneOffRecurrence(scheduledAtUtc),
         RecurrencePreset.daily => WeeklyRecurrence.daily(
@@ -400,6 +410,14 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
         );
       }
     }
+  }
+
+  void _showPassedTimeMessage([
+    String message = 'Escolha um horário que ainda não passou.',
+  ]) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<AlarmCapabilities?> _ensureAlarmAccess() async {
