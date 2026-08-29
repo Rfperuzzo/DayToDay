@@ -1,5 +1,6 @@
 package com.senhoritajhenifer.rotina
 
+import android.app.AlarmManager
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -19,6 +20,7 @@ class MainActivity : FlutterActivity() {
         ).setMethodCallHandler { call, result ->
             when (call.method) {
                 "canUseFullScreenIntent" -> result.success(canUseFullScreenIntent())
+                "canScheduleExactAlarms" -> result.success(canScheduleExactAlarms())
                 "requestFullScreenIntent" -> {
                     requestFullScreenIntent()
                     result.success(null)
@@ -34,6 +36,14 @@ class MainActivity : FlutterActivity() {
         }
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         return manager.canUseFullScreenIntent()
+    }
+
+    private fun canScheduleExactAlarms(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            return true
+        }
+        val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        return manager.canScheduleExactAlarms()
     }
 
     private fun requestFullScreenIntent() {

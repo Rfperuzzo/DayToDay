@@ -14,15 +14,16 @@ final class AndroidAlarmPermissionGateway implements AlarmPermissionGateway {
   Future<AlarmCapabilities> check() async {
     final statuses = await Future.wait([
       Permission.notification.status,
-      Permission.scheduleExactAlarm.status,
       Permission.accessNotificationPolicy.status,
     ]);
+    final exactScheduling =
+        await _channel.invokeMethod<bool>('canScheduleExactAlarms') ?? false;
     final fullScreen =
         await _channel.invokeMethod<bool>('canUseFullScreenIntent') ?? false;
     return AlarmCapabilities(
       notifications: statuses[0].isGranted,
-      exactScheduling: statuses[1].isGranted,
-      doNotDisturbAccess: statuses[2].isGranted,
+      exactScheduling: exactScheduling,
+      doNotDisturbAccess: statuses[1].isGranted,
       fullScreen: fullScreen,
     );
   }
@@ -31,9 +32,6 @@ final class AndroidAlarmPermissionGateway implements AlarmPermissionGateway {
   Future<AlarmCapabilities> requestRequiredAccess() async {
     if (!await Permission.notification.isGranted) {
       await Permission.notification.request();
-    }
-    if (!await Permission.scheduleExactAlarm.isGranted) {
-      await Permission.scheduleExactAlarm.request();
     }
     if (!await Permission.accessNotificationPolicy.isGranted) {
       await Permission.accessNotificationPolicy.request();
