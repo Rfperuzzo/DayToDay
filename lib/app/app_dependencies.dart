@@ -15,6 +15,7 @@ import '../features/alarms/infrastructure/android_alarm_gateway.dart';
 import '../features/alarms/infrastructure/android_alarm_permission_gateway.dart';
 import '../features/history/data/drift_activity_event_repository.dart';
 import '../features/history/domain/activity_event.dart';
+import '../features/dashboard/application/occurrence_actions.dart';
 import '../features/routine_engine/application/priority_routine_planner.dart';
 import '../features/routine_engine/domain/routine_planner.dart';
 
@@ -46,6 +47,14 @@ final alarmReconcilerProvider = Provider<AlarmReconciler>(
   (ref) => AlarmReconciler(
     activities: ref.watch(activityRepositoryProvider),
     occurrences: ref.watch(occurrenceRepositoryProvider),
+    alarms: ref.watch(alarmGatewayProvider),
+    clock: const SystemClock(),
+  ),
+);
+final occurrenceActionsProvider = Provider<OccurrenceActions>(
+  (ref) => OccurrenceActions(
+    occurrences: ref.watch(occurrenceRepositoryProvider),
+    events: ref.watch(activityEventRepositoryProvider),
     alarms: ref.watch(alarmGatewayProvider),
     clock: const SystemClock(),
   ),

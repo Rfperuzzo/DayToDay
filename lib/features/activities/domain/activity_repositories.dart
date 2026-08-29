@@ -22,4 +22,9 @@ abstract interface class OccurrenceRepository {
     DateTime startUtc,
     DateTime endUtc,
   );
+
+  Stream<List<ActivityOccurrence>> watchBetween(
+    DateTime startUtc,
+    DateTime endUtc,
+  );
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app/app_dependencies.dart';
+import 'core/presentation/rotina_theme.dart';
+import 'features/dashboard/presentation/today_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -8,13 +10,17 @@ Future<void> main() async {
 }
 
 class RotinaJheniferApp extends StatelessWidget {
-  const RotinaJheniferApp({super.key});
+  const RotinaJheniferApp({this.home, super.key});
+
+  final Widget? home;
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SizedBox.shrink(),
+      title: 'Rotina da Jhenifer',
+      theme: RotinaTheme.light,
+      home: home ?? const TodayScreen(),
     );
   }
 }

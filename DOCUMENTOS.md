@@ -17,7 +17,10 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - Application ID: `com.senhoritajhenifer.rotina`.
 - Android mínimo 24; compile/target SDK 36.
 - Dados somente locais, sem conta, backend, anúncios ou telemetria.
-- Nenhum layout de produto nesta etapa; apenas bootstrap técnico vazio.
+- A experiência visual parte da referência Stitch **Vibrant Momentum**: rosa
+  energético, superfícies claras, formas arredondadas e pouco ruído visual.
+- O primeiro layout de produto é o painel diário, com semana navegável,
+  progresso, próxima atividade e conclusão rápida.
 - Atividades podem ser únicas, diárias ou repetidas em dias da semana.
 - Todo alarme é forte: áudio em loop, vibração, tela cheia quando autorizada e
   tentativa de tocar durante Não Perturbe.
@@ -47,6 +50,7 @@ lib/
     routine_engine/     conflitos e reagendamento automático
     history/            eventos imutáveis da rotina
     settings/           preferências locais
+    dashboard/          leitura do dia, progresso e ações rápidas
 ```
 
 Cada funcionalidade pode ter `domain`, `application`, `data` e
@@ -57,6 +61,7 @@ Android.
 
 - `ActivityRepository`: grava e consulta atividades.
 - `OccurrenceRepository`: grava ocorrências e seus estados.
+  Também expõe uma observação reativa por intervalo para alimentar o painel.
 - `ActivityEventRepository`: mantém o histórico de decisões.
 - `AlarmGateway`: agenda, cancela e reconcilia alarmes sem expor o plugin.
 - `AlarmPermissionGateway`: relata capacidade exata, notificações, tela cheia
@@ -101,6 +106,9 @@ local e dias da semana para continuarem no mesmo horário após mudança de fuso
   transição.
 - **Pulso do dia:** futuro resumo de manhã e fechamento noturno.
 
+O painel implementa desde já o conceito de **Pulso do dia** na forma de
+progresso e mensagem de ritmo, sem pontuação competitiva ou envio de dados.
+
 As duas últimas ideias não serão ativadas antes de uma decisão de interface.
 
 ## Estratégia de Git
@@ -126,7 +134,7 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 ## Estado atual
 
 - [x] Repositório e projeto Flutter Android criados.
-- [x] Bootstrap vazio, sem layout de produto.
+- [x] Identidade visual e painel diário responsivo.
 - [x] Identidade e versões Android configuradas.
 - [x] Domínio e recorrência.
 - [x] Persistência SQLite.
@@ -153,7 +161,7 @@ futura atualização grande do Flutter, revisar os changelogs desses plugins.
 
 ## Próxima etapa recomendada
 
-Criar a primeira experiência de uso e a tela dedicada do alarme. Ela deve pedir
-permissões de forma contextual e oferecer as três respostas já contratadas:
-**Concluir**, **Agora não** e **Pular hoje**. Não alterar as regras do motor ao
-desenhar essas telas sem atualizar este documento.
+Criar o cadastro de atividades a partir do botão central da navegação. O fluxo
+deve pedir permissões de alarme de forma contextual e nunca esconder quando o
+Android estiver operando em modo degradado. Depois, criar a tela dedicada do
+alarme com **Concluir**, **Agora não** e **Pular hoje**.

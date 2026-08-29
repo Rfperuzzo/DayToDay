@@ -92,6 +92,26 @@ final class DriftOccurrenceRepository implements OccurrenceRepository {
     final rows = await query.get();
     return rows.map(_occurrenceFromRow).toList(growable: false);
   }
+
+  @override
+  Stream<List<ActivityOccurrence>> watchBetween(
+    DateTime startUtc,
+    DateTime endUtc,
+  ) {
+    final query = _database.select(_database.occurrences)
+      ..where(
+        (table) =>
+            table.scheduledStartUtc.isBiggerOrEqualValue(startUtc.toUtc()) &
+            table.scheduledStartUtc.isSmallerThanValue(endUtc.toUtc()),
+      )
+      ..orderBy([(table) => OrderingTerm.asc(table.scheduledStartUtc)]);
+    return query.watch().map(
+      (rows) => rows
+          .map(_occurrenceFromRow)
+          .where((item) => item.status != OccurrenceStatus.cancelled)
+          .toList(growable: false),
+    );
+  }
 }
 
 ActivitiesCompanion _activityCompanion(domain.Activity activity) {

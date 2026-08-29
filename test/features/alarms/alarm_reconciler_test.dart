@@ -117,6 +117,20 @@ final class _FakeOccurrenceRepository implements OccurrenceRepository {
       .toList();
 
   @override
+  Stream<List<ActivityOccurrence>> watchBetween(
+    DateTime startUtc,
+    DateTime endUtc,
+  ) => Stream.value(
+    values
+        .where(
+          (item) =>
+              !item.scheduledStartUtc.isBefore(startUtc) &&
+              item.scheduledStartUtc.isBefore(endUtc),
+        )
+        .toList(),
+  );
+
+  @override
   Future<void> saveAll(Iterable<ActivityOccurrence> occurrences) async {}
 
   @override
