@@ -15,7 +15,7 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - Flutter 3.44.2 e Dart 3.12.2.
 - Nome provisório: **Rotina da Jhenifer**.
 - Application ID: `com.senhoritajhenifer.rotina`.
-- Android mínimo 23; compile/target SDK 36.
+- Android mínimo 24; compile/target SDK 36.
 - Dados somente locais, sem conta, backend, anúncios ou telemetria.
 - Nenhum layout de produto nesta etapa; apenas bootstrap técnico vazio.
 - Atividades podem ser únicas, diárias ou repetidas em dias da semana.
@@ -63,6 +63,9 @@ Android.
   e Não Perturbe.
 - `RoutinePlanner`: gera recorrências e encontra o próximo espaço livre.
 - `Clock`: torna cálculos temporais determinísticos nos testes.
+
+Implementações atuais: Riverpod 3.4.2, Drift 2.34.3, `alarm` 5.12.0,
+`permission_handler` 12.0.1 e banco de fusos IANA 2025c.
 
 ## Dados locais
 
@@ -128,5 +131,5 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Domínio e recorrência.
 - [x] Persistência SQLite.
 - [x] Motor de reagendamento.
-- [ ] Adaptador de alarmes Android.
+- [x] Adaptador de alarmes Android.
 - [ ] Testes e build validados.

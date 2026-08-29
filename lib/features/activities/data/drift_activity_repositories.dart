@@ -5,6 +5,7 @@ import '../domain/activity.dart' as domain;
 import '../domain/activity_occurrence.dart';
 import '../domain/activity_repositories.dart';
 import '../domain/recurrence_rule.dart';
+import '../../alarms/infrastructure/native_alarm_id.dart';
 
 final class DriftActivityRepository implements ActivityRepository {
   const DriftActivityRepository(this._database);
@@ -63,6 +64,14 @@ final class DriftOccurrenceRepository implements OccurrenceRepository {
   Future<ActivityOccurrence?> findById(String id) async {
     final query = _database.select(_database.occurrences)
       ..where((table) => table.id.equals(id));
+    final row = await query.getSingleOrNull();
+    return row == null ? null : _occurrenceFromRow(row);
+  }
+
+  @override
+  Future<ActivityOccurrence?> findByNativeAlarmId(int nativeAlarmId) async {
+    final query = _database.select(_database.occurrences)
+      ..where((table) => table.nativeAlarmId.equals(nativeAlarmId));
     final row = await query.getSingleOrNull();
     return row == null ? null : _occurrenceFromRow(row);
   }
@@ -142,6 +151,7 @@ domain.Activity _activityFromRow(ActivityRow row) {
 OccurrencesCompanion _occurrenceCompanion(ActivityOccurrence occurrence) {
   return OccurrencesCompanion(
     id: Value(occurrence.id),
+    nativeAlarmId: Value(NativeAlarmId.fromOccurrenceId(occurrence.id)),
     activityId: Value(occurrence.activityId),
     originalStartUtc: Value(occurrence.originalStartUtc),
     scheduledStartUtc: Value(occurrence.scheduledStartUtc),

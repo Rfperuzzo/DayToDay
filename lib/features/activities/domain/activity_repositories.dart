@@ -16,6 +16,8 @@ abstract interface class OccurrenceRepository {
 
   Future<ActivityOccurrence?> findById(String id);
 
+  Future<ActivityOccurrence?> findByNativeAlarmId(int nativeAlarmId);
+
   Future<List<ActivityOccurrence>> findScheduledBetween(
     DateTime startUtc,
     DateTime endUtc,

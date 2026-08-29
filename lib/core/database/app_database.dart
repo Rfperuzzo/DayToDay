@@ -27,6 +27,7 @@ class Activities extends Table {
 @DataClassName('OccurrenceRow')
 class Occurrences extends Table {
   TextColumn get id => text()();
+  IntColumn get nativeAlarmId => integer()();
   TextColumn get activityId => text().references(Activities, #id)();
   DateTimeColumn get originalStartUtc => dateTime()();
   DateTimeColumn get scheduledStartUtc => dateTime()();

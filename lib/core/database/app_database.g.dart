@@ -865,6 +865,17 @@ class $OccurrencesTable extends Occurrences
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _nativeAlarmIdMeta = const VerificationMeta(
+    'nativeAlarmId',
+  );
+  @override
+  late final GeneratedColumn<int> nativeAlarmId = GeneratedColumn<int>(
+    'native_alarm_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _activityIdMeta = const VerificationMeta(
     'activityId',
   );
@@ -949,6 +960,7 @@ class $OccurrencesTable extends Occurrences
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    nativeAlarmId,
     activityId,
     originalStartUtc,
     scheduledStartUtc,
@@ -973,6 +985,17 @@ class $OccurrencesTable extends Occurrences
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
+    }
+    if (data.containsKey('native_alarm_id')) {
+      context.handle(
+        _nativeAlarmIdMeta,
+        nativeAlarmId.isAcceptableOrUnknown(
+          data['native_alarm_id']!,
+          _nativeAlarmIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_nativeAlarmIdMeta);
     }
     if (data.containsKey('activity_id')) {
       context.handle(
@@ -1050,6 +1073,10 @@ class $OccurrencesTable extends Occurrences
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
+      nativeAlarmId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}native_alarm_id'],
+      )!,
       activityId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}activity_id'],
@@ -1089,6 +1116,7 @@ class $OccurrencesTable extends Occurrences
 
 class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   final String id;
+  final int nativeAlarmId;
   final String activityId;
   final DateTime originalStartUtc;
   final DateTime scheduledStartUtc;
@@ -1098,6 +1126,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   final int attempt;
   const OccurrenceRow({
     required this.id,
+    required this.nativeAlarmId,
     required this.activityId,
     required this.originalStartUtc,
     required this.scheduledStartUtc,
@@ -1110,6 +1139,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
+    map['native_alarm_id'] = Variable<int>(nativeAlarmId);
     map['activity_id'] = Variable<String>(activityId);
     map['original_start_utc'] = Variable<DateTime>(originalStartUtc);
     map['scheduled_start_utc'] = Variable<DateTime>(scheduledStartUtc);
@@ -1123,6 +1153,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   OccurrencesCompanion toCompanion(bool nullToAbsent) {
     return OccurrencesCompanion(
       id: Value(id),
+      nativeAlarmId: Value(nativeAlarmId),
       activityId: Value(activityId),
       originalStartUtc: Value(originalStartUtc),
       scheduledStartUtc: Value(scheduledStartUtc),
@@ -1140,6 +1171,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return OccurrenceRow(
       id: serializer.fromJson<String>(json['id']),
+      nativeAlarmId: serializer.fromJson<int>(json['nativeAlarmId']),
       activityId: serializer.fromJson<String>(json['activityId']),
       originalStartUtc: serializer.fromJson<DateTime>(json['originalStartUtc']),
       scheduledStartUtc: serializer.fromJson<DateTime>(
@@ -1156,6 +1188,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
+      'nativeAlarmId': serializer.toJson<int>(nativeAlarmId),
       'activityId': serializer.toJson<String>(activityId),
       'originalStartUtc': serializer.toJson<DateTime>(originalStartUtc),
       'scheduledStartUtc': serializer.toJson<DateTime>(scheduledStartUtc),
@@ -1168,6 +1201,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
 
   OccurrenceRow copyWith({
     String? id,
+    int? nativeAlarmId,
     String? activityId,
     DateTime? originalStartUtc,
     DateTime? scheduledStartUtc,
@@ -1177,6 +1211,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     int? attempt,
   }) => OccurrenceRow(
     id: id ?? this.id,
+    nativeAlarmId: nativeAlarmId ?? this.nativeAlarmId,
     activityId: activityId ?? this.activityId,
     originalStartUtc: originalStartUtc ?? this.originalStartUtc,
     scheduledStartUtc: scheduledStartUtc ?? this.scheduledStartUtc,
@@ -1188,6 +1223,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   OccurrenceRow copyWithCompanion(OccurrencesCompanion data) {
     return OccurrenceRow(
       id: data.id.present ? data.id.value : this.id,
+      nativeAlarmId: data.nativeAlarmId.present
+          ? data.nativeAlarmId.value
+          : this.nativeAlarmId,
       activityId: data.activityId.present
           ? data.activityId.value
           : this.activityId,
@@ -1210,6 +1248,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   String toString() {
     return (StringBuffer('OccurrenceRow(')
           ..write('id: $id, ')
+          ..write('nativeAlarmId: $nativeAlarmId, ')
           ..write('activityId: $activityId, ')
           ..write('originalStartUtc: $originalStartUtc, ')
           ..write('scheduledStartUtc: $scheduledStartUtc, ')
@@ -1224,6 +1263,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   @override
   int get hashCode => Object.hash(
     id,
+    nativeAlarmId,
     activityId,
     originalStartUtc,
     scheduledStartUtc,
@@ -1237,6 +1277,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       identical(this, other) ||
       (other is OccurrenceRow &&
           other.id == this.id &&
+          other.nativeAlarmId == this.nativeAlarmId &&
           other.activityId == this.activityId &&
           other.originalStartUtc == this.originalStartUtc &&
           other.scheduledStartUtc == this.scheduledStartUtc &&
@@ -1248,6 +1289,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
 
 class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   final Value<String> id;
+  final Value<int> nativeAlarmId;
   final Value<String> activityId;
   final Value<DateTime> originalStartUtc;
   final Value<DateTime> scheduledStartUtc;
@@ -1258,6 +1300,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   final Value<int> rowid;
   const OccurrencesCompanion({
     this.id = const Value.absent(),
+    this.nativeAlarmId = const Value.absent(),
     this.activityId = const Value.absent(),
     this.originalStartUtc = const Value.absent(),
     this.scheduledStartUtc = const Value.absent(),
@@ -1269,6 +1312,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   });
   OccurrencesCompanion.insert({
     required String id,
+    required int nativeAlarmId,
     required String activityId,
     required DateTime originalStartUtc,
     required DateTime scheduledStartUtc,
@@ -1278,6 +1322,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     this.attempt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
+       nativeAlarmId = Value(nativeAlarmId),
        activityId = Value(activityId),
        originalStartUtc = Value(originalStartUtc),
        scheduledStartUtc = Value(scheduledStartUtc),
@@ -1286,6 +1331,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
        status = Value(status);
   static Insertable<OccurrenceRow> custom({
     Expression<String>? id,
+    Expression<int>? nativeAlarmId,
     Expression<String>? activityId,
     Expression<DateTime>? originalStartUtc,
     Expression<DateTime>? scheduledStartUtc,
@@ -1297,6 +1343,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (nativeAlarmId != null) 'native_alarm_id': nativeAlarmId,
       if (activityId != null) 'activity_id': activityId,
       if (originalStartUtc != null) 'original_start_utc': originalStartUtc,
       if (scheduledStartUtc != null) 'scheduled_start_utc': scheduledStartUtc,
@@ -1310,6 +1357,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
 
   OccurrencesCompanion copyWith({
     Value<String>? id,
+    Value<int>? nativeAlarmId,
     Value<String>? activityId,
     Value<DateTime>? originalStartUtc,
     Value<DateTime>? scheduledStartUtc,
@@ -1321,6 +1369,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   }) {
     return OccurrencesCompanion(
       id: id ?? this.id,
+      nativeAlarmId: nativeAlarmId ?? this.nativeAlarmId,
       activityId: activityId ?? this.activityId,
       originalStartUtc: originalStartUtc ?? this.originalStartUtc,
       scheduledStartUtc: scheduledStartUtc ?? this.scheduledStartUtc,
@@ -1337,6 +1386,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
+    }
+    if (nativeAlarmId.present) {
+      map['native_alarm_id'] = Variable<int>(nativeAlarmId.value);
     }
     if (activityId.present) {
       map['activity_id'] = Variable<String>(activityId.value);
@@ -1369,6 +1421,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   String toString() {
     return (StringBuffer('OccurrencesCompanion(')
           ..write('id: $id, ')
+          ..write('nativeAlarmId: $nativeAlarmId, ')
           ..write('activityId: $activityId, ')
           ..write('originalStartUtc: $originalStartUtc, ')
           ..write('scheduledStartUtc: $scheduledStartUtc, ')
@@ -2973,6 +3026,7 @@ typedef $$ActivitiesTableProcessedTableManager =
 typedef $$OccurrencesTableCreateCompanionBuilder =
     OccurrencesCompanion Function({
       required String id,
+      required int nativeAlarmId,
       required String activityId,
       required DateTime originalStartUtc,
       required DateTime scheduledStartUtc,
@@ -2985,6 +3039,7 @@ typedef $$OccurrencesTableCreateCompanionBuilder =
 typedef $$OccurrencesTableUpdateCompanionBuilder =
     OccurrencesCompanion Function({
       Value<String> id,
+      Value<int> nativeAlarmId,
       Value<String> activityId,
       Value<DateTime> originalStartUtc,
       Value<DateTime> scheduledStartUtc,
@@ -3046,6 +3101,11 @@ class $$OccurrencesTableFilterComposer
   });
   ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get nativeAlarmId => $composableBuilder(
+    column: $table.nativeAlarmId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3142,6 +3202,11 @@ class $$OccurrencesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get nativeAlarmId => $composableBuilder(
+    column: $table.nativeAlarmId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get originalStartUtc => $composableBuilder(
     column: $table.originalStartUtc,
     builder: (column) => ColumnOrderings(column),
@@ -3207,6 +3272,11 @@ class $$OccurrencesTableAnnotationComposer
   });
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get nativeAlarmId => $composableBuilder(
+    column: $table.nativeAlarmId,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get originalStartUtc => $composableBuilder(
     column: $table.originalStartUtc,
@@ -3310,6 +3380,7 @@ class $$OccurrencesTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
+                Value<int> nativeAlarmId = const Value.absent(),
                 Value<String> activityId = const Value.absent(),
                 Value<DateTime> originalStartUtc = const Value.absent(),
                 Value<DateTime> scheduledStartUtc = const Value.absent(),
@@ -3320,6 +3391,7 @@ class $$OccurrencesTableTableManager
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion(
                 id: id,
+                nativeAlarmId: nativeAlarmId,
                 activityId: activityId,
                 originalStartUtc: originalStartUtc,
                 scheduledStartUtc: scheduledStartUtc,
@@ -3332,6 +3404,7 @@ class $$OccurrencesTableTableManager
           createCompanionCallback:
               ({
                 required String id,
+                required int nativeAlarmId,
                 required String activityId,
                 required DateTime originalStartUtc,
                 required DateTime scheduledStartUtc,
@@ -3342,6 +3415,7 @@ class $$OccurrencesTableTableManager
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion.insert(
                 id: id,
+                nativeAlarmId: nativeAlarmId,
                 activityId: activityId,
                 originalStartUtc: originalStartUtc,
                 scheduledStartUtc: scheduledStartUtc,

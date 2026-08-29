@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'app/app_dependencies.dart';
 
-void main() {
-  runApp(const RotinaJheniferApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final dependencies = await AppDependencies.create();
+  runApp(dependencies.provideTo(const RotinaJheniferApp()));
 }
 
 class RotinaJheniferApp extends StatelessWidget {
