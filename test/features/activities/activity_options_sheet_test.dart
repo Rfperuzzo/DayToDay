@@ -5,6 +5,7 @@ import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
 import 'package:rotina_jhenifer/features/activities/application/activity_manager.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_jhenifer/features/activities/domain/activity_recurrence_preset.dart';
 import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
 import 'package:rotina_jhenifer/features/activities/presentation/activity_options_sheet.dart';
 
@@ -80,12 +81,15 @@ void main() {
     await tester.tap(find.text('Editar'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextFormField), 'Treino de força');
+    await tester.tap(find.text('Todo dia'));
+    await tester.pump();
     await tester.tap(find.text('Salvar alterações'));
     await tester.pumpAndSettle();
 
     expect(draft?.title, 'Treino de força');
     expect(draft?.hour, 15);
     expect(draft?.minute, 0);
+    expect(draft?.recurrence, ActivityRecurrencePreset.daily);
     expect(tester.takeException(), isNull);
   });
 }

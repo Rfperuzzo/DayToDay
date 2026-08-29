@@ -13,7 +13,8 @@ apenas avisar que um horário passou. Todo aprendizado permanece no aparelho.
 - solicitação contextual dos acessos de alarme;
 - tela de toque com **Concluir**, **Agora não** e **Pular hoje**;
 - confirmação do novo horário após o Resgate de rotina;
-- toque na tarefa com edição de nome/horário ou cancelamento confirmado;
+- toque na tarefa com edição de nome, horário e repetição ou cancelamento
+  confirmado;
 - dados locais, sem conta, nuvem, anúncios ou telemetria.
 
 ## Próxima prioridade

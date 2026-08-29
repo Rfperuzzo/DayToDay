@@ -6,6 +6,7 @@ import '../../../core/time/time_zone_service.dart';
 import '../application/activity_manager.dart';
 import '../domain/activity.dart';
 import '../domain/activity_occurrence.dart';
+import '../domain/activity_recurrence_preset.dart';
 import '../domain/recurrence_rule.dart';
 
 enum ActivityOption { edit, cancel }
@@ -118,6 +119,7 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _titleController;
   late TimeOfDay _time;
+  late ActivityRecurrencePreset _recurrence;
 
   @override
   void initState() {
@@ -125,6 +127,7 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
     _titleController = TextEditingController(text: widget.activity.title);
     final local = widget.timeZone.toLocal(widget.occurrence.scheduledStartUtc);
     _time = TimeOfDay.fromDateTime(local);
+    _recurrence = _presetFor(widget.activity.recurrence);
   }
 
   @override
@@ -210,6 +213,37 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                Text(
+                  'Repetição',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelLarge?.copyWith(color: RotinaColors.text),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: SegmentedButton<ActivityRecurrencePreset>(
+                    segments: const [
+                      ButtonSegment(
+                        value: ActivityRecurrencePreset.once,
+                        label: Text('Só este dia'),
+                      ),
+                      ButtonSegment(
+                        value: ActivityRecurrencePreset.daily,
+                        label: Text('Todo dia'),
+                      ),
+                      ButtonSegment(
+                        value: ActivityRecurrencePreset.weekdays,
+                        label: Text('Seg–sex'),
+                      ),
+                    ],
+                    selected: {_recurrence},
+                    showSelectedIcon: false,
+                    onSelectionChanged: (value) =>
+                        setState(() => _recurrence = value.single),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -263,7 +297,7 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    if (widget.activity.recurrence is OneOffRecurrence) {
+    if (_recurrence == ActivityRecurrencePreset.once) {
       final currentLocal = widget.timeZone.toLocal(
         widget.occurrence.scheduledStartUtc,
       );
@@ -291,6 +325,7 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
         title: _titleController.text,
         hour: _time.hour,
         minute: _time.minute,
+        recurrence: _recurrence,
       ),
     );
   }
@@ -354,3 +389,14 @@ String _shortDate(DateTime date) {
 }
 
 String _twoDigits(int value) => value.toString().padLeft(2, '0');
+
+ActivityRecurrencePreset _presetFor(RecurrenceRule recurrence) {
+  if (recurrence is OneOffRecurrence) {
+    return ActivityRecurrencePreset.once;
+  }
+  final weekly = recurrence as WeeklyRecurrence;
+  if (weekly.weekdays.length == DateTime.daysPerWeek) {
+    return ActivityRecurrencePreset.daily;
+  }
+  return ActivityRecurrencePreset.weekdays;
+}

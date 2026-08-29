@@ -4,6 +4,7 @@ import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
 import 'package:rotina_jhenifer/features/activities/application/activity_manager.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_jhenifer/features/activities/domain/activity_recurrence_preset.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_repositories.dart';
 import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
 import 'package:rotina_jhenifer/features/alarms/application/alarm_reconciler.dart';
@@ -24,6 +25,7 @@ void main() {
           title: 'Treino de força',
           hour: 18,
           minute: 30,
+          recurrence: ActivityRecurrencePreset.daily,
         ),
       );
 
@@ -50,6 +52,32 @@ void main() {
       expect(fixture.events.values.single.type, ActivityEventType.edited);
     },
   );
+
+  test('transforma repetição diária em tarefa somente para o dia', () async {
+    final fixture = _Fixture();
+
+    final result = await fixture.manager.edit(
+      selectedOccurrence: fixture.today,
+      draft: const ActivityEditDraft(
+        title: 'Treino especial',
+        hour: 16,
+        minute: 0,
+        recurrence: ActivityRecurrencePreset.once,
+      ),
+    );
+
+    final recurrence = fixture.activities.value!.recurrence;
+    expect(recurrence, isA<OneOffRecurrence>());
+    expect(
+      (recurrence as OneOffRecurrence).scheduledAtUtc,
+      DateTime.utc(2026, 8, 29, 16),
+    );
+    final scheduled = fixture.occurrences.values
+        .where((item) => item.status == OccurrenceStatus.scheduled)
+        .toList();
+    expect(scheduled, hasLength(1));
+    expect(result.generatedOccurrences, 1);
+  });
 
   test(
     'cancelamento desativa atividade e remove todos os alarmes futuros',

@@ -7,9 +7,8 @@ import '../../../core/time/time_zone_service.dart';
 import '../../alarms/domain/alarm_permission_gateway.dart';
 import '../application/activity_creator.dart';
 import '../domain/activity.dart';
+import '../domain/activity_recurrence_preset.dart';
 import '../domain/recurrence_rule.dart';
-
-enum RecurrencePreset { once, daily, weekdays }
 
 final class NewActivityOutcome {
   const NewActivityOutcome({
@@ -53,7 +52,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
   late TimeOfDay _time;
   var _durationMinutes = 30;
   var _priority = ActivityPriority.normal;
-  var _recurrence = RecurrencePreset.once;
+  var _recurrence = ActivityRecurrencePreset.once;
   var _saving = false;
 
   @override
@@ -187,18 +186,18 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                 const SizedBox(height: 24),
                 _SectionLabel(label: 'Repetição'),
                 const SizedBox(height: 8),
-                SegmentedButton<RecurrencePreset>(
+                SegmentedButton<ActivityRecurrencePreset>(
                   segments: const [
                     ButtonSegment(
-                      value: RecurrencePreset.once,
+                      value: ActivityRecurrencePreset.once,
                       label: Text('Uma vez'),
                     ),
                     ButtonSegment(
-                      value: RecurrencePreset.daily,
+                      value: ActivityRecurrencePreset.daily,
                       label: Text('Todo dia'),
                     ),
                     ButtonSegment(
-                      value: RecurrencePreset.weekdays,
+                      value: ActivityRecurrencePreset.weekdays,
                       label: Text('Seg–sex'),
                     ),
                   ],
@@ -342,7 +341,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
     final scheduledAtUtc = widget.timeZone.localComponentsToUtc(
       localComponents,
     );
-    if (_recurrence == RecurrencePreset.once &&
+    if (_recurrence == ActivityRecurrencePreset.once &&
         !scheduledAtUtc.isAfter(widget.clock.nowUtc())) {
       _showPassedTimeMessage();
       return;
@@ -351,7 +350,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
     setState(() => _saving = true);
     try {
       final capabilities = await _ensureAlarmAccess();
-      if (_recurrence == RecurrencePreset.once &&
+      if (_recurrence == ActivityRecurrencePreset.once &&
           !scheduledAtUtc.isAfter(widget.clock.nowUtc())) {
         if (mounted) {
           setState(() => _saving = false);
@@ -362,12 +361,12 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
         return;
       }
       final recurrence = switch (_recurrence) {
-        RecurrencePreset.once => OneOffRecurrence(scheduledAtUtc),
-        RecurrencePreset.daily => WeeklyRecurrence.daily(
+        ActivityRecurrencePreset.once => OneOffRecurrence(scheduledAtUtc),
+        ActivityRecurrencePreset.daily => WeeklyRecurrence.daily(
           hour: _time.hour,
           minute: _time.minute,
         ),
-        RecurrencePreset.weekdays => WeeklyRecurrence(
+        ActivityRecurrencePreset.weekdays => WeeklyRecurrence(
           weekdays: const {
             DateTime.monday,
             DateTime.tuesday,

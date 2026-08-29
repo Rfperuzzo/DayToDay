@@ -6,6 +6,7 @@ import '../../history/domain/activity_event.dart';
 import '../../settings/domain/user_preferences.dart';
 import '../domain/activity.dart';
 import '../domain/activity_occurrence.dart';
+import '../domain/activity_recurrence_preset.dart';
 import '../domain/activity_repositories.dart';
 import '../domain/recurrence_rule.dart';
 import 'occurrence_generator.dart';
@@ -15,11 +16,13 @@ final class ActivityEditDraft {
     required this.title,
     required this.hour,
     required this.minute,
+    required this.recurrence,
   });
 
   final String title;
   final int hour;
   final int minute;
+  final ActivityRecurrencePreset recurrence;
 }
 
 final class ActivityMutationResult {
@@ -86,8 +89,8 @@ final class ActivityManager {
       selectedOccurrence.activityId,
     );
     final now = _clock.nowUtc();
-    final recurrence = _withTime(
-      activity.recurrence,
+    final recurrence = _buildRecurrence(
+      draft.recurrence,
       selectedOccurrence,
       draft.hour,
       draft.minute,
@@ -186,14 +189,14 @@ final class ActivityManager {
     return activity;
   }
 
-  RecurrenceRule _withTime(
-    RecurrenceRule recurrence,
+  RecurrenceRule _buildRecurrence(
+    ActivityRecurrencePreset preset,
     ActivityOccurrence selectedOccurrence,
     int hour,
     int minute,
   ) {
-    return switch (recurrence) {
-      OneOffRecurrence() => OneOffRecurrence(
+    return switch (preset) {
+      ActivityRecurrencePreset.once => OneOffRecurrence(
         _timeZone.localComponentsToUtc(
           DateTime(
             _timeZone.toLocal(selectedOccurrence.scheduledStartUtc).year,
@@ -204,8 +207,18 @@ final class ActivityManager {
           ),
         ),
       ),
-      WeeklyRecurrence recurrence => WeeklyRecurrence(
-        weekdays: recurrence.weekdays,
+      ActivityRecurrencePreset.daily => WeeklyRecurrence.daily(
+        hour: hour,
+        minute: minute,
+      ),
+      ActivityRecurrencePreset.weekdays => WeeklyRecurrence(
+        weekdays: const {
+          DateTime.monday,
+          DateTime.tuesday,
+          DateTime.wednesday,
+          DateTime.thursday,
+          DateTime.friday,
+        },
         hour: hour,
         minute: minute,
       ),

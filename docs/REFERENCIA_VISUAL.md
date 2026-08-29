@@ -43,8 +43,9 @@ Os tokens de código ficam em `lib/core/presentation/rotina_theme.dart`.
 - botão flutuante de nova atividade;
 - formulário em folha inferior com campos de alto contraste e alvos de toque
   amplos.
-- menu de opções ao tocar na tarefa, com edição em folha inferior e ação de
-  cancelamento visualmente destrutiva, protegida por confirmação.
+- menu de opções ao tocar na tarefa, com edição de nome, horário e repetição em
+  folha inferior e ação de cancelamento visualmente destrutiva, protegida por
+  confirmação.
 
 ## Adaptações conscientes
 

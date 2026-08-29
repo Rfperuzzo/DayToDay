@@ -46,10 +46,11 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
   dia disponível.
 - A recorrência original nunca é deslocada por um reagendamento; somente a
   ocorrência atual muda.
-- Tocar em uma tarefa abre ações para editar ou cancelar. A edição de nome e
-  horário vale para a atividade e suas próximas repetições, substituindo os
-  alarmes antigos. O cancelamento exige confirmação, desativa a atividade e
-  remove todos os alarmes futuros.
+- Tocar em uma tarefa abre ações para editar ou cancelar. A edição permite
+  alterar nome, horário e repetição entre **Só este dia**, **Todo dia** e
+  **Seg–sex**. A nova regra vale para a atividade e suas próximas ocorrências,
+  substituindo os alarmes antigos. O cancelamento exige confirmação, desativa a
+  atividade e remove todos os alarmes futuros.
 - Edições e cancelamentos ficam registrados no histórico local. Se a
   sincronização com o Android falhar, a alteração permanece salva e o app
   comunica o estado degradado.
@@ -173,14 +174,15 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Ciclo físico validado com tela bloqueada, processo encerrado e Não
   Perturbe.
 - [x] Instalador debug portátil para Windows e celulares Android por USB.
-- [x] Edição de nome/horário e cancelamento a partir da tarefa no painel.
+- [x] Edição de nome, horário, repetição e cancelamento a partir da tarefa no
+  painel.
 
 ## Última validação
 
 Executada em 29/08/2026:
 
 - `flutter analyze`: nenhum problema encontrado.
-- `flutter test --no-pub`: 27 testes aprovados.
+- `flutter test --no-pub`: 28 testes aprovados.
 - `flutter build apk --debug`: APK gerado com sucesso.
 - Manifest mesclado contém `USE_EXACT_ALARM`, `USE_FULL_SCREEN_INTENT`,
   notificações, reinício, vibração, wake lock, política de notificação e serviço
@@ -200,8 +202,9 @@ Executada em 29/08/2026:
 - APK debug independente para instalação direta, sem celular conectado ao
   Windows: assinatura APK v2 verificada, 182.461.163 bytes e SHA-256
   `DC0368AFE252A48BED617D2A690DEFB8B3C5D8D2F55E5651EC462CA590BA36C1`.
-- Edição e cancelamento: testes de domínio, substituição de alarmes, folha de
-  opções, formulário e toque na tarefa aprovados; análise estática sem erros.
+- Edição e cancelamento: testes de domínio, substituição de alarmes, troca entre
+  tarefa diária e tarefa única, folha de opções, formulário e toque na tarefa
+  aprovados; análise estática sem erros.
 
 Os APKs e o ZIP existentes foram gerados antes da edição/cancelamento e não
 contêm essa funcionalidade. Um novo debug deve ser criado somente após o
