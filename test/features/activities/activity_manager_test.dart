@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rotina_jhenifer/core/time/clock.dart';
 import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
 import 'package:rotina_jhenifer/features/activities/application/activity_manager.dart';
+import 'package:rotina_jhenifer/features/activities/application/schedule_availability.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_recurrence_preset.dart';
@@ -26,6 +27,7 @@ void main() {
           hour: 18,
           minute: 30,
           recurrence: ActivityRecurrencePreset.daily,
+          estimatedDuration: Duration(minutes: 60),
         ),
       );
 
@@ -63,6 +65,7 @@ void main() {
         hour: 16,
         minute: 0,
         recurrence: ActivityRecurrencePreset.once,
+        estimatedDuration: Duration(minutes: 60),
       ),
     );
 
@@ -77,6 +80,39 @@ void main() {
         .toList();
     expect(scheduled, hasLength(1));
     expect(result.generatedOccurrences, 1);
+  });
+
+  test('não aumenta duração quando ela invade outra tarefa', () async {
+    final fixture = _Fixture();
+    fixture.occurrences.values.add(
+      ActivityOccurrence(
+        id: 'consulta:hoje',
+        activityId: 'consulta',
+        originalStartUtc: DateTime.utc(2026, 8, 29, 15, 45),
+        scheduledStartUtc: DateTime.utc(2026, 8, 29, 15, 45),
+        estimatedDuration: const Duration(minutes: 30),
+        priority: ActivityPriority.normal,
+        status: OccurrenceStatus.scheduled,
+      ),
+    );
+
+    final edit = fixture.manager.edit(
+      selectedOccurrence: fixture.today,
+      draft: const ActivityEditDraft(
+        title: 'Treino longo',
+        hour: 15,
+        minute: 0,
+        recurrence: ActivityRecurrencePreset.daily,
+        estimatedDuration: Duration(minutes: 90),
+      ),
+    );
+
+    await expectLater(edit, throwsA(isA<ScheduleConflictException>()));
+    expect(
+      fixture.activities.value!.estimatedDuration,
+      const Duration(minutes: 60),
+    );
+    expect(fixture.events.values, isEmpty);
   });
 
   test(
@@ -118,6 +154,7 @@ final class _Fixture {
       occurrences: occurrences,
       alarms: alarms,
       clock: clock,
+      timeZone: const _UtcTimeZone(),
     );
     manager = ActivityManager(
       activities: activities,

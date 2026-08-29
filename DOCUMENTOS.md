@@ -44,13 +44,25 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - O motor respeita prioridade e duração, evita sobreposições, tenta no máximo
   três reagendamentos no mesmo dia e depois leva a ocorrência para o próximo
   dia disponível.
+- A duração é obrigatória no cadastro e editável depois. O intervalo inteiro
+  fica reservado; o app recusa um horário cuja duração invada outra tarefa e
+  informa o próximo horário livre.
+- As tarefas pendentes de cada dia formam uma sequência. Apenas a primeira fica
+  disponível para conclusão e recebe alarme; as seguintes permanecem bloqueadas
+  até a anterior ser concluída, pulada ou cancelada.
+- Uma tarefa disponível pode ser concluída antes do horário ou do fim estimado.
+  A conclusão antecipada libera imediatamente a próxima tarefa e reconcilia os
+  alarmes do Android.
 - A recorrência original nunca é deslocada por um reagendamento; somente a
   ocorrência atual muda.
-- Tocar em uma tarefa abre ações para editar ou cancelar. A edição permite
-  alterar nome, horário e repetição entre **Só este dia**, **Todo dia** e
-  **Seg–sex**. A nova regra vale para a atividade e suas próximas ocorrências,
-  substituindo os alarmes antigos. O cancelamento exige confirmação, desativa a
-  atividade e remove todos os alarmes futuros.
+- Tocar em uma tarefa abre ações para editar, gerenciar subtarefas ou cancelar.
+  A edição permite alterar nome, horário, duração e repetição entre **Só este
+  dia**, **Todo dia** e **Seg–sex**. A nova regra vale para a atividade e suas
+  próximas ocorrências, substituindo os alarmes antigos. O cancelamento exige
+  confirmação, desativa a atividade e remove todos os alarmes futuros.
+- Subtarefas são etapas persistentes vinculadas à atividade principal. Podem
+  ser adicionadas, concluídas, reabertas e removidas; não criam alarmes próprios
+  nem alteram a recorrência da atividade.
 - Edições e cancelamentos ficam registrados no histórico local. Se a
   sincronização com o Android falhar, a alteração permanece salva e o app
   comunica o estado degradado.
@@ -80,6 +92,7 @@ Android.
 ### Contratos centrais
 
 - `ActivityRepository`: grava e consulta atividades.
+- `SubtaskRepository`: observa e mantém as etapas vinculadas a uma atividade.
 - `OccurrenceRepository`: grava ocorrências e seus estados.
   Também expõe uma observação reativa por intervalo para alimentar o painel.
 - `ActivityEventRepository`: mantém o histórico de decisões.
@@ -98,13 +111,14 @@ Implementações atuais: Riverpod 3.4.2, Drift 2.34.3, `alarm` 5.12.0,
 
 ## Dados locais
 
-O schema inicial possui cinco conjuntos:
+O schema atual, versão 2, possui seis conjuntos:
 
 1. `activities`: descrição, duração, prioridade, recorrência e estado ativo.
 2. `occurrences`: horário planejado, horário atual, tentativa e estado.
 3. `activity_events`: histórico append-only das ações da usuária e do sistema.
 4. `user_preferences`: janela do dia e política de reagendamento.
 5. `app_metadata`: versão do schema e última reconciliação dos alarmes.
+6. `subtasks`: etapas relacionadas à atividade, ordem, conclusão e datas.
 
 Horários únicos são persistidos como instantes UTC. Recorrências guardam horário
 local e dias da semana para continuarem no mesmo horário após mudança de fuso.
@@ -117,6 +131,9 @@ local e dias da semana para continuarem no mesmo horário após mudança de fuso
   fuso e após cada ação em um alarme.
 - Não permitir que deslizar a notificação silencie acidentalmente um alarme.
 - Alarmes simultâneos devem tocar sequencialmente, nunca misturar áudios.
+- Para cada dia, somente a primeira ocorrência pendente fica agendada no
+  Android. Ao concluir antecipadamente, pular ou cancelar, a reconciliação
+  remove o alarme anterior e prepara a próxima ocorrência liberada.
 - Permissão negada é um estado operacional degradado, não uma exceção fatal.
 - Nunca afirmar que um alarme é garantido quando o fabricante ou o Android o
   bloqueou.
@@ -176,13 +193,17 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Instalador debug portátil para Windows e celulares Android por USB.
 - [x] Edição de nome, horário, repetição e cancelamento a partir da tarefa no
   painel.
+- [x] Subtarefas persistentes vinculadas à atividade principal.
+- [x] Edição de duração e proteção contra intervalos sobrepostos.
+- [x] Sequência diária com tarefas posteriores bloqueadas e conclusão
+  antecipada liberando a próxima.
 
 ## Última validação
 
 Executada em 29/08/2026:
 
 - `flutter analyze`: nenhum problema encontrado.
-- `flutter test --no-pub`: 28 testes aprovados.
+- `flutter test --no-pub`: 36 testes aprovados.
 - `flutter build apk --debug`: APK gerado com sucesso.
 - Manifest mesclado contém `USE_EXACT_ALARM`, `USE_FULL_SCREEN_INTENT`,
   notificações, reinício, vibração, wake lock, política de notificação e serviço
@@ -205,10 +226,14 @@ Executada em 29/08/2026:
 - Edição e cancelamento: testes de domínio, substituição de alarmes, troca entre
   tarefa diária e tarefa única, folha de opções, formulário e toque na tarefa
   aprovados; análise estática sem erros.
+- Subtarefas, persistência do schema 2, conflito por duração, sequência diária,
+  bloqueio visual, liberação por conclusão antecipada e alarme exclusivo da
+  primeira tarefa pendente foram validados por testes automatizados.
 
-Os APKs e o ZIP existentes foram gerados antes da edição/cancelamento e não
-contêm essa funcionalidade. Um novo debug deve ser criado somente após o
-comando explícito do responsável pelo projeto.
+Os APKs e o ZIP existentes foram gerados antes da edição/cancelamento,
+subtarefas, duração protegida e sequência diária; portanto, não contêm essas
+funcionalidades. Um novo debug deve ser criado somente após o comando explícito
+do responsável pelo projeto.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma

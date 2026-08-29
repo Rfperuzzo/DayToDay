@@ -8,11 +8,14 @@ import '../../../app/app_dependencies.dart';
 import '../../../core/presentation/rotina_theme.dart';
 import '../../../core/time/time_zone_service.dart';
 import '../../activities/application/activity_manager.dart';
+import '../../activities/application/schedule_availability.dart';
 import '../../activities/domain/activity.dart';
 import '../../activities/domain/activity_occurrence.dart';
 import '../../activities/presentation/activity_options_sheet.dart';
 import '../../activities/presentation/new_activity_sheet.dart';
+import '../../activities/presentation/subtasks_sheet.dart';
 import '../application/day_providers.dart';
+import '../application/daily_task_sequence.dart';
 
 final class TodayScreen extends ConsumerWidget {
   const TodayScreen({super.key});
@@ -118,9 +121,24 @@ final class TodayScreen extends ConsumerWidget {
     switch (option) {
       case ActivityOption.edit:
         await _editActivity(context, ref, activity, occurrence);
+      case ActivityOption.subtasks:
+        await _openSubtasks(context, activity);
       case ActivityOption.cancel:
         await _cancelActivity(context, ref, activity, occurrence);
     }
+  }
+
+  Future<void> _openSubtasks(BuildContext context, Activity activity) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: RotinaColors.background,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      builder: (context) => SubtasksSheet(activity: activity),
+    );
   }
 
   Future<void> _editActivity(
@@ -158,6 +176,19 @@ final class TodayScreen extends ConsumerWidget {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(message)));
+      }
+    } on ScheduleConflictException catch (error) {
+      if (context.mounted) {
+        final local = ref
+            .read(timeZoneServiceProvider)
+            .toLocal(error.nextAvailableUtc);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Esse intervalo está ocupado. Próximo horário livre: ${_twoDigits(local.hour)}:${_twoDigits(local.minute)}.',
+            ),
+          ),
+        );
       }
     } catch (_) {
       if (context.mounted) {
@@ -259,7 +290,7 @@ final class TodayDashboard extends StatelessWidget {
     final completed = sortedOccurrences
         .where((item) => item.status == OccurrenceStatus.completed)
         .length;
-    final next = _findNextOccurrence(sortedOccurrences);
+    final next = DailyTaskSequence.firstAvailable(sortedOccurrences);
 
     return Scaffold(
       floatingActionButton: onAddRequested == null
@@ -367,6 +398,10 @@ final class TodayDashboard extends StatelessWidget {
                                 timeZone: timeZone,
                                 activity: activitiesById[occurrence.activityId],
                                 isNext: occurrence.id == next?.id,
+                                isLocked: DailyTaskSequence.isLocked(
+                                  occurrence: occurrence,
+                                  available: next,
+                                ),
                                 onComplete: () => onComplete(occurrence),
                                 onManage:
                                     activitiesById[occurrence.activityId]
@@ -391,19 +426,6 @@ final class TodayDashboard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  ActivityOccurrence? _findNextOccurrence(
-    List<ActivityOccurrence> sortedOccurrences,
-  ) {
-    final now = DateTime.now().toUtc();
-    for (final item in sortedOccurrences) {
-      if (item.status == OccurrenceStatus.scheduled &&
-          item.scheduledEndUtc.isAfter(now)) {
-        return item;
-      }
-    }
-    return null;
   }
 }
 
@@ -876,6 +898,7 @@ final class _TaskTile extends StatelessWidget {
     required this.timeZone,
     required this.activity,
     required this.isNext,
+    required this.isLocked,
     required this.onComplete,
     this.onManage,
   });
@@ -884,12 +907,15 @@ final class _TaskTile extends StatelessWidget {
   final TimeZoneService timeZone;
   final Activity? activity;
   final bool isNext;
+  final bool isLocked;
   final VoidCallback onComplete;
   final VoidCallback? onManage;
 
   @override
   Widget build(BuildContext context) {
     final completed = occurrence.status == OccurrenceStatus.completed;
+    final skipped = occurrence.status == OccurrenceStatus.skipped;
+    final terminal = completed || skipped;
     final active = !completed && isNext;
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 220),
@@ -913,13 +939,18 @@ final class _TaskTile extends StatelessWidget {
               child: Row(
                 children: [
                   Semantics(
-                    button: !completed,
+                    button: !terminal && !isLocked,
                     checked: completed,
-                    label: completed
+                    label: isLocked
+                        ? 'Tarefa bloqueada até concluir a anterior'
+                        : completed
                         ? 'Atividade concluída'
+                        : skipped
+                        ? 'Atividade pulada'
                         : 'Concluir atividade',
                     child: InkWell(
-                      onTap: completed ? null : onComplete,
+                      key: ValueKey('complete-${occurrence.id}'),
+                      onTap: terminal || isLocked ? null : onComplete,
                       customBorder: const CircleBorder(),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
@@ -942,6 +973,18 @@ final class _TaskTile extends StatelessWidget {
                                 Icons.check_rounded,
                                 color: Colors.white,
                                 size: 23,
+                              )
+                            : isLocked
+                            ? const Icon(
+                                Icons.lock_outline_rounded,
+                                color: RotinaColors.textMuted,
+                                size: 19,
+                              )
+                            : skipped
+                            ? const Icon(
+                                Icons.remove_rounded,
+                                color: RotinaColors.textMuted,
+                                size: 22,
                               )
                             : null,
                       ),
@@ -969,7 +1012,9 @@ final class _TaskTile extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${_time(timeZone, occurrence.scheduledStartUtc)} • ${occurrence.estimatedDuration.inMinutes} min',
+                          isLocked
+                              ? 'Disponível após concluir a tarefa anterior'
+                              : '${_time(timeZone, occurrence.scheduledStartUtc)} • ${occurrence.estimatedDuration.inMinutes} min',
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
                                 color: active
@@ -983,7 +1028,9 @@ final class _TaskTile extends StatelessWidget {
                     ),
                   ),
                   Icon(
-                    _priorityIcon(occurrence.priority),
+                    isLocked
+                        ? Icons.lock_clock_rounded
+                        : _priorityIcon(occurrence.priority),
                     color: active
                         ? RotinaColors.primary
                         : RotinaColors.textMuted,
@@ -1116,6 +1163,8 @@ String _time(TimeZoneService timeZone, DateTime utc) {
   final local = timeZone.toLocal(utc);
   return '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
 }
+
+String _twoDigits(int value) => value.toString().padLeft(2, '0');
 
 String _relativeLabel(DateTime utc) {
   final now = DateTime.now().toUtc();

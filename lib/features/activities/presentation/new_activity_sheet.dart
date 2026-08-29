@@ -6,6 +6,7 @@ import '../../../core/time/clock.dart';
 import '../../../core/time/time_zone_service.dart';
 import '../../alarms/domain/alarm_permission_gateway.dart';
 import '../application/activity_creator.dart';
+import '../application/schedule_availability.dart';
 import '../domain/activity.dart';
 import '../domain/activity_recurrence_preset.dart';
 import '../domain/recurrence_rule.dart';
@@ -397,6 +398,18 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
           ),
         );
       }
+    } on ScheduleConflictException catch (error) {
+      if (mounted) {
+        setState(() => _saving = false);
+        final next = widget.timeZone.toLocal(error.nextAvailableUtc);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Esse intervalo está ocupado. Próximo horário livre: ${_twoDigits(next.hour)}:${_twoDigits(next.minute)}.',
+            ),
+          ),
+        );
+      }
     } catch (_) {
       if (mounted) {
         setState(() => _saving = false);
@@ -561,3 +574,5 @@ String _shortDate(DateTime date) {
   ];
   return '${date.day} ${months[date.month - 1]}';
 }
+
+String _twoDigits(int value) => value.toString().padLeft(2, '0');

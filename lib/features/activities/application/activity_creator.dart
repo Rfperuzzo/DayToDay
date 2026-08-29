@@ -6,6 +6,7 @@ import '../domain/activity.dart';
 import '../domain/activity_repositories.dart';
 import '../domain/recurrence_rule.dart';
 import 'occurrence_generator.dart';
+import 'schedule_availability.dart';
 
 final class ActivityDraft {
   const ActivityDraft({
@@ -71,6 +72,14 @@ final class ActivityCreator {
       activity: activity,
       fromUtc: now,
       untilUtc: now.add(Duration(days: _preferences.scheduleHorizonDays)),
+    );
+    final existing = await _occurrences.findScheduledBetween(
+      now,
+      now.add(Duration(days: _preferences.scheduleHorizonDays)),
+    );
+    ScheduleAvailability.ensureAvailable(
+      candidates: generated,
+      existing: existing,
     );
 
     await _activities.save(activity);

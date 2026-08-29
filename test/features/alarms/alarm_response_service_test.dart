@@ -71,10 +71,14 @@ void main() {
       isTrue,
     );
     expect(
+      fixture.alarms.requests.any((item) => item.occurrenceId == conflict.id),
+      isTrue,
+    );
+    expect(
       fixture.alarms.requests.any(
         (item) => item.occurrenceId == fixture.target.id,
       ),
-      isTrue,
+      isFalse,
     );
   });
 }
@@ -98,6 +102,7 @@ final class _Fixture {
       occurrences: occurrences,
       alarms: alarms,
       clock: clock,
+      timeZone: const _UtcTimeZone(),
     );
     service = AlarmResponseService(
       occurrences: occurrences,

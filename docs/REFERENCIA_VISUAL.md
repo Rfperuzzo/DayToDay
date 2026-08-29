@@ -46,6 +46,11 @@ Os tokens de código ficam em `lib/core/presentation/rotina_theme.dart`.
 - menu de opções ao tocar na tarefa, com edição de nome, horário e repetição em
   folha inferior e ação de cancelamento visualmente destrutiva, protegida por
   confirmação.
+- seletor de duração também disponível na edição da atividade;
+- folha de subtarefas com inclusão rápida, progresso, conclusão, reabertura e
+  remoção de etapas;
+- estado bloqueado para tarefas posteriores, com cadeado e explicação de que a
+  tarefa anterior precisa ser concluída primeiro.
 
 ## Adaptações conscientes
 

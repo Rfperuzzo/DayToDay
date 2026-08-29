@@ -59,6 +59,7 @@ final alarmReconcilerProvider = Provider<AlarmReconciler>(
     occurrences: ref.watch(occurrenceRepositoryProvider),
     alarms: ref.watch(alarmGatewayProvider),
     clock: const SystemClock(),
+    timeZone: ref.watch(timeZoneServiceProvider),
   ),
 );
 final occurrenceActionsProvider = Provider<OccurrenceActions>(
@@ -66,7 +67,9 @@ final occurrenceActionsProvider = Provider<OccurrenceActions>(
     occurrences: ref.watch(occurrenceRepositoryProvider),
     events: ref.watch(activityEventRepositoryProvider),
     alarms: ref.watch(alarmGatewayProvider),
+    alarmReconciler: ref.watch(alarmReconcilerProvider),
     clock: const SystemClock(),
+    preferences: ref.watch(userPreferencesProvider),
   ),
 );
 final userPreferencesProvider = Provider<UserPreferences>(

@@ -10,11 +10,18 @@ apenas avisar que um horário passou. Todo aprendizado permanece no aparelho.
 - conclusão rápida com vibração curta;
 - cadastro de atividade única, diária ou de segunda a sexta;
 - duração e prioridade usadas pelo motor de rotina;
+- rejeição de horários cuja duração invade uma tarefa já reservada, com sugestão
+  do próximo horário livre;
 - solicitação contextual dos acessos de alarme;
 - tela de toque com **Concluir**, **Agora não** e **Pular hoje**;
 - confirmação do novo horário após o Resgate de rotina;
 - toque na tarefa com edição de nome, horário e repetição ou cancelamento
   confirmado;
+- edição da duração da atividade;
+- subtarefas persistentes relacionadas à tarefa principal, com conclusão,
+  reabertura e remoção;
+- fila diária: apenas a primeira tarefa pendente pode ser concluída e recebe
+  alarme; concluir antecipadamente libera a próxima imediatamente;
 - dados locais, sem conta, nuvem, anúncios ou telemetria.
 
 ## Próxima prioridade
@@ -47,11 +54,15 @@ ser obrigatória nem virar avaliação de desempenho.
 Comparar duração estimada e real para sugerir ajustes: “Seus treinos costumam
 durar 72 min; deseja atualizar de 60 para 75?”. Só aplicar após confirmação.
 
-### 5. Barreira anti-caos
+### 5. Barreira anti-caos — primeira versão entregue
 
 Exibir buffers entre deslocamento, preparação e atividade; limitar cascatas de
 reagendamento e proteger tarefas importantes. Quando o dia não comportar tudo,
 o app deve dizer isso claramente em vez de criar sobreposições invisíveis.
+
+A primeira versão já reserva toda a duração, recusa sobreposição, sugere o
+próximo horário livre e mantém as tarefas do dia em sequência. A evolução
+seguinte é permitir buffers configuráveis de preparação e deslocamento.
 
 ### 6. Pulso do dia sem culpa
 

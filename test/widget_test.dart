@@ -110,6 +110,52 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('tarefa seguinte fica bloqueada até conclusão antecipada', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(430, 1100));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final now = DateTime.now().toUtc();
+    final firstActivity = _activityForDashboard(
+      'primeira',
+      'Primeira tarefa',
+      now.add(const Duration(minutes: 30)),
+    );
+    final secondActivity = _activityForDashboard(
+      'segunda',
+      'Segunda tarefa',
+      now.add(const Duration(minutes: 90)),
+    );
+    final first = _occurrenceForDashboard(firstActivity);
+    final second = _occurrenceForDashboard(secondActivity);
+    ActivityOccurrence? completed;
+
+    await tester.pumpWidget(
+      RotinaJheniferApp(
+        home: TodayDashboard(
+          selectedDay: DateTime.now(),
+          activities: [firstActivity, secondActivity],
+          occurrences: [first, second],
+          timeZone: const DeviceTimeZoneService(),
+          onDaySelected: (_) {},
+          onComplete: (value) => completed = value,
+        ),
+      ),
+    );
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -430));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Disponível após concluir a tarefa anterior'),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(ValueKey('complete-${second.id}')));
+    expect(completed, isNull);
+    await tester.tap(find.byKey(ValueKey('complete-${first.id}')));
+    expect(completed, same(first));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('resultado do alarme usa o fuso configurado no app', (
     tester,
   ) async {
@@ -174,6 +220,30 @@ void main() {
     expect(find.text('Painel diário'), findsNothing);
     expect(tester.takeException(), isNull);
   });
+}
+
+Activity _activityForDashboard(String id, String title, DateTime startUtc) =>
+    Activity(
+      id: id,
+      title: title,
+      estimatedDuration: const Duration(minutes: 45),
+      priority: ActivityPriority.normal,
+      recurrence: OneOffRecurrence(startUtc),
+      createdAtUtc: startUtc.subtract(const Duration(days: 1)),
+      updatedAtUtc: startUtc.subtract(const Duration(days: 1)),
+    );
+
+ActivityOccurrence _occurrenceForDashboard(Activity activity) {
+  final recurrence = activity.recurrence as OneOffRecurrence;
+  return ActivityOccurrence(
+    id: '${activity.id}:1',
+    activityId: activity.id,
+    originalStartUtc: recurrence.scheduledAtUtc,
+    scheduledStartUtc: recurrence.scheduledAtUtc,
+    estimatedDuration: activity.estimatedDuration,
+    priority: activity.priority,
+    status: OccurrenceStatus.scheduled,
+  );
 }
 
 final class _RingingAlarmGateway implements AlarmGateway {

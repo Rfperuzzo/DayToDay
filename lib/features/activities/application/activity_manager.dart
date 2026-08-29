@@ -10,6 +10,7 @@ import '../domain/activity_recurrence_preset.dart';
 import '../domain/activity_repositories.dart';
 import '../domain/recurrence_rule.dart';
 import 'occurrence_generator.dart';
+import 'schedule_availability.dart';
 
 final class ActivityEditDraft {
   const ActivityEditDraft({
@@ -17,12 +18,14 @@ final class ActivityEditDraft {
     required this.hour,
     required this.minute,
     required this.recurrence,
+    required this.estimatedDuration,
   });
 
   final String title;
   final int hour;
   final int minute;
   final ActivityRecurrencePreset recurrence;
+  final Duration estimatedDuration;
 }
 
 final class ActivityMutationResult {
@@ -98,6 +101,7 @@ final class ActivityManager {
     final updated = activity.copyWith(
       title: draft.title,
       recurrence: recurrence,
+      estimatedDuration: draft.estimatedDuration,
       updatedAtUtc: now,
     );
     final pending = await _occurrences.findPendingForActivity(activity.id);
@@ -114,6 +118,15 @@ final class ActivityManager {
     if (generated.isEmpty && recurrence is OneOffRecurrence) {
       throw ArgumentError('Escolha um horário que ainda não passou.');
     }
+    final existing = await _occurrences.findScheduledBetween(
+      now,
+      now.add(Duration(days: _preferences.scheduleHorizonDays)),
+    );
+    ScheduleAvailability.ensureAvailable(
+      candidates: generated,
+      existing: existing,
+      ignoredActivityId: activity.id,
+    );
 
     await _activities.save(updated);
     await _occurrences.saveAll([...cancelled, ...generated]);
@@ -264,6 +277,13 @@ final class ActivityManager {
     }
     if (draft.minute < 0 || draft.minute > 59) {
       throw ArgumentError.value(draft.minute, 'minute', 'Minuto inválido.');
+    }
+    if (draft.estimatedDuration <= Duration.zero) {
+      throw ArgumentError.value(
+        draft.estimatedDuration,
+        'estimatedDuration',
+        'A duração deve ser positiva.',
+      );
     }
   }
 }

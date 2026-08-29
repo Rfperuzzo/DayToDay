@@ -40,6 +40,7 @@ void main() {
     await tester.tap(find.text('Abrir opções'));
     await tester.pumpAndSettle();
     expect(find.text('Editar nome ou horário'), findsOneWidget);
+    expect(find.text('Subtarefas'), findsOneWidget);
     expect(find.text('Cancelar atividade'), findsOneWidget);
     await tester.tap(find.text('Editar nome ou horário'));
     await tester.pumpAndSettle();
@@ -90,6 +91,7 @@ void main() {
     expect(draft?.hour, 15);
     expect(draft?.minute, 0);
     expect(draft?.recurrence, ActivityRecurrencePreset.daily);
+    expect(draft?.estimatedDuration, const Duration(minutes: 60));
     expect(tester.takeException(), isNull);
   });
 }

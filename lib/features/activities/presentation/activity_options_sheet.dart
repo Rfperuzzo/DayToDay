@@ -9,7 +9,7 @@ import '../domain/activity_occurrence.dart';
 import '../domain/activity_recurrence_preset.dart';
 import '../domain/recurrence_rule.dart';
 
-enum ActivityOption { edit, cancel }
+enum ActivityOption { edit, subtasks, cancel }
 
 final class ActivityOptionsSheet extends StatelessWidget {
   const ActivityOptionsSheet({
@@ -84,6 +84,13 @@ final class ActivityOptionsSheet extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             _OptionTile(
+              icon: Icons.account_tree_outlined,
+              title: 'Subtarefas',
+              subtitle: 'Divida esta atividade em etapas relacionadas.',
+              onTap: () => Navigator.pop(context, ActivityOption.subtasks),
+            ),
+            const SizedBox(height: 10),
+            _OptionTile(
               icon: Icons.cancel_outlined,
               title: 'Cancelar atividade',
               subtitle: 'Desativa a atividade e os próximos alarmes.',
@@ -120,6 +127,7 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
   late final TextEditingController _titleController;
   late TimeOfDay _time;
   late ActivityRecurrencePreset _recurrence;
+  late int _durationMinutes;
 
   @override
   void initState() {
@@ -128,6 +136,7 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
     final local = widget.timeZone.toLocal(widget.occurrence.scheduledStartUtc);
     _time = TimeOfDay.fromDateTime(local);
     _recurrence = _presetFor(widget.activity.recurrence);
+    _durationMinutes = widget.activity.estimatedDuration.inMinutes;
   }
 
   @override
@@ -211,6 +220,27 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
                     subtitle: Text(_time.format(context)),
                     trailing: const Icon(Icons.chevron_right_rounded),
                   ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Duração',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelLarge?.copyWith(color: RotinaColors.text),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final minutes in const [15, 30, 45, 60, 90])
+                      ChoiceChip(
+                        label: Text('$minutes min'),
+                        selected: _durationMinutes == minutes,
+                        onSelected: (_) =>
+                            setState(() => _durationMinutes = minutes),
+                      ),
+                  ],
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -326,6 +356,7 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
         hour: _time.hour,
         minute: _time.minute,
         recurrence: _recurrence,
+        estimatedDuration: Duration(minutes: _durationMinutes),
       ),
     );
   }

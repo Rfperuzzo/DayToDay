@@ -3,8 +3,9 @@
 Aplicativo Android offline para organizar atividades e disparar alarmes fortes,
 com reagendamento inteligente quando Jhenifer escolhe **Agora não**.
 
-O MVP já possui painel diário responsivo, conclusão rápida e cadastro de
-atividades únicas ou recorrentes com preparação contextual dos alarmes.
+O MVP já possui painel diário responsivo, conclusão antecipada, subtarefas,
+controle de duração, sequência diária e cadastro de atividades únicas ou
+recorrentes com preparação contextual dos alarmes.
 
 ## Contexto do projeto
 

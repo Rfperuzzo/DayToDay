@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rotina_jhenifer/core/time/clock.dart';
+import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_repositories.dart';
@@ -43,6 +44,7 @@ void main() {
       occurrences: _FakeOccurrenceRepository([occurrence]),
       alarms: alarms,
       clock: _FixedClock(DateTime.utc(2026, 8, 29, 10)),
+      timeZone: const _UtcTimeZone(),
     );
 
     await reconciler.reconcile(const UserPreferences());
@@ -60,6 +62,49 @@ void main() {
     expect(first, lessThanOrEqualTo(0x7fffffff));
     expect(first, isNot(NativeAlarmId.fromOccurrenceId('atividade:124')));
   });
+
+  test('agenda somente a primeira tarefa pendente de cada dia', () async {
+    final activity = Activity(
+      id: 'rotina',
+      title: 'Rotina sequencial',
+      estimatedDuration: const Duration(minutes: 30),
+      priority: ActivityPriority.normal,
+      recurrence: OneOffRecurrence(DateTime.utc(2026, 8, 30, 9)),
+      createdAtUtc: DateTime.utc(2026, 8, 29),
+      updatedAtUtc: DateTime.utc(2026, 8, 29),
+    );
+    final first = ActivityOccurrence(
+      id: 'primeira',
+      activityId: activity.id,
+      originalStartUtc: DateTime.utc(2026, 8, 30, 9),
+      scheduledStartUtc: DateTime.utc(2026, 8, 30, 9),
+      estimatedDuration: const Duration(minutes: 30),
+      priority: ActivityPriority.normal,
+      status: OccurrenceStatus.scheduled,
+    );
+    final second = ActivityOccurrence(
+      id: 'segunda',
+      activityId: activity.id,
+      originalStartUtc: DateTime.utc(2026, 8, 30, 10),
+      scheduledStartUtc: DateTime.utc(2026, 8, 30, 10),
+      estimatedDuration: const Duration(minutes: 30),
+      priority: ActivityPriority.normal,
+      status: OccurrenceStatus.scheduled,
+    );
+    final alarms = _FakeAlarmGateway([]);
+    final reconciler = AlarmReconciler(
+      activities: _FakeActivityRepository(activity),
+      occurrences: _FakeOccurrenceRepository([second, first]),
+      alarms: alarms,
+      clock: _FixedClock(DateTime.utc(2026, 8, 29, 10)),
+      timeZone: const _UtcTimeZone(),
+    );
+
+    await reconciler.reconcile(const UserPreferences());
+
+    expect(alarms.requests, hasLength(1));
+    expect(alarms.requests.single.occurrenceId, first.id);
+  });
 }
 
 final class _FixedClock implements Clock {
@@ -69,6 +114,22 @@ final class _FixedClock implements Clock {
 
   @override
   DateTime nowUtc() => value;
+}
+
+final class _UtcTimeZone implements TimeZoneService {
+  const _UtcTimeZone();
+
+  @override
+  DateTime localComponentsToUtc(DateTime localComponents) => DateTime.utc(
+    localComponents.year,
+    localComponents.month,
+    localComponents.day,
+    localComponents.hour,
+    localComponents.minute,
+  );
+
+  @override
+  DateTime toLocal(DateTime utc) => utc.toUtc();
 }
 
 final class _FakeActivityRepository implements ActivityRepository {

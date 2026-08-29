@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rotina_jhenifer/core/time/clock.dart';
 import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
 import 'package:rotina_jhenifer/features/activities/application/activity_creator.dart';
+import 'package:rotina_jhenifer/features/activities/application/schedule_availability.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
 import 'package:rotina_jhenifer/features/activities/domain/activity_repositories.dart';
@@ -29,6 +30,7 @@ void main() {
         occurrences: occurrences,
         alarms: alarms,
         clock: clock,
+        timeZone: const _UtcTimeZone(),
       ),
       clock: clock,
       preferences: const UserPreferences(),
@@ -49,6 +51,51 @@ void main() {
     expect(activities.value?.title, 'Treino de pernas');
     expect(occurrences.values, hasLength(1));
     expect(alarms.requests.single.title, 'Treino de pernas');
+  });
+
+  test('não salva tarefa cuja duração invade o próximo horário', () async {
+    final now = DateTime.utc(2026, 8, 29, 12);
+    final activities = _MemoryActivities();
+    final occurrences = _MemoryOccurrences()
+      ..values.add(
+        ActivityOccurrence(
+          id: 'compromisso:1',
+          activityId: 'compromisso',
+          originalStartUtc: DateTime.utc(2026, 8, 29, 13, 30),
+          scheduledStartUtc: DateTime.utc(2026, 8, 29, 13, 30),
+          estimatedDuration: const Duration(minutes: 30),
+          priority: ActivityPriority.normal,
+          status: OccurrenceStatus.scheduled,
+        ),
+      );
+    final alarms = _MemoryAlarms();
+    final clock = _FixedClock(now);
+    final creator = ActivityCreator(
+      activities: activities,
+      occurrences: occurrences,
+      timeZone: const _UtcTimeZone(),
+      alarmReconciler: AlarmReconciler(
+        activities: activities,
+        occurrences: occurrences,
+        alarms: alarms,
+        clock: clock,
+        timeZone: const _UtcTimeZone(),
+      ),
+      clock: clock,
+      preferences: const UserPreferences(),
+    );
+
+    final creation = creator.create(
+      ActivityDraft(
+        title: 'Treino',
+        estimatedDuration: const Duration(minutes: 60),
+        priority: ActivityPriority.normal,
+        recurrence: OneOffRecurrence(DateTime.utc(2026, 8, 29, 13)),
+      ),
+    );
+
+    await expectLater(creation, throwsA(isA<ScheduleConflictException>()));
+    expect(activities.value, isNull);
   });
 }
 

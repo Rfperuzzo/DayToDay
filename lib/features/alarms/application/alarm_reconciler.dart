@@ -1,4 +1,6 @@
 import '../../../core/time/clock.dart';
+import '../../../core/time/time_zone_service.dart';
+import '../../activities/domain/activity_occurrence.dart';
 import '../../activities/domain/activity_repositories.dart';
 import '../../settings/domain/user_preferences.dart';
 import '../domain/alarm_gateway.dart';
@@ -10,19 +12,22 @@ final class AlarmReconciler {
     required OccurrenceRepository occurrences,
     required AlarmGateway alarms,
     required Clock clock,
-  }) : this._(activities, occurrences, alarms, clock);
+    required TimeZoneService timeZone,
+  }) : this._(activities, occurrences, alarms, clock, timeZone);
 
   const AlarmReconciler._(
     this._activities,
     this._occurrences,
     this._alarms,
     this._clock,
+    this._timeZone,
   );
 
   final ActivityRepository _activities;
   final OccurrenceRepository _occurrences;
   final AlarmGateway _alarms;
   final Clock _clock;
+  final TimeZoneService _timeZone;
 
   Future<void> reconcile(UserPreferences preferences) async {
     final now = _clock.nowUtc();
@@ -32,7 +37,8 @@ final class AlarmReconciler {
       (left, right) =>
           left.scheduledStartUtc.compareTo(right.scheduledStartUtc),
     );
-    final limited = desired.take(preferences.maxPendingAlarms).toList();
+    final sequential = _firstOccurrenceOfEachDay(desired);
+    final limited = sequential.take(preferences.maxPendingAlarms).toList();
     _validateNativeIds(limited.map((item) => item.id));
 
     final existing = {
@@ -61,6 +67,22 @@ final class AlarmReconciler {
         ),
       );
     }
+  }
+
+  List<ActivityOccurrence> _firstOccurrenceOfEachDay(
+    List<ActivityOccurrence> occurrences,
+  ) {
+    final seenDays = <String>{};
+    return [
+      for (final occurrence in occurrences)
+        if (seenDays.add(_localDayKey(occurrence.scheduledStartUtc)))
+          occurrence,
+    ];
+  }
+
+  String _localDayKey(DateTime utc) {
+    final local = _timeZone.toLocal(utc);
+    return '${local.year}-${local.month}-${local.day}';
   }
 
   void _validateNativeIds(Iterable<String> occurrenceIds) {

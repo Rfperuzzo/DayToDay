@@ -89,11 +89,17 @@ final class AlarmResponseService {
         occurredAtUtc: now,
       ),
     );
+    var alarmsSynchronized = true;
+    try {
+      await _alarmReconciler.reconcile(_preferences);
+    } catch (_) {
+      alarmsSynchronized = false;
+    }
     return AlarmResponseResult(
       response: response,
       occurrence: updated,
       adjustedOccurrences: const [],
-      alarmsSynchronized: true,
+      alarmsSynchronized: alarmsSynchronized,
     );
   }
 
