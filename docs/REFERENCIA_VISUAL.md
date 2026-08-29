@@ -18,6 +18,9 @@ de rede. Ícones e tipografia usam recursos compilados no aplicativo.
 
 ## Direção adotada
 
+- Ícone oficial: ilustração fornecida da Jhenifer, preservada em
+  `assets/branding/` e exportada para ícones Android legados, redondos e
+  adaptativos.
 - Personalidade: produtividade calorosa, feminina e enérgica, sem infantilizar.
 - Fundo principal: `#FFF8F7`.
 - Rosa de ação: `#BA0034`; destaque: `#E51245`.

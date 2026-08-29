@@ -22,6 +22,9 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
   máquina que fará a instalação por USB.
 - A experiência visual parte da referência Stitch **Vibrant Momentum**: rosa
   energético, superfícies claras, formas arredondadas e pouco ruído visual.
+- A ilustração recebida da Jhenifer é o ícone oficial do aplicativo. A fonte
+  original fica preservada em `assets/branding/`, e o Android recebe variantes
+  legada, redonda e adaptativa em todas as densidades.
 - O primeiro layout de produto é o painel diário, com semana navegável,
   progresso, próxima atividade e conclusão rápida.
 - O cadastro nasce do botão flutuante central e cobre título, observação, dia,
@@ -204,6 +207,7 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 
 - [x] Repositório e projeto Flutter Android criados.
 - [x] Identidade visual e painel diário responsivo.
+- [x] Ícone oficial da Jhenifer configurado para launchers Android.
 - [x] Cadastro contextual de atividades e preparação de alarmes.
 - [x] Identidade e versões Android configuradas.
 - [x] Domínio e recorrência.
@@ -266,12 +270,14 @@ Executada em 29/08/2026:
 - Widget: ordenação, progresso, bloqueio sequencial e ação **Concluir tarefa**
   foram validados no Flutter; manifesto, `RemoteViews`, troca automática entre
   os sete dias em cache e código Kotlin foram compilados sem erros.
+- Ícone oficial: recursos legado, redondo e adaptativo foram processados com
+  sucesso pelo Android Gradle Plugin em todas as densidades.
 
 Os APKs e o ZIP existentes foram gerados antes da edição/cancelamento,
 subtarefas, duração protegida, sequência diária, cascata por importância e
-widget da tela inicial; portanto, não contêm essas funcionalidades. Um novo
-debug deve ser criado somente após o comando explícito do responsável pelo
-projeto.
+widget da tela inicial e também antes do ícone oficial; portanto, não contêm
+essas funcionalidades nem a nova identidade no launcher. Um novo debug deve
+ser criado somente após o comando explícito do responsável pelo projeto.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma

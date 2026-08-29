@@ -8,7 +8,8 @@ O MVP já possui painel diário responsivo, conclusão antecipada, subtarefas,
 controle de duração, sequência diária e cadastro de atividades únicas ou
 recorrentes com preparação contextual dos alarmes. A fila se reorganiza por
 importância sem criar sobreposições, e um widget Android mostra as tarefas do
-dia na tela inicial.
+dia na tela inicial. A ilustração da Jhenifer é usada como ícone oficial em
+formatos Android legado, redondo e adaptativo.
 
 ## Contexto do projeto
 
