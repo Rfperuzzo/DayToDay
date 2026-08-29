@@ -74,4 +74,28 @@ final class Activity {
   final bool isActive;
   final DateTime createdAtUtc;
   final DateTime updatedAtUtc;
+
+  Activity copyWith({
+    String? title,
+    String? notes,
+    Duration? estimatedDuration,
+    ActivityPriority? priority,
+    RecurrenceRule? recurrence,
+    Duration? preparationLead,
+    bool? isActive,
+    DateTime? updatedAtUtc,
+  }) {
+    return Activity(
+      id: id,
+      title: title ?? this.title,
+      notes: notes ?? this.notes,
+      estimatedDuration: estimatedDuration ?? this.estimatedDuration,
+      priority: priority ?? this.priority,
+      recurrence: recurrence ?? this.recurrence,
+      preparationLead: preparationLead ?? this.preparationLead,
+      isActive: isActive ?? this.isActive,
+      createdAtUtc: createdAtUtc,
+      updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
+    );
+  }
 }

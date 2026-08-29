@@ -36,6 +36,15 @@ final class DriftActivityRepository implements ActivityRepository {
       (rows) => rows.map(_activityFromRow).toList(growable: false),
     );
   }
+
+  @override
+  Stream<List<domain.Activity>> watchAll() {
+    final query = _database.select(_database.activities)
+      ..orderBy([(table) => OrderingTerm.asc(table.title)]);
+    return query.watch().map(
+      (rows) => rows.map(_activityFromRow).toList(growable: false),
+    );
+  }
 }
 
 final class DriftOccurrenceRepository implements OccurrenceRepository {
@@ -87,6 +96,25 @@ final class DriftOccurrenceRepository implements OccurrenceRepository {
             table.scheduledStartUtc.isBiggerOrEqualValue(startUtc.toUtc()) &
             table.scheduledStartUtc.isSmallerThanValue(endUtc.toUtc()) &
             table.status.equals(OccurrenceStatus.scheduled.name),
+      )
+      ..orderBy([(table) => OrderingTerm.asc(table.scheduledStartUtc)]);
+    final rows = await query.get();
+    return rows.map(_occurrenceFromRow).toList(growable: false);
+  }
+
+  @override
+  Future<List<ActivityOccurrence>> findPendingForActivity(
+    String activityId,
+  ) async {
+    final query = _database.select(_database.occurrences)
+      ..where(
+        (table) =>
+            table.activityId.equals(activityId) &
+            table.status.isIn([
+              OccurrenceStatus.scheduled.name,
+              OccurrenceStatus.ringing.name,
+              OccurrenceStatus.postponed.name,
+            ]),
       )
       ..orderBy([(table) => OrderingTerm.asc(table.scheduledStartUtc)]);
     final rows = await query.get();

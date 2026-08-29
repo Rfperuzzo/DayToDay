@@ -15,6 +15,10 @@ final activeActivitiesProvider = StreamProvider<List<Activity>>(
   (ref) => ref.watch(activityRepositoryProvider).watchActive(),
 );
 
+final allActivitiesProvider = StreamProvider<List<Activity>>(
+  (ref) => ref.watch(activityRepositoryProvider).watchAll(),
+);
+
 final dayOccurrencesProvider =
     StreamProvider.family<List<ActivityOccurrence>, DateTime>((ref, day) {
       final normalizedDay = dateOnly(day);

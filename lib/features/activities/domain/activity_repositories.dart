@@ -7,6 +7,8 @@ abstract interface class ActivityRepository {
   Future<Activity?> findById(String id);
 
   Stream<List<Activity>> watchActive();
+
+  Stream<List<Activity>> watchAll();
 }
 
 abstract interface class OccurrenceRepository {
@@ -22,6 +24,8 @@ abstract interface class OccurrenceRepository {
     DateTime startUtc,
     DateTime endUtc,
   );
+
+  Future<List<ActivityOccurrence>> findPendingForActivity(String activityId);
 
   Stream<List<ActivityOccurrence>> watchBetween(
     DateTime startUtc,

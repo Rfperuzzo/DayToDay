@@ -4,6 +4,8 @@ enum ActivityEventType {
   skipped,
   automaticallyRescheduled,
   alarmDropped,
+  edited,
+  cancelled,
 }
 
 final class ActivityEvent {

@@ -180,6 +180,9 @@ final class _MemoryActivities implements ActivityRepository {
 
   @override
   Stream<List<Activity>> watchActive() => Stream.value(values.values.toList());
+
+  @override
+  Stream<List<Activity>> watchAll() => watchActive();
 }
 
 final class _MemoryOccurrences implements OccurrenceRepository {
@@ -203,6 +206,19 @@ final class _MemoryOccurrences implements OccurrenceRepository {
             item.status == OccurrenceStatus.scheduled &&
             !item.scheduledStartUtc.isBefore(startUtc) &&
             item.scheduledStartUtc.isBefore(endUtc),
+      )
+      .toList();
+
+  @override
+  Future<List<ActivityOccurrence>> findPendingForActivity(
+    String activityId,
+  ) async => values
+      .where(
+        (item) =>
+            item.activityId == activityId &&
+            (item.status == OccurrenceStatus.scheduled ||
+                item.status == OccurrenceStatus.ringing ||
+                item.status == OccurrenceStatus.postponed),
       )
       .toList();
 

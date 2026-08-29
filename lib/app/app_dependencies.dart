@@ -7,6 +7,7 @@ import '../core/time/iana_time_zone_service.dart';
 import '../core/time/time_zone_service.dart';
 import '../features/activities/data/drift_activity_repositories.dart';
 import '../features/activities/application/activity_creator.dart';
+import '../features/activities/application/activity_manager.dart';
 import '../features/activities/domain/activity_repositories.dart';
 import '../features/alarms/application/alarm_event_processor.dart';
 import '../features/alarms/application/alarm_reconciler.dart';
@@ -71,6 +72,18 @@ final activityCreatorProvider = Provider<ActivityCreator>(
     occurrences: ref.watch(occurrenceRepositoryProvider),
     timeZone: ref.watch(timeZoneServiceProvider),
     alarmReconciler: ref.watch(alarmReconcilerProvider),
+    clock: const SystemClock(),
+    preferences: ref.watch(userPreferencesProvider),
+  ),
+);
+final activityManagerProvider = Provider<ActivityManager>(
+  (ref) => ActivityManager(
+    activities: ref.watch(activityRepositoryProvider),
+    occurrences: ref.watch(occurrenceRepositoryProvider),
+    events: ref.watch(activityEventRepositoryProvider),
+    alarms: ref.watch(alarmGatewayProvider),
+    alarmReconciler: ref.watch(alarmReconcilerProvider),
+    timeZone: ref.watch(timeZoneServiceProvider),
     clock: const SystemClock(),
     preferences: ref.watch(userPreferencesProvider),
   ),
