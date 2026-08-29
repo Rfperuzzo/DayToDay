@@ -189,6 +189,9 @@ Executada em 29/08/2026:
   entre múltiplos aparelhos apresentaram os resultados esperados.
 - ZIP portátil gerado com APK e ADB incluídos: 79,7 MB e SHA-256
   `FC4320BE33017D4682F20AF6725DADFFB6DF289B893DDEC7BBDD74A11A96885B`.
+- APK debug independente para instalação direta, sem celular conectado ao
+  Windows: assinatura APK v2 verificada, 182.461.163 bytes e SHA-256
+  `DC0368AFE252A48BED617D2A690DEFB8B3C5D8D2F55E5651EC462CA590BA36C1`.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma

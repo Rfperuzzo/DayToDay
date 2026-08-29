@@ -1,5 +1,24 @@
 # Instalador debug para celulares Android
 
+## Instalação direta sem conectar o celular ao Windows
+
+O arquivo `Rotina-da-Jhenifer-debug-android.apk` pode ser enviado ao celular
+por Drive, WhatsApp, e-mail, cabo ou outro meio. Não é necessário conectar o
+aparelho ao computador durante a instalação.
+
+No celular:
+
+1. Baixe ou copie o APK.
+2. Abra o arquivo pelo gerenciador de arquivos ou pelo aplicativo que o recebeu.
+3. Quando o Android solicitar, autorize **Instalar apps desconhecidos** apenas
+   para esse aplicativo de origem.
+4. Confirme **Instalar** e depois abra **Rotina da Jhenifer**.
+
+Depois da instalação, a autorização para instalar apps desconhecidos pode ser
+desativada novamente. Uma atualização preserva os dados quando o APK anterior
+foi assinado pela mesma chave debug. Se houver outra assinatura, o Android exige
+desinstalar a versão anterior, o que apaga os dados locais dela.
+
 ## Objetivo
 
 O instalador portátil permite que uma pessoa no Windows instale ou atualize a
