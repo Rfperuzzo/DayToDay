@@ -12,6 +12,8 @@ Leia [DOCUMENTOS.md](DOCUMENTOS.md) antes de alterar código. Esse arquivo é a
 memória viva das decisões, regras de negócio e próximos passos. A direção de
 interface está em [docs/REFERENCIA_VISUAL.md](docs/REFERENCIA_VISUAL.md) e as
 ideias priorizadas em [docs/ROADMAP_PRODUTO.md](docs/ROADMAP_PRODUTO.md).
+Os resultados da rodada real no Motorola estão em
+[docs/VALIDACAO_DISPOSITIVO.md](docs/VALIDACAO_DISPOSITIVO.md).
 
 ## Comandos
 

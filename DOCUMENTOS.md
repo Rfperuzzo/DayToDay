@@ -123,7 +123,8 @@ O painel implementa desde já o conceito de **Pulso do dia** na forma de
 progresso e mensagem de ritmo, sem pontuação competitiva ou envio de dados.
 
 Detalhes de priorização estão em `docs/ROADMAP_PRODUTO.md`. A transcrição das
-decisões da referência Stitch está em `docs/REFERENCIA_VISUAL.md`.
+decisões da referência Stitch está em `docs/REFERENCIA_VISUAL.md`. A matriz e
+as evidências do teste real estão em `docs/VALIDACAO_DISPOSITIVO.md`.
 
 ## Estratégia de Git
 
@@ -158,19 +159,26 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Casos de uso das três respostas do alarme.
 - [x] Tela dedicada do alarme e resultado explicável do Resgate de rotina.
 - [x] Testes e build validados.
+- [x] Ciclo físico validado com tela bloqueada, processo encerrado e Não
+  Perturbe.
 
 ## Última validação
 
 Executada em 29/08/2026:
 
 - `flutter analyze`: nenhum problema encontrado.
-- `flutter test`: 21 testes aprovados.
+- `flutter test --no-pub`: 23 testes aprovados.
 - `flutter build apk --debug`: APK gerado com sucesso.
 - Manifest mesclado contém `USE_EXACT_ALARM`, `USE_FULL_SCREEN_INTENT`,
   notificações, reinício, vibração, wake lock, política de notificação e serviço
   de mídia.
 - Manifest mesclado não contém `READ_EXTERNAL_STORAGE` nem
   `SCHEDULE_EXACT_ALARM`.
+- Motorola edge 60 fusion com Android 16: cadastro, alarme exato, tela cheia,
+  **Agora não**, segundo toque da mesma ocorrência, **Pular hoje**,
+  **Concluir**, persistência e cold start aprovados.
+- Não Perturbe em modo prioridade: `STREAM_ALARM` sem mute, volume 7/7 e rota
+  para o alto-falante. O modo original foi restaurado após o teste.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma
@@ -178,7 +186,7 @@ futura atualização grande do Flutter, revisar os changelogs desses plugins.
 
 ## Próxima etapa recomendada
 
-Validar o ciclo completo em um aparelho Android físico, incluindo processo
-encerrado, tela bloqueada, Não Perturbe e fabricantes com economia agressiva de
+Criar uma página de diagnóstico dos acessos do alarme, validar um APK release
+assinado e ampliar a matriz para fabricantes com políticas agressivas de
 bateria. Depois, evoluir a explicação do Resgate para nomear qual compromisso
-foi protegido e criar uma página de diagnóstico dos acessos do alarme.
+foi protegido.
