@@ -132,4 +132,28 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Persistência SQLite.
 - [x] Motor de reagendamento.
 - [x] Adaptador de alarmes Android.
-- [ ] Testes e build validados.
+- [x] Testes e build validados.
+
+## Última validação
+
+Executada em 29/08/2026:
+
+- `flutter analyze`: nenhum problema encontrado.
+- `flutter test`: 14 testes aprovados.
+- `flutter build apk --debug`: APK gerado com sucesso.
+- Manifest mesclado contém `USE_EXACT_ALARM`, `USE_FULL_SCREEN_INTENT`,
+  notificações, reinício, vibração, wake lock, política de notificação e serviço
+  de mídia.
+- Manifest mesclado não contém `READ_EXTERNAL_STORAGE` nem
+  `SCHEDULE_EXACT_ALARM`.
+
+Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
+aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma
+futura atualização grande do Flutter, revisar os changelogs desses plugins.
+
+## Próxima etapa recomendada
+
+Criar a primeira experiência de uso e a tela dedicada do alarme. Ela deve pedir
+permissões de forma contextual e oferecer as três respostas já contratadas:
+**Concluir**, **Agora não** e **Pular hoje**. Não alterar as regras do motor ao
+desenhar essas telas sem atualizar este documento.
