@@ -252,8 +252,8 @@ Executada em 29/08/2026:
 - `flutter analyze`: nenhum problema encontrado.
 - `flutter test --no-pub`: 52 testes aprovados.
 - `:app:compileDebugKotlin`: widget, recursos Android e canal nativo compilados
-  com sucesso usando o JBR 21 do Android Studio; nenhum APK foi gerado.
-- `flutter build apk --debug`: APK gerado com sucesso.
+  com sucesso usando o JBR 21 do Android Studio.
+- `flutter build apk --debug --no-pub`: APK atualizado gerado com sucesso.
 - Manifest mesclado contém `USE_EXACT_ALARM`, `USE_FULL_SCREEN_INTENT`,
   notificações, reinício, vibração, wake lock, política de notificação e serviço
   de mídia.
@@ -269,10 +269,10 @@ Executada em 29/08/2026:
   entre múltiplos aparelhos apresentaram os resultados esperados.
 - ZIP portátil gerado com APK e ADB incluídos: 79,7 MB e SHA-256
   `FC4320BE33017D4682F20AF6725DADFFB6DF289B893DDEC7BBDD74A11A96885B`.
-- APK debug independente atualizado a partir do commit `a072074`, para
+- APK debug independente atualizado a partir do commit `7cc4604`, para
   instalação direta sem celular conectado ao Windows: assinatura APK v2
-  verificada, 182.550.404 bytes e SHA-256
-  `B1DA81EE9FC551145D6841A4EA543728E592F3990918DC59958DFA8DE47379A0`.
+  verificada, 182.562.582 bytes e SHA-256
+  `7989BE8FDEFC99D6F3F1C10EBB4EEBD5D6E3F0143DA334228A946243739C8D4D`.
 - Edição e cancelamento: testes de domínio, substituição de alarmes, troca entre
   tarefa diária e tarefa única, folha de opções, formulário e toque na tarefa
   aprovados; análise estática sem erros.
@@ -292,9 +292,9 @@ Executada em 29/08/2026:
   validados por testes automatizados.
 
 O APK `outputs/Rotina-da-Jhenifer-debug-android.apk` contém todas as
-funcionalidades até o ícone oficial, mas foi gerado antes da manutenção do
-horizonte e do calendário mensal. O APK e o ZIP portátil devem ser regenerados
-apenas após novo comando explícito de debug.
+funcionalidades até a manutenção do horizonte recorrente e o calendário mensal
+contínuo. O ZIP portátil ainda é anterior a essas mudanças e deve ser
+regenerado apenas após novo comando explícito.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma

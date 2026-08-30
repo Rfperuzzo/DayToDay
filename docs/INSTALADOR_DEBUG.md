@@ -22,16 +22,17 @@ desinstalar a versão anterior, o que apaga os dados locais dela.
 ## APK atual
 
 - arquivo: `outputs/Rotina-da-Jhenifer-debug-android.apk`;
-- código-fonte: commit `a072074`;
-- tamanho: 182.550.404 bytes;
+- código-fonte: commit `7cc4604`;
+- tamanho: 182.562.582 bytes;
 - SHA-256:
-  `B1DA81EE9FC551145D6841A4EA543728E592F3990918DC59958DFA8DE47379A0`;
+  `7989BE8FDEFC99D6F3F1C10EBB4EEBD5D6E3F0143DA334228A946243739C8D4D`;
 - assinatura debug APK Signature Scheme v2 verificada;
 - pacote: `com.senhoritajhenifer.rotina`, versão `1.0.0`, Android mínimo 7.0.
 
 Esta compilação inclui edição e cancelamento, subtarefas, duração protegida,
 sequência diária, recuperação por importância, widget da tela inicial e o ícone
-oficial da Jhenifer.
+oficial da Jhenifer. Também inclui a manutenção idempotente das recorrências e o
+calendário mensal contínuo entre 2000 e 2100.
 
 ## Objetivo
 
