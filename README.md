@@ -9,7 +9,8 @@ controle de duração, sequência diária e cadastro de atividades únicas ou
 recorrentes com preparação contextual dos alarmes. A fila se reorganiza por
 importância sem criar sobreposições, e um widget Android mostra as tarefas do
 dia na tela inicial. A ilustração da Jhenifer é usada como ícone oficial em
-formatos Android legado, redondo e adaptativo.
+formatos Android legado, redondo e adaptativo. O calendário horizontal percorre
+todos os dias dos meses e mostra a rotina da data selecionada.
 
 ## Contexto do projeto
 
@@ -23,6 +24,8 @@ O instalador portátil para testes em outros celulares está documentado em
 [docs/INSTALADOR_DEBUG.md](docs/INSTALADOR_DEBUG.md).
 As instruções do widget Android estão em
 [docs/WIDGET_TELA_INICIAL.md](docs/WIDGET_TELA_INICIAL.md).
+O comportamento do calendário está em
+[docs/CALENDARIO_MENSAL.md](docs/CALENDARIO_MENSAL.md).
 
 ## Comandos
 

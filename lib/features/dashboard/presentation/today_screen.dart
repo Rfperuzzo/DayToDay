@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import '../../activities/presentation/subtasks_sheet.dart';
 import '../../home_widget/domain/day_widget_gateway.dart';
 import '../application/day_providers.dart';
 import '../application/daily_task_sequence.dart';
+import 'continuous_month_calendar.dart';
 
 final class TodayScreen extends ConsumerWidget {
   const TodayScreen({super.key});
@@ -43,7 +45,9 @@ final class TodayScreen extends ConsumerWidget {
           activities: activityItems,
           occurrences: occurrenceItems,
           timeZone: ref.watch(timeZoneServiceProvider),
-          onDaySelected: ref.read(selectedDayProvider.notifier).select,
+          onDaySelected: (day) => _selectDay(ref, activityItems, day),
+          onVisibleMonthChanged: (month) =>
+              _prepareVisibleMonth(ref, activityItems, month),
           onAddRequested: () => _openNewActivity(context, ref, selectedDay),
           onManage: (activity, occurrence) =>
               _openActivityOptions(context, ref, activity, occurrence),
@@ -87,6 +91,27 @@ final class TodayScreen extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _prepareVisibleMonth(
+    WidgetRef ref,
+    List<Activity> activities,
+    DateTime month,
+  ) {
+    unawaited(() async {
+      try {
+        await ref
+            .read(occurrenceHorizonMaintainerProvider)
+            .ensureMonth(activities: activities, localMonth: month);
+      } catch (_) {
+        // As tarefas já persistidas continuam disponíveis em modo degradado.
+      }
+    }());
+  }
+
+  void _selectDay(WidgetRef ref, List<Activity> activities, DateTime day) {
+    ref.read(selectedDayProvider.notifier).select(day);
+    _prepareVisibleMonth(ref, activities, DateTime(day.year, day.month));
   }
 
   Future<void> _openActivityOptions(
@@ -331,6 +356,7 @@ final class TodayDashboard extends StatelessWidget {
     required this.timeZone,
     required this.onDaySelected,
     required this.onComplete,
+    this.onVisibleMonthChanged,
     this.onManage,
     this.onAddRequested,
     super.key,
@@ -342,6 +368,7 @@ final class TodayDashboard extends StatelessWidget {
   final TimeZoneService timeZone;
   final ValueChanged<DateTime> onDaySelected;
   final ValueChanged<ActivityOccurrence> onComplete;
+  final ValueChanged<DateTime>? onVisibleMonthChanged;
   final void Function(Activity, ActivityOccurrence)? onManage;
   final VoidCallback? onAddRequested;
 
@@ -390,9 +417,10 @@ final class TodayDashboard extends StatelessWidget {
                           total: sortedOccurrences.length,
                         ),
                         const SizedBox(height: 26),
-                        _WeekStrip(
+                        ContinuousMonthCalendar(
                           selectedDay: selectedDay,
                           onSelected: onDaySelected,
+                          onVisibleMonthChanged: onVisibleMonthChanged,
                         ),
                         const SizedBox(height: 34),
                         LayoutBuilder(
@@ -612,91 +640,6 @@ final class _Welcome extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
       ],
-    );
-  }
-}
-
-final class _WeekStrip extends StatelessWidget {
-  const _WeekStrip({required this.selectedDay, required this.onSelected});
-
-  final DateTime selectedDay;
-  final ValueChanged<DateTime> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    final weekStart = selectedDay.subtract(
-      Duration(days: selectedDay.weekday - 1),
-    );
-    return SizedBox(
-      height: 82,
-      child: Row(
-        children: [
-          for (var index = 0; index < 7; index++) ...[
-            if (index > 0) const SizedBox(width: 8),
-            Expanded(
-              child: Builder(
-                builder: (context) {
-                  final day = dateOnly(weekStart.add(Duration(days: index)));
-                  final selected = day == dateOnly(selectedDay);
-                  return Semantics(
-                    selected: selected,
-                    label: _longDate(day),
-                    child: InkWell(
-                      onTap: () => onSelected(day),
-                      borderRadius: BorderRadius.circular(20),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 220),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: selected
-                              ? RotinaColors.primary
-                              : RotinaColors.surfaceStrong,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: selected
-                              ? const [
-                                  BoxShadow(
-                                    color: Color(0x40BA0034),
-                                    blurRadius: 16,
-                                    offset: Offset(0, 6),
-                                  ),
-                                ]
-                              : null,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              _weekdayShort(day.weekday),
-                              style: TextStyle(
-                                color: selected
-                                    ? const Color(0xFFFFDADA)
-                                    : RotinaColors.textMuted,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '${day.day}',
-                              style: TextStyle(
-                                color: selected
-                                    ? Colors.white
-                                    : RotinaColors.text,
-                                fontSize: 23,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ],
-      ),
     );
   }
 }
@@ -1195,9 +1138,6 @@ final class _DashboardError extends StatelessWidget {
     ),
   );
 }
-
-String _weekdayShort(int weekday) =>
-    const ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM'][weekday - 1];
 
 String _longDate(DateTime date) {
   const weekdays = [

@@ -38,7 +38,8 @@ Os tokens de código ficam em `lib/core/presentation/rotina_theme.dart`.
 
 - cabeçalho com identidade da Jhenifer, sem depender de foto externa;
 - saudação e quantidade de tarefas do dia escolhido;
-- seletor da semana navegável e localizado em português;
+- calendário horizontal localizado em português, com sete cartões visíveis,
+  continuidade entre meses e título do mês em foco;
 - cartão de progresso com anel animado;
 - cartão da próxima atividade;
 - lista diária com anel circular de conclusão e feedback tátil;

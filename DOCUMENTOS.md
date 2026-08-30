@@ -25,8 +25,8 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - A ilustração recebida da Jhenifer é o ícone oficial do aplicativo. A fonte
   original fica preservada em `assets/branding/`, e o Android recebe variantes
   legada, redonda e adaptativa em todas as densidades.
-- O primeiro layout de produto é o painel diário, com semana navegável,
-  progresso, próxima atividade e conclusão rápida.
+- O primeiro layout de produto é o painel diário, com calendário mensal
+  contínuo, progresso, próxima atividade e conclusão rápida.
 - O cadastro nasce do botão flutuante central e cobre título, observação, dia,
   horário, duração, prioridade e repetição.
 - Repetições disponíveis no primeiro fluxo: única, diária e dias úteis.
@@ -84,6 +84,11 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - O horizonte móvel de ocorrências é renovado na inicialização de forma
   idempotente, sem sobrescrever conclusões, pulos, adiamentos ou reagendamentos
   já persistidos. A manutenção nunca cria tarefas retroativas.
+- O calendário preserva os cartões diários originais e mostra sete dias por vez
+  em uma faixa contínua entre 2000 e 2100. O título acompanha o mês visível,
+  enquanto as tarefas só mudam após a seleção explícita de uma data. Meses
+  futuros são preparados ao navegar ou selecionar; meses passados exibem apenas
+  o histórico existente.
 - Edições e cancelamentos ficam registrados no histórico local. Se a
   sincronização com o Android falhar, a alteração permanece salva e o app
   comunica o estado degradado.
@@ -187,6 +192,7 @@ decisões da referência Stitch está em `docs/REFERENCIA_VISUAL.md`. A matriz e
 as evidências do teste real estão em `docs/VALIDACAO_DISPOSITIVO.md`. O fluxo
 de empacotamento e instalação está em `docs/INSTALADOR_DEBUG.md`. A instalação
 e o comportamento do widget estão em `docs/WIDGET_TELA_INICIAL.md`.
+A navegação de datas está descrita em `docs/CALENDARIO_MENSAL.md`.
 
 ## Estratégia de Git
 
@@ -236,13 +242,15 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Widget Android com tarefas do dia e abertura direta para concluir ou
   editar.
 - [x] Manutenção idempotente do horizonte móvel de ocorrências recorrentes.
+- [x] Calendário mensal contínuo com seleção diária e preparação de meses
+  futuros.
 
 ## Última validação
 
 Executada em 29/08/2026:
 
 - `flutter analyze`: nenhum problema encontrado.
-- `flutter test --no-pub`: 48 testes aprovados.
+- `flutter test --no-pub`: 52 testes aprovados.
 - `:app:compileDebugKotlin`: widget, recursos Android e canal nativo compilados
   com sucesso usando o JBR 21 do Android Studio; nenhum APK foi gerado.
 - `flutter build apk --debug`: APK gerado com sucesso.
@@ -279,6 +287,9 @@ Executada em 29/08/2026:
   os sete dias em cache e código Kotlin foram compilados sem erros.
 - Ícone oficial: recursos legado, redondo e adaptativo foram processados com
   sucesso pelo Android Gradle Plugin em todas as densidades.
+- Calendário mensal: meses de 28, 29, 30 e 31 dias, virada de ano, título do mês
+  visível, seleção explícita e consulta isolada das tarefas do dia foram
+  validados por testes automatizados.
 
 O APK `outputs/Rotina-da-Jhenifer-debug-android.apk` contém todas as
 funcionalidades até o ícone oficial, mas foi gerado antes da manutenção do

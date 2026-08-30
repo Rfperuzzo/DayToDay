@@ -5,7 +5,8 @@ apenas avisar que um horário passou. Todo aprendizado permanece no aparelho.
 
 ## Entregue no MVP atual
 
-- painel reativo do dia e navegação pela semana;
+- painel reativo do dia e calendário mensal contínuo, mantendo sete dias
+  visíveis e carregando as tarefas da data selecionada;
 - progresso diário e próxima atividade em destaque;
 - conclusão rápida com vibração curta;
 - cadastro de atividade única, diária ou de segunda a sexta;

@@ -71,11 +71,15 @@ void main() {
 
     expect(find.text('0 de 1 concluídas'), findsOneWidget);
     expect(find.text('Treino de pernas'), findsNWidgets(2));
-    await tester.drag(find.byType(CustomScrollView), const Offset(0, -300));
+    final task = find.byKey(ValueKey('task-${occurrence.id}'));
+    await tester.ensureVisible(task);
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(ValueKey('task-${occurrence.id}')));
+    await tester.tap(task);
     expect(managed, same(occurrence));
-    await tester.tap(find.text('Concluir atividade'));
+    final complete = find.text('Concluir atividade');
+    await tester.ensureVisible(complete);
+    await tester.pumpAndSettle();
+    await tester.tap(complete);
     expect(completed, same(occurrence));
     await tester.tap(find.byTooltip('Adicionar atividade'));
     expect(addRequested, isTrue);
