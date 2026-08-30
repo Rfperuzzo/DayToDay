@@ -68,6 +68,39 @@ void main() {
     expect(loaded.scheduledStartUtc, DateTime.utc(2026, 8, 31, 12));
   });
 
+  test('geração preserva estado existente e recupera cancelamento', () async {
+    final activity = _activity();
+    await activities.save(activity);
+    final generated = ActivityOccurrence(
+      id: 'ocorrencia-gerada',
+      activityId: activity.id,
+      originalStartUtc: DateTime.utc(2026, 9, 4, 8),
+      scheduledStartUtc: DateTime.utc(2026, 9, 4, 8),
+      estimatedDuration: const Duration(minutes: 20),
+      priority: ActivityPriority.high,
+      status: OccurrenceStatus.scheduled,
+    );
+    await occurrences.saveAll([
+      generated.copyWith(
+        scheduledStartUtc: DateTime.utc(2026, 9, 4, 9),
+        status: OccurrenceStatus.completed,
+      ),
+    ]);
+
+    expect(await occurrences.saveGenerated([generated]), 0);
+    var loaded = await occurrences.findById(generated.id);
+    expect(loaded!.status, OccurrenceStatus.completed);
+    expect(loaded.scheduledStartUtc, DateTime.utc(2026, 9, 4, 9));
+
+    await occurrences.update(
+      generated.copyWith(status: OccurrenceStatus.cancelled),
+    );
+    expect(await occurrences.saveGenerated([generated]), 1);
+    loaded = await occurrences.findById(generated.id);
+    expect(loaded!.status, OccurrenceStatus.scheduled);
+    expect(loaded.scheduledStartUtc, generated.scheduledStartUtc);
+  });
+
   test('subtarefa permanece vinculada e pode ser concluída', () async {
     final activity = _activity();
     await activities.save(activity);

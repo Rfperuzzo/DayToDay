@@ -211,6 +211,10 @@ final class _FakeOccurrenceRepository implements OccurrenceRepository {
   Future<void> saveAll(Iterable<ActivityOccurrence> occurrences) async {}
 
   @override
+  Future<int> saveGenerated(Iterable<ActivityOccurrence> occurrences) async =>
+      0;
+
+  @override
   Future<void> update(ActivityOccurrence occurrence) async {}
 }
 

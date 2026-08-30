@@ -63,6 +63,45 @@ final class DriftOccurrenceRepository implements OccurrenceRepository {
   }
 
   @override
+  Future<int> saveGenerated(Iterable<ActivityOccurrence> occurrences) async {
+    final candidates = occurrences.toList(growable: false);
+    if (candidates.isEmpty) {
+      return 0;
+    }
+    return _database.transaction(() async {
+      final candidateIds = candidates.map((item) => item.id).toList();
+      final existing = <String, OccurrenceRow>{};
+      for (var offset = 0; offset < candidateIds.length; offset += 500) {
+        final end = offset + 500 < candidateIds.length
+            ? offset + 500
+            : candidateIds.length;
+        final query = _database.select(_database.occurrences)
+          ..where((table) => table.id.isIn(candidateIds.sublist(offset, end)));
+        for (final row in await query.get()) {
+          existing[row.id] = row;
+        }
+      }
+      final accepted = [
+        for (final occurrence in candidates)
+          if (existing[occurrence.id] == null ||
+              existing[occurrence.id]!.status ==
+                  OccurrenceStatus.cancelled.name)
+            occurrence,
+      ];
+      if (accepted.isEmpty) {
+        return 0;
+      }
+      await _database.batch((batch) {
+        batch.insertAllOnConflictUpdate(
+          _database.occurrences,
+          accepted.map(_occurrenceCompanion),
+        );
+      });
+      return accepted.length;
+    });
+  }
+
+  @override
   Future<void> update(ActivityOccurrence occurrence) async {
     await _database
         .into(_database.occurrences)

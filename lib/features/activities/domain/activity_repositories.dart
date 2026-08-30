@@ -14,6 +14,8 @@ abstract interface class ActivityRepository {
 abstract interface class OccurrenceRepository {
   Future<void> saveAll(Iterable<ActivityOccurrence> occurrences);
 
+  Future<int> saveGenerated(Iterable<ActivityOccurrence> occurrences);
+
   Future<void> update(ActivityOccurrence occurrence);
 
   Future<ActivityOccurrence?> findById(String id);

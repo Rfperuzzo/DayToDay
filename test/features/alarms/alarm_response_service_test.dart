@@ -235,6 +235,19 @@ final class _MemoryOccurrences implements OccurrenceRepository {
   }
 
   @override
+  Future<int> saveGenerated(Iterable<ActivityOccurrence> occurrences) async {
+    var saved = 0;
+    for (final occurrence in occurrences) {
+      final existing = await findById(occurrence.id);
+      if (existing == null || existing.status == OccurrenceStatus.cancelled) {
+        await update(occurrence);
+        saved++;
+      }
+    }
+    return saved;
+  }
+
+  @override
   Future<void> update(ActivityOccurrence occurrence) async {
     values
       ..removeWhere((item) => item.id == occurrence.id)

@@ -81,6 +81,9 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - O widget recebe sete dias de resumo offline e escolhe o dia atual no Android,
   permitindo a virada da data sem depender de o Flutter estar aberto à
   meia-noite. Alterações no banco atualizam o resumo quando o app está ativo.
+- O horizonte móvel de ocorrências é renovado na inicialização de forma
+  idempotente, sem sobrescrever conclusões, pulos, adiamentos ou reagendamentos
+  já persistidos. A manutenção nunca cria tarefas retroativas.
 - Edições e cancelamentos ficam registrados no histórico local. Se a
   sincronização com o Android falhar, a alteração permanece salva e o app
   comunica o estado degradado.
@@ -125,6 +128,8 @@ Android.
 - `RoutinePlanner`: gera recorrências e encontra o próximo espaço livre.
 - `ActivityCreator`: salva uma atividade, materializa o horizonte de ocorrências
   e tenta reconciliar os alarmes sem perder o cadastro em caso de degradação.
+- `OccurrenceHorizonMaintainer`: renova os próximos 30 dias e prepara meses
+  futuros consultados sem duplicar ocorrências nem reverter estados existentes.
 - `Clock`: torna cálculos temporais determinísticos nos testes.
 - `DayWidgetGateway`: sincroniza o resumo de sete dias com o widget Android e
   entrega ao Flutter a tarefa tocada na tela inicial.
@@ -230,13 +235,14 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
   importância e fallback de 10 minutos.
 - [x] Widget Android com tarefas do dia e abertura direta para concluir ou
   editar.
+- [x] Manutenção idempotente do horizonte móvel de ocorrências recorrentes.
 
 ## Última validação
 
 Executada em 29/08/2026:
 
 - `flutter analyze`: nenhum problema encontrado.
-- `flutter test --no-pub`: 43 testes aprovados.
+- `flutter test --no-pub`: 48 testes aprovados.
 - `:app:compileDebugKotlin`: widget, recursos Android e canal nativo compilados
   com sucesso usando o JBR 21 do Android Studio; nenhum APK foi gerado.
 - `flutter build apk --debug`: APK gerado com sucesso.
@@ -275,9 +281,9 @@ Executada em 29/08/2026:
   sucesso pelo Android Gradle Plugin em todas as densidades.
 
 O APK `outputs/Rotina-da-Jhenifer-debug-android.apk` contém todas as
-funcionalidades e a identidade visual listadas acima. O ZIP portátil para
-Windows ainda pertence à compilação anterior e deve ser regenerado antes de ser
-usado para instalar esta versão por USB.
+funcionalidades até o ícone oficial, mas foi gerado antes da manutenção do
+horizonte e do calendário mensal. O APK e o ZIP portátil devem ser regenerados
+apenas após novo comando explícito de debug.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma

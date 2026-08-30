@@ -8,6 +8,7 @@ import '../core/time/time_zone_service.dart';
 import '../features/activities/data/drift_activity_repositories.dart';
 import '../features/activities/data/drift_subtask_repository.dart';
 import '../features/activities/application/activity_creator.dart';
+import '../features/activities/application/occurrence_horizon_maintainer.dart';
 import '../features/activities/application/activity_manager.dart';
 import '../features/activities/application/subtask_manager.dart';
 import '../features/activities/domain/activity_repositories.dart';
@@ -70,6 +71,14 @@ final alarmReconcilerProvider = Provider<AlarmReconciler>(
     timeZone: ref.watch(timeZoneServiceProvider),
   ),
 );
+final occurrenceHorizonMaintainerProvider =
+    Provider<OccurrenceHorizonMaintainer>(
+      (ref) => OccurrenceHorizonMaintainer(
+        occurrences: ref.watch(occurrenceRepositoryProvider),
+        timeZone: ref.watch(timeZoneServiceProvider),
+        clock: const SystemClock(),
+      ),
+    );
 final occurrenceActionsProvider = Provider<OccurrenceActions>(
   (ref) => OccurrenceActions(
     occurrences: ref.watch(occurrenceRepositoryProvider),
@@ -167,6 +176,20 @@ final class AppDependencies {
       clock: const SystemClock(),
       timeZone: timeZone,
     );
+    final horizonMaintainer = OccurrenceHorizonMaintainer(
+      occurrences: occurrences,
+      timeZone: timeZone,
+      clock: const SystemClock(),
+    );
+    try {
+      await horizonMaintainer.ensureRollingHorizon(
+        activities: await activities.watchActive().first,
+        preferences: preferences,
+      );
+      await alarmReconciler.reconcile(preferences);
+    } catch (_) {
+      // O app continua disponível quando o Android limita a sincronização.
+    }
     final missedTaskRecovery = MissedTaskRecoveryService(
       occurrences: occurrences,
       events: events,
