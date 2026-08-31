@@ -263,7 +263,10 @@ Executada em 31/08/2026 após a troca de identidade:
 - Novo ícone validado nas cinco densidades Android, nas variantes legada,
   redonda e adaptativa; a fonte original tem SHA-256
   `7296C2167E3E6EBEAAE11F68AD0BCF900CEEB656D098C1D87F721C1BDB9DA144`.
-- Nenhum APK foi gerado nesta validação.
+- `flutter build apk --debug --no-pub`: APK da nova identidade gerado com
+  sucesso, com assinatura debug v2 verificada, pacote
+  `com.senhoritaandriele.rotina`, 162.958.920 bytes e SHA-256
+  `E732555A23F0A4309E8664DB5F5BC9607CF9DD737B9FF2193C1D33EDC0C079B3`.
 
 ## Validação física anterior
 
@@ -306,10 +309,11 @@ Executada em 29/08/2026, antes da troca completa de identidade:
   visível, seleção explícita e consulta isolada das tarefas do dia foram
   validados por testes automatizados.
 
-Os artefatos atualmente arquivados em `outputs/` foram gerados antes da nova
-identidade e não devem ser distribuídos como **Rotina da Andriele**. O APK e o
-ZIP com o novo nome, pacote e ícone devem ser gerados somente após comando
-explícito de debug.
+O APK `outputs/Rotina-da-Andriele-debug-android.apk` contém a nova identidade,
+o pacote e o ícone oficiais. Os arquivos nomeados como `Rotina-legada-*` foram
+gerados antes dessa mudança e não devem ser distribuídos como **Rotina da
+Andriele**. O ZIP portátil com a nova identidade ainda depende de comando
+explícito para ser regenerado.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma

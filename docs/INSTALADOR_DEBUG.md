@@ -2,9 +2,9 @@
 
 ## Instalação direta sem conectar o celular ao Windows
 
-Quando gerado, o arquivo `Rotina-da-Andriele-debug-android.apk` pode ser enviado
-ao celular por Drive, WhatsApp, e-mail, cabo ou outro meio. Não é necessário
-conectar o aparelho ao computador durante a instalação.
+O arquivo `Rotina-da-Andriele-debug-android.apk` pode ser enviado ao celular por
+Drive, WhatsApp, e-mail, cabo ou outro meio. Não é necessário conectar o
+aparelho ao computador durante a instalação.
 
 No celular:
 
@@ -19,16 +19,20 @@ desativada novamente. O pacote `com.senhoritaandriele.rotina` representa a nova
 identidade e é instalado separadamente de builds anteriores; os dados locais
 não são migrados automaticamente.
 
-## Próximo APK
+## APK atual
 
 - arquivo: `outputs/Rotina-da-Andriele-debug-android.apk`;
-- geração: pendente de comando explícito de debug;
+- código-fonte: commit `51c996a`;
+- tamanho: 162.958.920 bytes;
+- SHA-256:
+  `E732555A23F0A4309E8664DB5F5BC9607CF9DD737B9FF2193C1D33EDC0C079B3`;
+- assinatura debug APK Signature Scheme v2 verificada;
 - pacote: `com.senhoritaandriele.rotina`, versão `1.0.0`, Android mínimo 7.0.
 
-A próxima compilação incluirá edição e cancelamento, subtarefas, duração
-protegida, sequência diária, recuperação por importância, widget da tela
-inicial, manutenção idempotente das recorrências, calendário mensal contínuo e
-a identidade oficial da Andriele.
+Esta compilação inclui edição e cancelamento, subtarefas, duração protegida,
+sequência diária, recuperação por importância, widget da tela inicial,
+manutenção idempotente das recorrências, calendário mensal contínuo e a
+identidade oficial da Andriele.
 
 ## Objetivo
 
