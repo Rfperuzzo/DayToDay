@@ -1,15 +1,16 @@
 # Identidade do aplicativo
 
-O ícone oficial da **Rotina da Jhenifer** foi recebido em 29/08/2026 no arquivo
-`jhenifericone.jpeg`.
+O ícone oficial da **Rotina da Andriele** foi recebido em 31/08/2026 no arquivo
+`icone novo.png`.
 
 ## Arquivos preservados
 
-- `jhenifer_app_icon_source.jpeg`: cópia binária exata do arquivo recebido;
-- `jhenifer_app_icon.png`: matriz PNG de 1024 × 1024 para futuras exportações.
+- `andriele_app_icon_source.png`: cópia binária exata do arquivo recebido;
+- `andriele_app_icon.png`: matriz PNG de 1024 × 1024 com contorno transparente
+  para futuras exportações.
 
 SHA-256 da imagem original:
-`95D6CF28874BF6F1926EF8D5BFC0CCE5F43CC04E0E55E4C7CF39309216F24057`.
+`7296C2167E3E6EBEAAE11F68AD0BCF900CEEB656D098C1D87F721C1BDB9DA144`.
 
 ## Android
 
@@ -20,6 +21,7 @@ As pastas `mipmap-mdpi` até `mipmap-xxxhdpi` contêm:
 - `ic_launcher_foreground.png`: camada do ícone adaptativo do Android 8 ou
   superior.
 
-A conversão apenas redimensiona a arte original com interpolação bicúbica de
-alta qualidade. Não há regeneração por IA, mudança da personagem ou dependência
-de rede em tempo de execução.
+A conversão remove apenas a margem escura externa, aplica transparência ao
+contorno e redimensiona a arte original com interpolação bicúbica de alta
+qualidade. Não há regeneração por IA, mudança da personagem ou dependência de
+rede em tempo de execução.

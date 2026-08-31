@@ -7,7 +7,7 @@ final class AndroidAlarmPermissionGateway implements AlarmPermissionGateway {
   const AndroidAlarmPermissionGateway();
 
   static const _channel = MethodChannel(
-    'com.senhoritajhenifer.rotina/alarm_permissions',
+    'com.senhoritaandriele.rotina/alarm_permissions',
   );
 
   @override

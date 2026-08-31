@@ -2,9 +2,9 @@
 
 ## Instalação direta sem conectar o celular ao Windows
 
-O arquivo `Rotina-da-Jhenifer-debug-android.apk` pode ser enviado ao celular
-por Drive, WhatsApp, e-mail, cabo ou outro meio. Não é necessário conectar o
-aparelho ao computador durante a instalação.
+Quando gerado, o arquivo `Rotina-da-Andriele-debug-android.apk` pode ser enviado
+ao celular por Drive, WhatsApp, e-mail, cabo ou outro meio. Não é necessário
+conectar o aparelho ao computador durante a instalação.
 
 No celular:
 
@@ -12,32 +12,28 @@ No celular:
 2. Abra o arquivo pelo gerenciador de arquivos ou pelo aplicativo que o recebeu.
 3. Quando o Android solicitar, autorize **Instalar apps desconhecidos** apenas
    para esse aplicativo de origem.
-4. Confirme **Instalar** e depois abra **Rotina da Jhenifer**.
+4. Confirme **Instalar** e depois abra **Rotina da Andriele**.
 
 Depois da instalação, a autorização para instalar apps desconhecidos pode ser
-desativada novamente. Uma atualização preserva os dados quando o APK anterior
-foi assinado pela mesma chave debug. Se houver outra assinatura, o Android exige
-desinstalar a versão anterior, o que apaga os dados locais dela.
+desativada novamente. O pacote `com.senhoritaandriele.rotina` representa a nova
+identidade e é instalado separadamente de builds anteriores; os dados locais
+não são migrados automaticamente.
 
-## APK atual
+## Próximo APK
 
-- arquivo: `outputs/Rotina-da-Jhenifer-debug-android.apk`;
-- código-fonte: commit `7cc4604`;
-- tamanho: 182.562.582 bytes;
-- SHA-256:
-  `7989BE8FDEFC99D6F3F1C10EBB4EEBD5D6E3F0143DA334228A946243739C8D4D`;
-- assinatura debug APK Signature Scheme v2 verificada;
-- pacote: `com.senhoritajhenifer.rotina`, versão `1.0.0`, Android mínimo 7.0.
+- arquivo: `outputs/Rotina-da-Andriele-debug-android.apk`;
+- geração: pendente de comando explícito de debug;
+- pacote: `com.senhoritaandriele.rotina`, versão `1.0.0`, Android mínimo 7.0.
 
-Esta compilação inclui edição e cancelamento, subtarefas, duração protegida,
-sequência diária, recuperação por importância, widget da tela inicial e o ícone
-oficial da Jhenifer. Também inclui a manutenção idempotente das recorrências e o
-calendário mensal contínuo entre 2000 e 2100.
+A próxima compilação incluirá edição e cancelamento, subtarefas, duração
+protegida, sequência diária, recuperação por importância, widget da tela
+inicial, manutenção idempotente das recorrências, calendário mensal contínuo e
+a identidade oficial da Andriele.
 
 ## Objetivo
 
 O instalador portátil permite que uma pessoa no Windows instale ou atualize a
-versão debug da Rotina da Jhenifer em um celular Android por USB, sem precisar
+versão debug da Rotina da Andriele em um celular Android por USB, sem precisar
 configurar Flutter, Java ou Android Studio.
 
 O ZIP contém:
@@ -55,7 +51,7 @@ O ZIP contém:
    offline.
 3. Permite escolher o destino quando há vários aparelhos.
 4. Instala com atualização de dados (`adb install -r -d`).
-5. Abre `com.senhoritajhenifer.rotina/.MainActivity` após o sucesso.
+5. Abre `com.senhoritaandriele.rotina/.MainActivity` após o sucesso.
 6. Opcionalmente acompanha o `logcat` do processo para depuração.
 
 O instalador não desinstala versões incompatíveis automaticamente, pois isso
@@ -71,7 +67,7 @@ powershell -ExecutionPolicy Bypass -File scripts/package_debug_installer.ps1
 ```
 
 O empacotador executa `flutter build apk --debug --no-pub` e grava o ZIP em
-`outputs/Rotina-da-Jhenifer-Debug-Windows.zip`.
+`outputs/Rotina-da-Andriele-Debug-Windows.zip`.
 
 Para reaproveitar um APK já validado:
 

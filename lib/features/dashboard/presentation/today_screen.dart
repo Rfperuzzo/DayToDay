@@ -560,7 +560,7 @@ final class _BrandHeader extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Rotina da Jhenifer',
+                    'Rotina da Andriele',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -615,7 +615,7 @@ final class _Welcome extends StatelessWidget {
         ),
         const SizedBox(height: 18),
         Text(
-          isToday ? 'Olá, Jhenifer! ✨' : 'Seu dia em foco ✨',
+          isToday ? 'Olá, Andriele! ✨' : 'Seu dia em foco ✨',
           style: Theme.of(context).textTheme.headlineLarge,
         ),
         const SizedBox(height: 10),

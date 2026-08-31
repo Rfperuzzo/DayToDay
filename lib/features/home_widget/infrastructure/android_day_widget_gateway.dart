@@ -7,7 +7,7 @@ import '../domain/day_widget_gateway.dart';
 
 final class AndroidDayWidgetGateway implements DayWidgetGateway {
   static const _channel = MethodChannel(
-    'com.senhoritajhenifer.rotina/day_widget',
+    'com.senhoritaandriele.rotina/day_widget',
   );
 
   final _requests = StreamController<DayWidgetOpenRequest>.broadcast();

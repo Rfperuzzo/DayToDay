@@ -1,18 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotina_jhenifer/core/time/clock.dart';
-import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity_repositories.dart';
-import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
-import 'package:rotina_jhenifer/features/alarms/application/alarm_reconciler.dart';
-import 'package:rotina_jhenifer/features/alarms/application/alarm_response_service.dart';
-import 'package:rotina_jhenifer/features/alarms/domain/alarm_gateway.dart';
-import 'package:rotina_jhenifer/features/history/domain/activity_event.dart';
-import 'package:rotina_jhenifer/features/routine_engine/application/priority_routine_planner.dart';
-import 'package:rotina_jhenifer/features/settings/domain/user_preferences.dart';
+import 'package:rotina_andriele/core/time/clock.dart';
+import 'package:rotina_andriele/core/time/time_zone_service.dart';
+import 'package:rotina_andriele/features/activities/domain/activity.dart';
+import 'package:rotina_andriele/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_andriele/features/activities/domain/activity_repositories.dart';
+import 'package:rotina_andriele/features/activities/domain/recurrence_rule.dart';
+import 'package:rotina_andriele/features/alarms/application/alarm_reconciler.dart';
+import 'package:rotina_andriele/features/alarms/application/alarm_response_service.dart';
+import 'package:rotina_andriele/features/alarms/domain/alarm_gateway.dart';
+import 'package:rotina_andriele/features/history/domain/activity_event.dart';
+import 'package:rotina_andriele/features/routine_engine/application/priority_routine_planner.dart';
+import 'package:rotina_andriele/features/settings/domain/user_preferences.dart';
 
 void main() {
   final now = DateTime.utc(2026, 8, 31, 10, 2);

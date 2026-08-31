@@ -11,7 +11,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$packageName = 'com.senhoritajhenifer.rotina'
+$packageName = 'com.senhoritaandriele.rotina'
 $mainActivity = "$packageName/.MainActivity"
 
 function Resolve-AdbPath {
@@ -142,7 +142,7 @@ function Select-TargetDevice {
 
 try {
     Write-Host ''
-    Write-Host 'Rotina da Jhenifer — instalador debug' -ForegroundColor Magenta
+    Write-Host 'Rotina da Andriele — instalador debug' -ForegroundColor Magenta
     Write-Host '====================================' -ForegroundColor DarkMagenta
 
     $script:resolvedAdbPath = Resolve-AdbPath -RequestedPath $AdbPath

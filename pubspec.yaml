@@ -1,5 +1,5 @@
-name: rotina_jhenifer
-description: "Organizador de rotina offline com alarmes inteligentes para Jhenifer."
+name: rotina_andriele
+description: "Organizador de rotina offline com alarmes inteligentes para Andriele."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

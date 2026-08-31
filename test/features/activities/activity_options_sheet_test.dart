@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotina_jhenifer/core/time/clock.dart';
-import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
-import 'package:rotina_jhenifer/features/activities/application/activity_manager.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity_recurrence_preset.dart';
-import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
-import 'package:rotina_jhenifer/features/activities/presentation/activity_options_sheet.dart';
+import 'package:rotina_andriele/core/time/clock.dart';
+import 'package:rotina_andriele/core/time/time_zone_service.dart';
+import 'package:rotina_andriele/features/activities/application/activity_manager.dart';
+import 'package:rotina_andriele/features/activities/domain/activity.dart';
+import 'package:rotina_andriele/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_andriele/features/activities/domain/activity_recurrence_preset.dart';
+import 'package:rotina_andriele/features/activities/domain/recurrence_rule.dart';
+import 'package:rotina_andriele/features/activities/presentation/activity_options_sheet.dart';
 
 void main() {
   testWidgets('toque na opção retorna pedido de edição', (tester) async {

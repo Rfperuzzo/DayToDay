@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
-import 'package:rotina_jhenifer/features/dashboard/application/daily_task_sequence.dart';
+import 'package:rotina_andriele/features/activities/domain/activity.dart';
+import 'package:rotina_andriele/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_andriele/features/dashboard/application/daily_task_sequence.dart';
 
 void main() {
   test('somente a primeira tarefa pendente fica disponível', () {

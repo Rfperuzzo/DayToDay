@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rotina_jhenifer/app/app_dependencies.dart';
-import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
-import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
-import 'package:rotina_jhenifer/features/dashboard/presentation/today_screen.dart';
-import 'package:rotina_jhenifer/features/alarms/application/alarm_response_service.dart';
-import 'package:rotina_jhenifer/features/alarms/domain/alarm_gateway.dart';
-import 'package:rotina_jhenifer/features/alarms/presentation/alarm_screen.dart';
-import 'package:rotina_jhenifer/features/alarms/presentation/alarm_router.dart';
-import 'package:rotina_jhenifer/main.dart';
+import 'package:rotina_andriele/app/app_dependencies.dart';
+import 'package:rotina_andriele/core/time/time_zone_service.dart';
+import 'package:rotina_andriele/features/activities/domain/activity.dart';
+import 'package:rotina_andriele/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_andriele/features/activities/domain/recurrence_rule.dart';
+import 'package:rotina_andriele/features/dashboard/presentation/today_screen.dart';
+import 'package:rotina_andriele/features/alarms/application/alarm_response_service.dart';
+import 'package:rotina_andriele/features/alarms/domain/alarm_gateway.dart';
+import 'package:rotina_andriele/features/alarms/presentation/alarm_screen.dart';
+import 'package:rotina_andriele/features/alarms/presentation/alarm_router.dart';
+import 'package:rotina_andriele/main.dart';
 
 void main() {
   testWidgets('aplica identidade visual ao aplicativo', (tester) async {
     await tester.pumpWidget(
-      const RotinaJheniferApp(
-        home: Scaffold(body: Center(child: Text('Rotina da Jhenifer'))),
+      const RotinaAndrieleApp(
+        home: Scaffold(body: Center(child: Text('Rotina da Andriele'))),
       ),
     );
 
     expect(tester.takeException(), isNull);
-    expect(find.text('Rotina da Jhenifer'), findsOneWidget);
+    expect(find.text('Rotina da Andriele'), findsOneWidget);
   });
 
   testWidgets('painel mostra progresso, próxima atividade e conclusão', (
@@ -55,7 +55,7 @@ void main() {
     var addRequested = false;
 
     await tester.pumpWidget(
-      RotinaJheniferApp(
+      RotinaAndrieleApp(
         home: TodayDashboard(
           selectedDay: now,
           activities: [activity],
@@ -91,7 +91,7 @@ void main() {
     final scheduledAt = DateTime.now().toUtc();
 
     await tester.pumpWidget(
-      RotinaJheniferApp(
+      RotinaAndrieleApp(
         home: AlarmRingingScreen(
           alarm: RingingAlarmBinding(
             occurrenceId: 'treino-1',
@@ -135,7 +135,7 @@ void main() {
     ActivityOccurrence? completed;
 
     await tester.pumpWidget(
-      RotinaJheniferApp(
+      RotinaAndrieleApp(
         home: TodayDashboard(
           selectedDay: DateTime.now(),
           activities: [firstActivity, secondActivity],
@@ -175,7 +175,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      RotinaJheniferApp(
+      RotinaAndrieleApp(
         home: AlarmResolvedScreen(
           title: 'Treino',
           result: AlarmResponseResult(
@@ -202,7 +202,7 @@ void main() {
       nativeAlarmId: 84,
       scheduledAtUtc: DateTime.now().toUtc(),
       title: 'Hora de acordar',
-      body: 'Bom dia, Jhenifer!',
+      body: 'Bom dia, Andriele!',
     );
 
     await tester.pumpWidget(
@@ -213,7 +213,7 @@ void main() {
             const DeviceTimeZoneService(),
           ),
         ],
-        child: const RotinaJheniferApp(
+        child: const RotinaAndrieleApp(
           home: AlarmRouter(child: Text('Painel diário')),
         ),
       ),

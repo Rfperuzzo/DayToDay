@@ -1,6 +1,6 @@
 # Roadmap de produto e soluções inovadoras
 
-O princípio central é simples: o app deve ajudar Jhenifer a retomar o dia, não
+O princípio central é simples: o app deve ajudar Andriele a retomar o dia, não
 apenas avisar que um horário passou. Todo aprendizado permanece no aparelho.
 
 ## Entregue no MVP atual
@@ -82,7 +82,7 @@ flexível.
 
 Uma ideia só entra no produto quando:
 
-1. resolve uma decisão real do dia de Jhenifer;
+1. resolve uma decisão real do dia de Andriele;
 2. funciona offline;
 3. não compromete a confiabilidade do alarme;
 4. explica alterações automáticas;

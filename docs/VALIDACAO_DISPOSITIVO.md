@@ -3,7 +3,10 @@
 Data: 29/08/2026  
 Aparelho: Motorola edge 60 fusion  
 Sistema: Android 16, API 36  
-Aplicativo: `com.senhoritajhenifer.rotina`, build debug
+Aplicativo: build debug anterior à troca completa de identidade
+
+> A identidade `com.senhoritaandriele.rotina` deve repetir esta validação em
+> aparelho físico quando o próximo APK for autorizado e gerado.
 
 ## Resultado
 
@@ -73,4 +76,3 @@ recriou o processo com um novo PID, acordou a tela e abriu **ALARME TOCANDO**.
   bateria diferentes ainda merecem uma futura matriz de aparelhos.
 - O teste usou build debug. A assinatura e o comportamento do APK release devem
   ser validados antes de distribuição externa.
-

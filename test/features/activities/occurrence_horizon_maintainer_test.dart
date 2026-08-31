@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotina_jhenifer/core/time/clock.dart';
-import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
-import 'package:rotina_jhenifer/features/activities/application/occurrence_horizon_maintainer.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity_repositories.dart';
-import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
-import 'package:rotina_jhenifer/features/alarms/infrastructure/native_alarm_id.dart';
-import 'package:rotina_jhenifer/features/settings/domain/user_preferences.dart';
+import 'package:rotina_andriele/core/time/clock.dart';
+import 'package:rotina_andriele/core/time/time_zone_service.dart';
+import 'package:rotina_andriele/features/activities/application/occurrence_horizon_maintainer.dart';
+import 'package:rotina_andriele/features/activities/domain/activity.dart';
+import 'package:rotina_andriele/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_andriele/features/activities/domain/activity_repositories.dart';
+import 'package:rotina_andriele/features/activities/domain/recurrence_rule.dart';
+import 'package:rotina_andriele/features/alarms/infrastructure/native_alarm_id.dart';
+import 'package:rotina_andriele/features/settings/domain/user_preferences.dart';
 
 void main() {
   late _MemoryOccurrences occurrences;

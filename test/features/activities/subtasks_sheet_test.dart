@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotina_jhenifer/app/app_dependencies.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
-import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
-import 'package:rotina_jhenifer/features/activities/domain/subtask.dart';
-import 'package:rotina_jhenifer/features/activities/domain/subtask_repository.dart';
-import 'package:rotina_jhenifer/features/activities/presentation/subtasks_sheet.dart';
+import 'package:rotina_andriele/app/app_dependencies.dart';
+import 'package:rotina_andriele/features/activities/domain/activity.dart';
+import 'package:rotina_andriele/features/activities/domain/recurrence_rule.dart';
+import 'package:rotina_andriele/features/activities/domain/subtask.dart';
+import 'package:rotina_andriele/features/activities/domain/subtask_repository.dart';
+import 'package:rotina_andriele/features/activities/presentation/subtasks_sheet.dart';
 
 void main() {
   testWidgets('adiciona e conclui subtarefa ligada à atividade', (

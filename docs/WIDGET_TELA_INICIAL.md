@@ -8,7 +8,7 @@ dados locais e não exige conta, rede ou uma dependência Flutter adicional.
 1. Abra o aplicativo ao menos uma vez para preparar a agenda local.
 2. Toque e segure um espaço vazio da tela inicial do Android.
 3. Escolha **Widgets**.
-4. Procure **Rotina da Jhenifer** e selecione **Tarefas de hoje**.
+4. Procure **Rotina da Andriele** e selecione **Tarefas de hoje**.
 5. Arraste o widget para a tela inicial e ajuste seu tamanho se desejar.
 
 ## Comportamento

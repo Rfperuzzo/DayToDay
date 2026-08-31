@@ -107,7 +107,7 @@ final class AppDatabase extends _$AppDatabase {
   AppDatabase.defaults()
     : super(
         driftDatabase(
-          name: 'rotina_jhenifer',
+          name: 'rotina_andriele',
           native: const DriftNativeOptions(shareAcrossIsolates: true),
         ),
       );

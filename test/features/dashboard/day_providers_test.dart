@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotina_jhenifer/app/app_dependencies.dart';
-import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity_repositories.dart';
-import 'package:rotina_jhenifer/features/alarms/infrastructure/native_alarm_id.dart';
-import 'package:rotina_jhenifer/features/dashboard/application/day_providers.dart';
+import 'package:rotina_andriele/app/app_dependencies.dart';
+import 'package:rotina_andriele/core/time/time_zone_service.dart';
+import 'package:rotina_andriele/features/activities/domain/activity.dart';
+import 'package:rotina_andriele/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_andriele/features/activities/domain/activity_repositories.dart';
+import 'package:rotina_andriele/features/alarms/infrastructure/native_alarm_id.dart';
+import 'package:rotina_andriele/features/dashboard/application/day_providers.dart';
 
 void main() {
   test('selecionar data consulta somente as tarefas daquele dia', () async {

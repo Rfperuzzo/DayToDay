@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotina_jhenifer/core/time/clock.dart';
-import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
-import 'package:rotina_jhenifer/features/activities/presentation/new_activity_sheet.dart';
-import 'package:rotina_jhenifer/features/alarms/domain/alarm_permission_gateway.dart';
+import 'package:rotina_andriele/core/time/clock.dart';
+import 'package:rotina_andriele/core/time/time_zone_service.dart';
+import 'package:rotina_andriele/features/activities/presentation/new_activity_sheet.dart';
+import 'package:rotina_andriele/features/alarms/domain/alarm_permission_gateway.dart';
 
 void main() {
   testWidgets('não salva se o horário passar durante a liberação de acesso', (

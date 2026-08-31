@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
-import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
-import 'package:rotina_jhenifer/features/routine_engine/application/priority_routine_planner.dart';
-import 'package:rotina_jhenifer/features/settings/domain/user_preferences.dart';
+import 'package:rotina_andriele/core/time/time_zone_service.dart';
+import 'package:rotina_andriele/features/activities/domain/activity.dart';
+import 'package:rotina_andriele/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_andriele/features/routine_engine/application/priority_routine_planner.dart';
+import 'package:rotina_andriele/features/settings/domain/user_preferences.dart';
 
 void main() {
   const planner = PriorityRoutinePlanner(_UtcTimeZone());

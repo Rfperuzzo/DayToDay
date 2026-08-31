@@ -1,4 +1,4 @@
-package com.senhoritajhenifer.rotina
+package com.senhoritaandriele.rotina
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -29,7 +29,7 @@ class RotinaDayWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
-        const val ACTION_OPEN_TASK = "com.senhoritajhenifer.rotina.OPEN_WIDGET_TASK"
+        const val ACTION_OPEN_TASK = "com.senhoritaandriele.rotina.OPEN_WIDGET_TASK"
         const val EXTRA_OCCURRENCE_ID = "occurrenceId"
         const val EXTRA_ACTIVITY_ID = "activityId"
 
@@ -197,7 +197,7 @@ class RotinaDayWidgetProvider : AppWidgetProvider() {
             val intent = Intent(context, MainActivity::class.java).apply {
                 action = ACTION_OPEN_TASK
                 data = Uri.parse(
-                    "rotinajhenifer://widget/task/${Uri.encode(task.occurrenceId)}",
+                    "rotinaandriele://widget/task/${Uri.encode(task.occurrenceId)}",
                 )
                 putExtra(EXTRA_OCCURRENCE_ID, task.occurrenceId)
                 putExtra(EXTRA_ACTIVITY_ID, task.activityId)
