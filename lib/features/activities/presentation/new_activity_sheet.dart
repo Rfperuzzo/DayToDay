@@ -122,7 +122,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 24),
-                _SectionLabel(label: 'O que a Andriele vai fazer?'),
+                _SectionLabel(label: 'O que a Jhenifer vai fazer?'),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _titleController,

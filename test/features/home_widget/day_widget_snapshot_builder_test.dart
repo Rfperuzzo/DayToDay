@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotina_andriele/core/time/time_zone_service.dart';
-import 'package:rotina_andriele/features/activities/domain/activity.dart';
-import 'package:rotina_andriele/features/activities/domain/activity_occurrence.dart';
-import 'package:rotina_andriele/features/activities/domain/recurrence_rule.dart';
-import 'package:rotina_andriele/features/home_widget/application/day_widget_snapshot_builder.dart';
+import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
+import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
+import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
+import 'package:rotina_jhenifer/features/home_widget/application/day_widget_snapshot_builder.dart';
 
 void main() {
   test('resume, ordena e bloqueia as tarefas posteriores do widget', () {

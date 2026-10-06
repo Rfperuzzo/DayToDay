@@ -16,7 +16,7 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         tools:node="remove" />
     <application
-        android:label="Rotina da Andriele"
+        android:label="Rotina da Jhenifer"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">

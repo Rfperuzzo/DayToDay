@@ -63,7 +63,7 @@ final class AlarmReconciler {
           occurrenceId: occurrence.id,
           scheduledAtUtc: occurrence.scheduledStartUtc,
           estimatedDuration: occurrence.estimatedDuration,
-          title: activity?.title ?? 'Atividade da Andriele',
+          title: activity?.title ?? 'Atividade da Jhenifer',
           body: 'Hora da sua atividade. Abra para responder.',
         ),
       );

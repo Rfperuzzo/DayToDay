@@ -1,4 +1,4 @@
-# Rotina da Andriele
+# Rotina da Jhenifer
 
 Aplicativo Android offline para organizar atividades e disparar alarmes fortes,
 com reagendamento inteligente ao escolher **Agora não** ou perder a janela de
@@ -8,7 +8,7 @@ O MVP já possui painel diário responsivo, conclusão antecipada, subtarefas,
 controle de duração, sequência diária e cadastro de atividades únicas ou
 recorrentes com preparação contextual dos alarmes. A fila se reorganiza por
 importância sem criar sobreposições, e um widget Android mostra as tarefas do
-dia na tela inicial. A ilustração da Andriele é usada como ícone oficial em
+dia na tela inicial. A ilustração da Jhenifer é usada como ícone oficial em
 formatos Android legado, redondo e adaptativo. O calendário horizontal percorre
 todos os dias dos meses e mostra a rotina da data selecionada.
 
@@ -37,7 +37,8 @@ flutter build apk --debug
 powershell -ExecutionPolicy Bypass -File scripts/package_debug_installer.ps1
 ```
 
-> Neste ambiente Codex, os metadados Git estão em `.gitdata` porque a pasta
-> `.git` é protegida pelo sandbox. Use
-> `git --git-dir=.gitdata --work-tree=. <comando>` enquanto essa proteção
-> estiver ativa.
+## Repositório
+
+https://github.com/Rfperuzzo/rotina-da-jhenifer
+
+Este projeto usa Git convencional (`.git`), com o histórico original preservado.

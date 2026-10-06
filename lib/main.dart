@@ -8,11 +8,11 @@ import 'features/home_widget/presentation/day_widget_bridge.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final dependencies = await AppDependencies.create();
-  runApp(dependencies.provideTo(const RotinaAndrieleApp()));
+  runApp(dependencies.provideTo(const RotinaJheniferApp()));
 }
 
-class RotinaAndrieleApp extends StatelessWidget {
-  const RotinaAndrieleApp({this.home, super.key});
+class RotinaJheniferApp extends StatelessWidget {
+  const RotinaJheniferApp({this.home, super.key});
 
   final Widget? home;
 
@@ -20,7 +20,7 @@ class RotinaAndrieleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Rotina da Andriele',
+      title: 'Rotina da Jhenifer',
       theme: RotinaTheme.light,
       home:
           home ??

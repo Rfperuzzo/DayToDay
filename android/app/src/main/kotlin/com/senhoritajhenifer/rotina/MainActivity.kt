@@ -1,4 +1,4 @@
-package com.senhoritaandriele.rotina
+package com.senhoritajhenifer.rotina
 
 import android.app.AlarmManager
 import android.app.NotificationManager
@@ -25,7 +25,7 @@ class MainActivity : FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
-            "com.senhoritaandriele.rotina/alarm_permissions",
+            "com.senhoritajhenifer.rotina/alarm_permissions",
         ).setMethodCallHandler { call, result ->
             when (call.method) {
                 "canUseFullScreenIntent" -> result.success(canUseFullScreenIntent())
@@ -153,6 +153,6 @@ class MainActivity : FlutterActivity() {
         const val WIDGET_PREFERENCES = "rotina_day_widget"
         const val WIDGET_SNAPSHOT_KEY = "day_snapshot"
         const val WIDGET_PENDING_TASK_KEY = "pending_task"
-        private const val DAY_WIDGET_CHANNEL = "com.senhoritaandriele.rotina/day_widget"
+        private const val DAY_WIDGET_CHANNEL = "com.senhoritajhenifer.rotina/day_widget"
     }
 }

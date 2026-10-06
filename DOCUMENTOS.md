@@ -1,4 +1,4 @@
-# Memória viva — Rotina da Andriele
+# Memória viva — Rotina da Jhenifer
 
 Atualize este documento no mesmo commit de qualquer mudança que altere regras,
 arquitetura, dependências importantes ou escopo.
@@ -6,15 +6,15 @@ arquitetura, dependências importantes ou escopo.
 ## Objetivo
 
 Construir um aplicativo Android, offline e sem conta, que ajude a senhorita
-Andriele a organizar suas atividades. Cada atividade pode gerar um alarme forte
+Jhenifer a organizar suas atividades. Cada atividade pode gerar um alarme forte
 e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 
 ## Decisões confirmadas
 
 - Android primeiro; a arquitetura não deve impedir uma futura versão iOS.
 - Flutter 3.44.2 e Dart 3.12.2.
-- Nome oficial: **Rotina da Andriele**.
-- Application ID: `com.senhoritaandriele.rotina`.
+- Nome oficial: **Rotina da Jhenifer**.
+- Application ID: `com.senhoritajhenifer.rotina`.
 - Android mínimo 24; compile/target SDK 36.
 - Dados somente locais, sem conta, backend, anúncios ou telemetria.
 - A distribuição de testes usa um instalador portátil para Windows com APK
@@ -22,7 +22,7 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
   máquina que fará a instalação por USB.
 - A experiência visual parte da referência Stitch **Vibrant Momentum**: rosa
   energético, superfícies claras, formas arredondadas e pouco ruído visual.
-- A ilustração recebida da Andriele é o ícone oficial do aplicativo. A fonte
+- A ilustração recebida da Jhenifer é o ícone oficial do aplicativo. A fonte
   original fica preservada em `assets/branding/`, e o Android recebe variantes
   legada, redonda e adaptativa em todas as densidades.
 - A troca completa de identidade também alcança o pacote Dart, banco local,
@@ -182,7 +182,7 @@ local e dias da semana para continuarem no mesmo horário após mudança de fuso
 ## Ideias inovadoras preservadas
 
 - **Resgate de rotina:** reconstrói o restante do dia após **Agora não**.
-- **Memória da Andriele:** aprende durações reais usando somente histórico local.
+- **Memória da Jhenifer:** aprende durações reais usando somente histórico local.
 - **Barreira anti-caos:** protege prioridades e impede cascatas de sobreposição.
 - **Tempo de preparação:** aviso opcional antes da atividade e buffer de
   transição.
@@ -207,22 +207,14 @@ A navegação de datas está descrita em `docs/CALENDARIO_MENSAL.md`.
   possível.
 - Não misturar layouts futuros com mudanças do motor de rotina.
 
-O sandbox atual bloqueia escrita em diretórios chamados `.git`. Por isso, o
-repositório real usa `.gitdata` como diretório Git separado:
-
-```powershell
-git --git-dir=.gitdata --work-tree=. status
-git --git-dir=.gitdata --work-tree=. log --oneline
-```
-
-Fora do sandbox, a normalização consiste em remover o `.git` vazio protegido e
-renomear `.gitdata` para `.git`; nenhum commit é perdido.
+O repositório usa Git convencional (`.git`) e preserva o histórico original.
+Repositório: https://github.com/Rfperuzzo/rotina-da-jhenifer
 
 ## Estado atual
 
 - [x] Repositório e projeto Flutter Android criados.
 - [x] Identidade visual e painel diário responsivo.
-- [x] Ícone oficial da Andriele configurado para launchers Android.
+- [x] Ícone oficial da Jhenifer configurado para launchers Android.
 - [x] Cadastro contextual de atividades e preparação de alarmes.
 - [x] Identidade e versões Android configuradas.
 - [x] Domínio e recorrência.
@@ -249,24 +241,21 @@ renomear `.gitdata` para `.git`; nenhum commit é perdido.
 - [x] Calendário mensal contínuo com seleção diária e preparação de meses
   futuros.
 
-## Última validação automatizada
+## Retorno à identidade original — 05/10/2026
 
-Executada em 31/08/2026 após a troca de identidade:
-
-- `flutter analyze`: nenhum problema encontrado.
+- Nome oficial restaurado para **Rotina da Jhenifer** em todas as telas, testes e documentação.
+- Pacote Dart: `rotina_jhenifer`; Android: `com.senhoritajhenifer.rotina`.
+- Banco, canais nativos, URI do widget e instaladores usam a identidade original.
+- Ícone original e suas variantes Android restaurados do commit `1894729`.
+- O aplicativo com outro Application ID permanece separado, sem migração automática.
+- Uma instalação antiga da Jhenifer só pode ser atualizada se a assinatura for compatível.
+- `flutter analyze --no-pub`: nenhum problema encontrado.
 - `flutter test --no-pub`: 52 testes aprovados.
-- `:app:compileDebugKotlin`: widget, recursos Android e canal nativo compilados
-  com sucesso usando o JBR 21 do Android Studio.
-- Pacote Dart `rotina_andriele`, Application ID
-  `com.senhoritaandriele.rotina`, banco `rotina_andriele` e canais nativos da
-  Andriele compilados em conjunto.
-- Novo ícone validado nas cinco densidades Android, nas variantes legada,
-  redonda e adaptativa; a fonte original tem SHA-256
-  `7296C2167E3E6EBEAAE11F68AD0BCF900CEEB656D098C1D87F721C1BDB9DA144`.
-- `flutter build apk --debug --no-pub`: APK da nova identidade gerado com
-  sucesso, com assinatura debug v2 verificada, pacote
-  `com.senhoritaandriele.rotina`, 162.958.920 bytes e SHA-256
-  `E732555A23F0A4309E8664DB5F5BC9607CF9DD737B9FF2193C1D33EDC0C079B3`.
+- `flutter build apk --debug --no-pub`: APK compilado com sucesso.
+- APK inspecionado: nome Rotina da Jhenifer, pacote original, versão 1.0.0, Android mínimo 24.
+- Assinatura APK v2 verificada; scripts PowerShell sem erros de sintaxe.
+- Nenhuma referência à identidade substituída nos arquivos atuais versionados.
+- O teste em aparelho físico não foi repetido nesta revisão; as evidências abaixo são históricas.
 
 ## Validação física anterior
 
@@ -309,11 +298,8 @@ Executada em 29/08/2026, antes da troca completa de identidade:
   visível, seleção explícita e consulta isolada das tarefas do dia foram
   validados por testes automatizados.
 
-O APK `outputs/Rotina-da-Andriele-debug-android.apk` contém a nova identidade,
-o pacote e o ícone oficiais. Os arquivos nomeados como `Rotina-legada-*` foram
-gerados antes dessa mudança e não devem ser distribuídos como **Rotina da
-Andriele**. O ZIP portátil com a nova identidade ainda depende de comando
-explícito para ser regenerado.
+Os APKs antigos não fazem parte da entrega atual. Gere novos artefatos a partir
+deste repositório; não renomeie binários anteriores como se fossem novos builds.
 
 Existe um aviso não bloqueante: os plugins `alarm` e `flutter_timezone` ainda
 aplicam o Kotlin Gradle Plugin tradicional. A versão atual compila; antes de uma

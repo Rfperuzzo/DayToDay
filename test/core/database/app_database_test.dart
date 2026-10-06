@@ -1,13 +1,13 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotina_andriele/core/database/app_database.dart';
-import 'package:rotina_andriele/core/time/clock.dart';
-import 'package:rotina_andriele/features/activities/application/subtask_manager.dart';
-import 'package:rotina_andriele/features/activities/data/drift_activity_repositories.dart';
-import 'package:rotina_andriele/features/activities/data/drift_subtask_repository.dart';
-import 'package:rotina_andriele/features/activities/domain/activity.dart';
-import 'package:rotina_andriele/features/activities/domain/activity_occurrence.dart';
-import 'package:rotina_andriele/features/activities/domain/recurrence_rule.dart';
+import 'package:rotina_jhenifer/core/database/app_database.dart';
+import 'package:rotina_jhenifer/core/time/clock.dart';
+import 'package:rotina_jhenifer/features/activities/application/subtask_manager.dart';
+import 'package:rotina_jhenifer/features/activities/data/drift_activity_repositories.dart';
+import 'package:rotina_jhenifer/features/activities/data/drift_subtask_repository.dart';
+import 'package:rotina_jhenifer/features/activities/domain/activity.dart';
+import 'package:rotina_jhenifer/features/activities/domain/activity_occurrence.dart';
+import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart';
 
 void main() {
   late AppDatabase database;

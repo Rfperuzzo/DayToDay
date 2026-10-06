@@ -1,7 +1,7 @@
 # Referência visual — Vibrant Momentum
 
 Este documento preserva o contexto visual recebido para o projeto **Rotina da
-Andriele**. Ele descreve uma referência de produto, não código a ser executado
+Jhenifer**. Ele descreve uma referência de produto, não código a ser executado
 nem uma dependência do aplicativo.
 
 ## Origem
@@ -18,7 +18,7 @@ de rede. Ícones e tipografia usam recursos compilados no aplicativo.
 
 ## Direção adotada
 
-- Ícone oficial: ilustração fornecida da Andriele, preservada em
+- Ícone oficial: ilustração fornecida da Jhenifer, preservada em
   `assets/branding/` e exportada para ícones Android legados, redondos e
   adaptativos.
 - Personalidade: produtividade calorosa, feminina e enérgica, sem infantilizar.
@@ -36,7 +36,7 @@ Os tokens de código ficam em `lib/core/presentation/rotina_theme.dart`.
 
 ## Componentes já traduzidos para Flutter
 
-- cabeçalho com identidade da Andriele, sem depender de foto externa;
+- cabeçalho com identidade da Jhenifer, sem depender de foto externa;
 - saudação e quantidade de tarefas do dia escolhido;
 - calendário horizontal localizado em português, com sete cartões visíveis,
   continuidade entre meses e título do mês em foco;

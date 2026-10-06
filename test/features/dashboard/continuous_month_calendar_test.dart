@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:rotina_andriele/features/dashboard/presentation/continuous_month_calendar.dart';
+import 'package:rotina_jhenifer/features/dashboard/presentation/continuous_month_calendar.dart';
 
 void main() {
   test('calcula meses com 28, 29, 30 e 31 dias', () {
