@@ -16,13 +16,13 @@ import 'package:rotina_jhenifer/main.dart';
 void main() {
   testWidgets('aplica identidade visual ao aplicativo', (tester) async {
     await tester.pumpWidget(
-      const RotinaJheniferApp(
-        home: Scaffold(body: Center(child: Text('Rotina da Jhenifer'))),
+      const DayToDayApp(
+        home: Scaffold(body: Center(child: Text('DayToDay'))),
       ),
     );
 
     expect(tester.takeException(), isNull);
-    expect(find.text('Rotina da Jhenifer'), findsOneWidget);
+    expect(find.text('DayToDay'), findsOneWidget);
   });
 
   testWidgets('painel mostra progresso, próxima atividade e conclusão', (
@@ -55,7 +55,7 @@ void main() {
     var addRequested = false;
 
     await tester.pumpWidget(
-      RotinaJheniferApp(
+      DayToDayApp(
         home: TodayDashboard(
           selectedDay: now,
           activities: [activity],
@@ -91,7 +91,7 @@ void main() {
     final scheduledAt = DateTime.now().toUtc();
 
     await tester.pumpWidget(
-      RotinaJheniferApp(
+      DayToDayApp(
         home: AlarmRingingScreen(
           alarm: RingingAlarmBinding(
             occurrenceId: 'treino-1',
@@ -135,7 +135,7 @@ void main() {
     ActivityOccurrence? completed;
 
     await tester.pumpWidget(
-      RotinaJheniferApp(
+      DayToDayApp(
         home: TodayDashboard(
           selectedDay: DateTime.now(),
           activities: [firstActivity, secondActivity],
@@ -175,7 +175,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      RotinaJheniferApp(
+      DayToDayApp(
         home: AlarmResolvedScreen(
           title: 'Treino',
           result: AlarmResponseResult(
@@ -202,7 +202,7 @@ void main() {
       nativeAlarmId: 84,
       scheduledAtUtc: DateTime.now().toUtc(),
       title: 'Hora de acordar',
-      body: 'Bom dia, Jhenifer!',
+      body: 'Bom dia!',
     );
 
     await tester.pumpWidget(
@@ -213,7 +213,7 @@ void main() {
             const DeviceTimeZoneService(),
           ),
         ],
-        child: const RotinaJheniferApp(
+        child: const DayToDayApp(
           home: AlarmRouter(child: Text('Painel diário')),
         ),
       ),

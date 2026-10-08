@@ -1,6 +1,6 @@
-# Rotina da Jhenifer
+# DayToDay
 
-Aplicativo Android offline para organizar atividades e disparar alarmes fortes,
+Aplicativo Android offline para organizar rotinas e disparar alarmes fortes,
 com reagendamento inteligente ao escolher **Agora não** ou perder a janela de
 uma tarefa sem confirmação.
 
@@ -8,7 +8,7 @@ O MVP já possui painel diário responsivo, conclusão antecipada, subtarefas,
 controle de duração, sequência diária e cadastro de atividades únicas ou
 recorrentes com preparação contextual dos alarmes. A fila se reorganiza por
 importância sem criar sobreposições, e um widget Android mostra as tarefas do
-dia na tela inicial. A ilustração da Jhenifer é usada como ícone oficial em
+dia na tela inicial. A identidade neutra usa um calendário com check como ícone em
 formatos Android legado, redondo e adaptativo. O calendário horizontal percorre
 todos os dias dos meses e mostra a rotina da data selecionada.
 

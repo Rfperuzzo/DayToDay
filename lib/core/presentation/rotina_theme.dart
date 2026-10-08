@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 abstract final class RotinaColors {
-  static const background = Color(0xFFFFF8F7);
+  static const background = Color(0xFFF7F7F5);
   static const surface = Color(0xFFFFFFFF);
-  static const surfaceSoft = Color(0xFFFFF0F1);
-  static const surfaceStrong = Color(0xFFFFE1E4);
-  static const primary = Color(0xFFBA0034);
-  static const primaryBright = Color(0xFFE51245);
-  static const primarySoft = Color(0xFFF4DCE4);
-  static const text = Color(0xFF321017);
-  static const textMuted = Color(0xFF6B5A60);
-  static const outline = Color(0xFFE6BCBD);
+  static const surfaceSoft = Color(0xFFF0F0ED);
+  static const surfaceStrong = Color(0xFFE5E5E0);
+  static const primary = Color(0xFF343833);
+  static const primaryBright = Color(0xFF5C625A);
+  static const primarySoft = Color(0xFFE8EAE5);
+  static const text = Color(0xFF242723);
+  static const textMuted = Color(0xFF646860);
+  static const outline = Color(0xFFD8DBD3);
+  static const onPrimary = Color(0xFFFFFFFF);
+  static const alarmBackground = Color(0xFF242723);
   static const danger = Color(0xFFB3261E);
 }
 
@@ -20,8 +22,32 @@ abstract final class RotinaTheme {
       seedColor: RotinaColors.primary,
       brightness: Brightness.light,
       primary: RotinaColors.primary,
+      onPrimary: RotinaColors.onPrimary,
+      primaryContainer: RotinaColors.primarySoft,
+      onPrimaryContainer: RotinaColors.text,
+      secondary: RotinaColors.primaryBright,
+      onSecondary: RotinaColors.onPrimary,
+      secondaryContainer: RotinaColors.surfaceStrong,
+      onSecondaryContainer: RotinaColors.text,
+      tertiary: RotinaColors.textMuted,
+      onTertiary: RotinaColors.onPrimary,
+      tertiaryContainer: RotinaColors.surfaceStrong,
+      onTertiaryContainer: RotinaColors.text,
       surface: RotinaColors.surface,
       onSurface: RotinaColors.text,
+      onSurfaceVariant: RotinaColors.textMuted,
+      surfaceContainerLowest: RotinaColors.surface,
+      surfaceContainerLow: RotinaColors.background,
+      surfaceContainer: RotinaColors.surfaceSoft,
+      surfaceContainerHigh: RotinaColors.surfaceStrong,
+      surfaceContainerHighest: RotinaColors.outline,
+      surfaceTint: RotinaColors.primary,
+      outline: RotinaColors.textMuted,
+      outlineVariant: RotinaColors.outline,
+      inverseSurface: RotinaColors.text,
+      onInverseSurface: RotinaColors.background,
+      inversePrimary: RotinaColors.surfaceStrong,
+      error: RotinaColors.danger,
     );
     final base = ThemeData(useMaterial3: true, colorScheme: colors);
 

@@ -243,7 +243,7 @@ final class _CalendarDayCard extends StatelessWidget {
             boxShadow: selected
                 ? const [
                     BoxShadow(
-                      color: Color(0x40BA0034),
+                      color: Color(0x20343833),
                       blurRadius: 16,
                       offset: Offset(0, 6),
                     ),
@@ -257,7 +257,7 @@ final class _CalendarDayCard extends StatelessWidget {
                 _weekdayShort(day.weekday),
                 style: TextStyle(
                   color: selected
-                      ? const Color(0xFFFFDADA)
+                      ? const Color(0xFFE5E5E0)
                       : RotinaColors.textMuted,
                   fontSize: 12,
                   fontWeight: FontWeight.w800,

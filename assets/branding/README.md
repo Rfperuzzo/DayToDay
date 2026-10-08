@@ -1,25 +1,9 @@
-# Identidade do aplicativo
+# Identidade DayToDay
 
-O ícone oficial da **Rotina da Jhenifer** foi recebido em 29/08/2026 no arquivo
-`jhenifericone.jpeg`.
+O ícone é um calendário com marca de conclusão em off-white sobre grafite.
+Sua geometria é definida em `scripts/generate_daytoday_icons.ps1`; execute o
+script no Windows para gerar a matriz `daytoday_app_icon.png` e os ícones Android
+legados, redondos e adaptativos de mdpi até xxxhdpi.
 
-## Arquivos preservados
-
-- `jhenifer_app_icon_source.jpeg`: cópia binária exata do arquivo recebido;
-- `jhenifer_app_icon.png`: matriz PNG de 1024 × 1024 para futuras exportações.
-
-SHA-256 da imagem original:
-`95D6CF28874BF6F1926EF8D5BFC0CCE5F43CC04E0E55E4C7CF39309216F24057`.
-
-## Android
-
-As pastas `mipmap-mdpi` até `mipmap-xxxhdpi` contêm:
-
-- `ic_launcher.png`: ícone legado nas densidades oficiais;
-- `ic_launcher_round.png`: variante circular para launchers compatíveis;
-- `ic_launcher_foreground.png`: camada do ícone adaptativo do Android 8 ou
-  superior.
-
-A conversão apenas redimensiona a arte original com interpolação bicúbica de
-alta qualidade. Não há regeneração por IA, mudança da personagem ou dependência
-de rede em tempo de execução.
+As imagens `jhenifer_app_icon_source.jpeg` e `jhenifer_app_icon.png` são fontes
+históricas preservadas e não são usadas no aplicativo atual.

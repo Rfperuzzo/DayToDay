@@ -1,34 +1,28 @@
-# Memória viva — Rotina da Jhenifer
+# Memória viva — DayToDay
 
 Atualize este documento no mesmo commit de qualquer mudança que altere regras,
 arquitetura, dependências importantes ou escopo.
 
 ## Objetivo
 
-Construir um aplicativo Android, offline e sem conta, que ajude a senhorita
-Jhenifer a organizar suas atividades. Cada atividade pode gerar um alarme forte
+Construir um aplicativo Android, offline e sem conta, para ajudar qualquer pessoa:
+organizar suas rotinas e atividades. Cada atividade pode gerar um alarme forte
 e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 
 ## Decisões confirmadas
 
 - Android primeiro; a arquitetura não deve impedir uma futura versão iOS.
 - Flutter 3.44.2 e Dart 3.12.2.
-- Nome oficial: **Rotina da Jhenifer**.
+- Nome oficial: **DayToDay**.
 - Application ID: `com.senhoritajhenifer.rotina`.
 - Android mínimo 24; compile/target SDK 36.
 - Dados somente locais, sem conta, backend, anúncios ou telemetria.
 - A distribuição de testes usa um instalador portátil para Windows com APK
   debug e ADB incluídos; Flutter e Android Studio não são necessários na
   máquina que fará a instalação por USB.
-- A experiência visual parte da referência Stitch **Vibrant Momentum**: rosa
-  energético, superfícies claras, formas arredondadas e pouco ruído visual.
-- A ilustração recebida da Jhenifer é o ícone oficial do aplicativo. A fonte
-  original fica preservada em `assets/branding/`, e o Android recebe variantes
-  legada, redonda e adaptativa em todas as densidades.
-- A troca completa de identidade também alcança o pacote Dart, banco local,
-  canais nativos, widget e instalador. Como o Application ID mudou, o Android
-  instala esta versão separadamente e não migra automaticamente os dados do
-  aplicativo anterior.
+- Identidade neutra: off-white, branco, grafite e cinza; vermelho apenas para erros e ações destrutivas.
+- Ícone oficial: calendário com check, gerado por scripts/generate_daytoday_icons.ps1 em todas as densidades Android. Arte anterior preservada como referência histórica.
+- A mudança para DayToDay preserva Application ID, pacote Dart, banco, canais nativos e URI do widget para manter dados em atualizações compatíveis.
 - O primeiro layout de produto é o painel diário, com calendário mensal
   contínuo, progresso, próxima atividade e conclusão rápida.
 - O cadastro nasce do botão flutuante central e cobre título, observação, dia,
@@ -182,7 +176,7 @@ local e dias da semana para continuarem no mesmo horário após mudança de fuso
 ## Ideias inovadoras preservadas
 
 - **Resgate de rotina:** reconstrói o restante do dia após **Agora não**.
-- **Memória da Jhenifer:** aprende durações reais usando somente histórico local.
+- **Memória da rotina:** aprende durações reais usando somente histórico local.
 - **Barreira anti-caos:** protege prioridades e impede cascatas de sobreposição.
 - **Tempo de preparação:** aviso opcional antes da atividade e buffer de
   transição.
@@ -214,7 +208,7 @@ Repositório: https://github.com/Rfperuzzo/rotina-da-jhenifer
 
 - [x] Repositório e projeto Flutter Android criados.
 - [x] Identidade visual e painel diário responsivo.
-- [x] Ícone oficial da Jhenifer configurado para launchers Android.
+- [x] Ícone oficial DayToDay configurado para launchers Android.
 - [x] Cadastro contextual de atividades e preparação de alarmes.
 - [x] Identidade e versões Android configuradas.
 - [x] Domínio e recorrência.
@@ -241,7 +235,15 @@ Repositório: https://github.com/Rfperuzzo/rotina-da-jhenifer
 - [x] Calendário mensal contínuo com seleção diária e preparação de meses
   futuros.
 
-## Retorno à identidade original — 05/10/2026
+## Identidade DayToDay — 08/10/2026
+
+- Produto reposicionado como organizador de rotinas para qualquer pessoa.
+- Marca atualizada no painel, cadastro, Android, widget e instalador.
+- Paleta neutra aplicada também ao calendário, formulários e alarme.
+- Identificadores técnicos e regras de rotina preservados.
+- Registros abaixo descrevem versões históricas.
+
+## Retorno à identidade original — 05/10/2026 (histórico)
 
 - Nome oficial restaurado para **Rotina da Jhenifer** em todas as telas, testes e documentação.
 - Pacote Dart: `rotina_jhenifer`; Android: `com.senhoritajhenifer.rotina`.
@@ -311,3 +313,5 @@ Criar uma página de diagnóstico dos acessos do alarme, validar um APK release
 assinado e ampliar a matriz para fabricantes com políticas agressivas de
 bateria. Depois, evoluir a explicação do Resgate para nomear qual compromisso
 foi protegido.
+
+Validação desta mudança: análise estática sem problemas, 52 testes aprovados e APK debug compilado. Painel renderizado em teste visual; teste em aparelho físico não realizado nesta revisão.

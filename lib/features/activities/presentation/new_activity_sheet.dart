@@ -122,7 +122,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 24),
-                _SectionLabel(label: 'O que a Jhenifer vai fazer?'),
+                _SectionLabel(label: 'O que você vai fazer?'),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _titleController,
@@ -131,7 +131,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                   textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
                     hintText: 'Ex.: Treino de pernas',
-                    prefixIcon: Icon(Icons.auto_awesome_rounded),
+                    prefixIcon: Icon(Icons.checklist_rounded),
                   ),
                   validator: (value) => value == null || value.trim().isEmpty
                       ? 'Digite o nome da atividade.'

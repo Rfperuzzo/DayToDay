@@ -1,4 +1,4 @@
-# Instalador debug — Rotina da Jhenifer
+# Instalador debug — DayToDay
 
 Este pacote instala ou atualiza o aplicativo em um celular Android conectado ao
 Windows por USB. Flutter e Android Studio não precisam estar instalados: o ADB

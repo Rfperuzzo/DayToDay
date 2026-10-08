@@ -1,7 +1,7 @@
 @echo off
 setlocal
 chcp 65001 >nul
-title Instalador Debug - Rotina da Jhenifer
+title Instalador Debug - DayToDay
 
 powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0install_debug.ps1" %*
 set "INSTALL_RESULT=%ERRORLEVEL%"

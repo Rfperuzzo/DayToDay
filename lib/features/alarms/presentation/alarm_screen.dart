@@ -61,9 +61,9 @@ final class _AlarmRingingScreenState extends State<AlarmRingingScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Color(0xFF7F0025),
+                  RotinaColors.alarmBackground,
                   RotinaColors.primaryBright,
-                  Color(0xFFFF4168),
+                  RotinaColors.primaryBright,
                 ],
               ),
             ),
@@ -135,7 +135,7 @@ final class _AlarmRingingScreenState extends State<AlarmRingingScreen> {
                             borderRadius: BorderRadius.circular(32),
                             boxShadow: const [
                               BoxShadow(
-                                color: Color(0x4D520018),
+                                color: Color(0x4D242723),
                                 blurRadius: 38,
                                 offset: Offset(0, 18),
                               ),
@@ -409,7 +409,7 @@ final class AlarmResolvedScreen extends StatelessWidget {
 ) => switch (result.response) {
   AlarmResponse.complete => (
     icon: Icons.check_rounded,
-    heading: 'Feito! ✨',
+    heading: 'Feito!',
     message:
         '${result.occurrence.status == OccurrenceStatus.completed ? 'Atividade concluída' : 'Tudo certo'} e registrada na sua rotina.',
   ),

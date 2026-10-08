@@ -86,7 +86,7 @@ final class TodayScreen extends ConsumerWidget {
       return;
     }
     final message = outcome.fullyReady
-        ? 'Atividade salva e alarme preparado. ✨'
+        ? 'Atividade salva e alarme preparado.'
         : 'Atividade salva. Revise os acessos para o alarme funcionar com força total.';
     ScaffoldMessenger.of(
       context,
@@ -263,7 +263,7 @@ final class TodayScreen extends ConsumerWidget {
       await HapticFeedback.mediumImpact();
       if (context.mounted) {
         final message = result.alarmsSynchronized
-            ? 'Atividade e próximos alarmes atualizados. ✨'
+            ? 'Atividade e próximos alarmes atualizados.'
             : 'Atividade atualizada. Revise os acessos do alarme.';
         ScaffoldMessenger.of(
           context,
@@ -553,14 +553,14 @@ final class _BrandHeader extends StatelessWidget {
                   ),
                   alignment: Alignment.center,
                   child: const Icon(
-                    Icons.auto_awesome_rounded,
+                    Icons.checklist_rounded,
                     color: RotinaColors.primary,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Rotina da Jhenifer',
+                    'DayToDay',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -578,7 +578,7 @@ final class _BrandHeader extends StatelessWidget {
                   ),
                   alignment: Alignment.center,
                   child: const Text(
-                    'J',
+                    'D',
                     style: TextStyle(
                       color: RotinaColors.textMuted,
                       fontSize: 18,
@@ -615,7 +615,7 @@ final class _Welcome extends StatelessWidget {
         ),
         const SizedBox(height: 18),
         Text(
-          isToday ? 'Olá, Jhenifer! ✨' : 'Seu dia em foco ✨',
+          isToday ? 'Sua rotina, no seu ritmo.' : 'Seu dia em foco',
           style: Theme.of(context).textTheme.headlineLarge,
         ),
         const SizedBox(height: 10),
@@ -624,7 +624,7 @@ final class _Welcome extends StatelessWidget {
             children: [
               TextSpan(
                 text: isToday
-                    ? 'Pronta para conquistar o dia? Você tem '
+                    ? 'Organize um passo de cada vez. Você tem '
                     : 'Você planejou ',
               ),
               TextSpan(
@@ -681,10 +681,10 @@ final class _ProgressCard extends StatelessWidget {
                       ),
                       child: Text(
                         total == 0
-                            ? 'Vamos começar? 🌷'
+                            ? 'Um passo de cada vez'
                             : completed == total
-                            ? 'Dia conquistado! ✨'
-                            : 'Mantenha o ritmo! 🔥',
+                            ? 'Tudo em dia'
+                            : 'No seu ritmo',
                         style: const TextStyle(
                           color: RotinaColors.primary,
                           fontWeight: FontWeight.w800,
@@ -754,7 +754,7 @@ final class _ProgressRingPainter extends CustomPainter {
       ..strokeWidth = strokeWidth;
     final foreground = Paint()
       ..shader = const LinearGradient(
-        colors: [RotinaColors.primary, Color(0xFFFF5C72)],
+        colors: [RotinaColors.primary, RotinaColors.primaryBright],
       ).createShader(Offset.zero & size)
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
@@ -802,7 +802,7 @@ final class _NextActivityCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x33BA0034),
+            color: Color(0x18343833),
             blurRadius: 26,
             offset: Offset(0, 10),
           ),

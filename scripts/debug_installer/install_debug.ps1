@@ -142,7 +142,7 @@ function Select-TargetDevice {
 
 try {
     Write-Host ''
-    Write-Host 'Rotina da Jhenifer — instalador debug' -ForegroundColor Magenta
+    Write-Host 'DayToDay — instalador debug' -ForegroundColor Gray
     Write-Host '====================================' -ForegroundColor DarkMagenta
 
     $script:resolvedAdbPath = Resolve-AdbPath -RequestedPath $AdbPath

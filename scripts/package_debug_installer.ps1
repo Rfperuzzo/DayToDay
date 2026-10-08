@@ -53,7 +53,7 @@ New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
 
 $packageId = [Guid]::NewGuid().ToString('N')
 $stagingParent = Join-Path $projectRoot "build\debug_installer\$packageId"
-$stagingDirectory = Join-Path $stagingParent 'Rotina-da-Jhenifer-Debug'
+$stagingDirectory = Join-Path $stagingParent 'DayToDay-Debug'
 $platformToolsDirectory = Join-Path $stagingDirectory 'platform-tools'
 
 New-Item -ItemType Directory -Path $platformToolsDirectory -Force | Out-Null
@@ -72,7 +72,7 @@ foreach ($fileName in $requiredAdbFiles) {
     Copy-Item -LiteralPath (Join-Path $AdbDirectory $fileName) -Destination $platformToolsDirectory
 }
 
-$zipPath = Join-Path $OutputDirectory 'Rotina-da-Jhenifer-Debug-Windows.zip'
+$zipPath = Join-Path $OutputDirectory 'DayToDay-Debug-Windows.zip'
 Compress-Archive -LiteralPath $stagingDirectory -DestinationPath $zipPath -CompressionLevel Optimal -Force
 
 $zip = Get-Item -LiteralPath $zipPath
