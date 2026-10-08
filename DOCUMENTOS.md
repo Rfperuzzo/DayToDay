@@ -202,7 +202,7 @@ A navegação de datas está descrita em `docs/CALENDARIO_MENSAL.md`.
 - Não misturar layouts futuros com mudanças do motor de rotina.
 
 O repositório usa Git convencional (`.git`) e preserva o histórico original.
-Repositório: https://github.com/Rfperuzzo/rotina-da-jhenifer
+Repositório: https://github.com/Rfperuzzo/DayToDay
 
 ## Estado atual
 
