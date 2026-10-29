@@ -14,6 +14,7 @@ void main() {
   testWidgets('adiciona e conclui subtarefa ligada à atividade', (
     tester,
   ) async {
+    final semantics = tester.ensureSemantics();
     final repository = _MemorySubtasks();
     addTearDown(repository.close);
     final activity = Activity(
@@ -39,6 +40,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'Separar os pesos');
+    expect(find.bySemanticsLabel('Nova subtarefa'), findsOneWidget);
     await tester.tap(find.byTooltip('Adicionar subtarefa'));
     await tester.pump(const Duration(milliseconds: 200));
 
@@ -51,6 +53,7 @@ void main() {
     expect(repository.values.single.activityId, activity.id);
     expect(repository.values.single.isCompleted, isTrue);
     expect(tester.takeException(), isNull);
+    semantics.dispose();
   });
 }
 

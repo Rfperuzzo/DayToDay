@@ -130,6 +130,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                   textCapitalization: TextCapitalization.sentences,
                   textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
+                    labelText: 'Nome da atividade',
                     hintText: 'Ex.: Treino de pernas',
                     prefixIcon: Icon(Icons.checklist_rounded),
                   ),
@@ -142,7 +143,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                   controller: _notesController,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: const InputDecoration(
-                    hintText: 'Local ou observação (opcional)',
+                    labelText: 'Local ou observação (opcional)',
                     prefixIcon: Icon(Icons.place_outlined),
                   ),
                 ),

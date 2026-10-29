@@ -6,6 +6,37 @@ import 'package:rotina_jhenifer/features/activities/presentation/new_activity_sh
 import 'package:rotina_jhenifer/features/alarms/domain/alarm_permission_gateway.dart';
 
 void main() {
+  testWidgets('campos preservam nomes acessíveis depois do preenchimento', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await tester.binding.setSurfaceSize(const Size(430, 932));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final clock = _MutableClock(DateTime.utc(2026, 8, 29, 12));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: NewActivitySheet(
+            initialDay: DateTime(2026, 8, 29),
+            timeZone: const _UtcTimeZone(),
+            permissions: _DelayedPermissionGateway(clock),
+            clock: clock,
+            onCreate: (_) async => throw StateError('Não deve salvar.'),
+          ),
+        ),
+      ),
+    );
+    await tester.enterText(find.byType(TextFormField).first, 'Treino');
+    await tester.enterText(find.byType(TextFormField).last, 'Academia');
+    expect(find.bySemanticsLabel('Nome da atividade'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Local ou observação (opcional)'),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+    semantics.dispose();
+  });
+
   testWidgets('não salva se o horário passar durante a liberação de acesso', (
     tester,
   ) async {

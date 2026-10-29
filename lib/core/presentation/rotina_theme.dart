@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 
+abstract final class RotinaSpacing {
+  static const unit = 4.0;
+  static const xs = unit;
+  static const sm = unit * 2;
+  static const md = unit * 4;
+  static const lg = unit * 6;
+}
+
+abstract final class RotinaDimensions {
+  static const minimumTouchTarget = 48.0;
+  static const calendarMinimumHeight = 82.0;
+}
+
 abstract final class RotinaColors {
   static const background = Color(0xFFF7F7F5);
   static const surface = Color(0xFFFFFFFF);
@@ -79,6 +92,16 @@ abstract final class RotinaTheme {
           color: RotinaColors.text,
           fontSize: 20,
           fontWeight: FontWeight.w700,
+        ),
+        titleMedium: base.textTheme.titleMedium?.copyWith(
+          fontSize: 23,
+          fontWeight: FontWeight.w800,
+          height: 1.25,
+        ),
+        labelSmall: base.textTheme.labelSmall?.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w800,
+          height: 1.25,
         ),
         bodyLarge: base.textTheme.bodyLarge?.copyWith(
           color: RotinaColors.textMuted,
