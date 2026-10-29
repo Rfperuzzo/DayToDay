@@ -1,8 +1,8 @@
 # Piloto MONSTRUX no DayToDay — 28/10/2026
 
-## Estado após a primeira análise e implementação
+## Estado após as análises e implementação
 
-Uma chamada limitada concluiu com 8.368 tokens, sem cobrança adicional. A revisão ampliada está preparada, mas seu relatório ainda não foi registrado; não atribuir a ela as correções do supervisor. O aplicativo recebeu ajustes de calendário com texto ampliado, identificação dos campos, área de toque, ação de adicionar e nome da edição. A análise estática passou, 54 testes passaram e um novo APK debug compilou. Veja a cobertura e os limites em [ux-review.md](monstrux/ux-review.md).
+Duas chamadas concluíram sem cobrança adicional: a primeira limitada usou 8.368 tokens; a segunda avaliou a síntese das sete jornadas e usou 8.731. A revisão ampliada priorizou as quatro frentes confirmadas pelo supervisor. O modelo avaliou a linha de base, não a implementação final. O aplicativo recebeu ajustes de calendário com texto ampliado, identificação dos campos, área de toque, ação de adicionar e nome da edição. A análise estática passou, 54 testes passaram e um novo APK debug compilou. Veja a cobertura e os limites em [ux-review.md](monstrux/ux-review.md).
 
 Os registros abaixo descrevem a preparação inicial e são mantidos como histórico.
 

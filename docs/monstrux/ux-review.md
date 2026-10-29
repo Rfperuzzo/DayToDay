@@ -4,7 +4,11 @@
 
 O supervisor inspecionou as superfícies de apresentação do aplicativo e reuniu uma síntese por sete jornadas em `full-review-evidence.md`. Esse arquivo registra a linha de base anterior às correções; suas referências de linha não descrevem os arquivos já alterados.
 
-A primeira chamada MONSTRUX, limitada a três trechos sobre botões, concluiu com 8.368 tokens e recomendações condicionais. A segunda chamada, preparada para a síntese das sete jornadas, ainda não possui relatório ou recibo de consumo registrado. A atualização do escopo foi confirmada, mas o processo aguarda a confirmação da chamada. As correções deste documento são fundamentadas em observações e testes do supervisor; não são apresentadas como resultado da segunda chamada.
+A primeira chamada MONSTRUX, limitada a três trechos sobre botões, concluiu com 8.368 tokens e recomendações condicionais. A segunda chamada avaliou a síntese das sete jornadas e concluiu com 8.731 tokens. Foram duas chamadas, com 17.099 tokens efetivamente registrados em 24.000 reservados, sem créditos pagos e sem novas tentativas automáticas.
+
+O supervisor adiantou correções de problemas já reproduzidos enquanto a segunda chamada aguardava confirmação humana. O relatório posterior do MONSTRUX priorizou as mesmas quatro frentes: calendário responsivo, área de conclusão, nomes persistentes dos campos e clareza da edição. O supervisor conferiu a implementação e os testes. O modelo recebeu a síntese da linha de base, não a implementação final nem todas as fontes e screenshots; não declarou aprovação ou certificação.
+
+O relatório também menciona o nome de duração entre os campos a conferir. Os seletores existentes já expõem valores como 15 min e a seleção; não foi removida ou trocada essa interação com base apenas nessa menção. Não foram acrescentadas funções de undo ou novas regras de salvamento.
 
 ## Cobertura por jornada
 

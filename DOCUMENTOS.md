@@ -321,7 +321,7 @@ Validação desta mudança: análise estática sem problemas, 52 testes aprovado
 
 - Instalação de desenvolvimento isolada do APK, sem dependência Flutter/Android nova.
 - Código, dados e regras de rotina preservados; esta rodada prepara uma auditoria UX supervisionada.
-- Na preparação inicial, a proteção da franquia bloqueou a sessão. Depois, a primeira análise limitada concluiu com 8.368 tokens; a revisão ampliada ainda aguarda recibo. Nenhuma API paga ou modelo local.
+- Na preparação inicial, a proteção da franquia bloqueou a sessão. Depois, a primeira análise limitada concluiu com 8.368 tokens e a revisão da síntese ampliada com 8.731. Nenhuma API paga ou modelo local.
 - Plano, validações e falha de inicialização em GMT documentados em [MONSTRUX_PILOT.md](docs/MONSTRUX_PILOT.md).
 - MONSTRUX privado e controles não são publicados neste repositório público.
 
