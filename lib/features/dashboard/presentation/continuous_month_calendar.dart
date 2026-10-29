@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,7 @@ final class _ContinuousMonthCalendarState
     _firstDay,
     _lastDayExclusive,
   );
-  static const _spacing = 8.0;
+  static const _spacing = RotinaSpacing.sm;
 
   final ScrollController _controller = ScrollController();
   late DateTime _visibleMonth;
@@ -69,6 +70,39 @@ final class _ContinuousMonthCalendarState
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textScaler = MediaQuery.textScalerOf(context);
+    Size measure(String text, TextStyle style) {
+      final painter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textDirection: Directionality.of(context),
+        textScaler: textScaler,
+        maxLines: 1,
+      )..layout();
+      final size = painter.size;
+      painter.dispose();
+      return size;
+    }
+
+    final weekdaySizes = [
+      for (var day = 1; day <= 7; day++)
+        measure(_weekdayShort(day), theme.textTheme.labelSmall!),
+    ];
+    final daySizes = [
+      for (var day = 1; day <= 31; day++)
+        measure('$day', theme.textTheme.titleMedium!),
+    ];
+    final widestLabel = [
+      ...weekdaySizes,
+      ...daySizes,
+    ].map((size) => size.width).reduce(math.max);
+    final cardHeight = math.max(
+      RotinaDimensions.calendarMinimumHeight,
+      weekdaySizes.map((size) => size.height).reduce(math.max) +
+          daySizes.map((size) => size.height).reduce(math.max) +
+          RotinaSpacing.xs +
+          RotinaSpacing.lg,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -82,10 +116,13 @@ final class _ContinuousMonthCalendarState
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: 82,
+          height: cardHeight,
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final itemExtent = (constraints.maxWidth + _spacing) / 7;
+              final itemExtent = math.max(
+                (constraints.maxWidth + _spacing) / 7,
+                widestLabel + RotinaSpacing.md + _spacing,
+              );
               _updateMetrics(constraints.maxWidth, itemExtent);
               return ListView.builder(
                 key: const ValueKey('continuous-month-calendar-list'),
@@ -255,21 +292,23 @@ final class _CalendarDayCard extends StatelessWidget {
             children: [
               Text(
                 _weekdayShort(day.weekday),
-                style: TextStyle(
+                maxLines: 1,
+                softWrap: false,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: selected
-                      ? const Color(0xFFE5E5E0)
-                      : RotinaColors.textMuted,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
+                      ? Theme.of(context).colorScheme.secondaryContainer
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 '${day.day}',
-                style: TextStyle(
-                  color: selected ? Colors.white : RotinaColors.text,
-                  fontSize: 23,
-                  fontWeight: FontWeight.w800,
+                maxLines: 1,
+                softWrap: false,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: selected
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],

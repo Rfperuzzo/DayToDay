@@ -90,6 +90,7 @@ final class _SubtasksSheetState extends ConsumerState<SubtasksSheet> {
                         textInputAction: TextInputAction.done,
                         onSubmitted: (_) => _add(),
                         decoration: const InputDecoration(
+                          labelText: 'Nova subtarefa',
                           hintText: 'Adicionar uma etapa',
                           prefixIcon: Icon(Icons.playlist_add_rounded),
                         ),
