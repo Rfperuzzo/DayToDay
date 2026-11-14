@@ -334,3 +334,19 @@ Validação desta mudança: análise estática sem problemas, 52 testes aprovado
 - Menu de edição descreve nome, horário, duração e repetição já disponíveis.
 - Paleta, identificadores, banco, regras, motor de rotina e integração de alarmes preservados. O achado GMT permanece aberto.
 - Análise estática sem problemas, 54 testes aprovados e APK debug compilado. Escopo, atribuição e limites da revisão em [ux-review.md](docs/monstrux/ux-review.md).
+
+
+## Agente UX importado — 14/11/2026
+
+- MONSTRUX do Projeto Monstro copiado para `.cursor/agents/monstro-ux.md`,
+  com duas skills locais e referências, sem alterar o repositório de origem.
+- Contexto adaptado ao DayToDay; método, lições e calibração históricos
+  preservados. `docs/MONSTRUX.md` explica uso e limites;
+  `.cursor/monstrux-origin.json` registra origem e hashes.
+- As 19 skills externas foram copiadas integralmente para `.cursor/skills`,
+  preservando pins/hashes e licenças; são 21 skills locais com as duas próprias.
+  Não houve alteração global. O perfil não altera o runtime `.monstrux`, seus
+  controles ou registros. `python -B tool/validate_ux_skill_pack.py --smoke`
+  verifica o pacote sem executar inferência.
+- A importação não muda a aplicação e não equivale a revisão de UX executada
+  ou aprovação para loja. Testes/resultados do fitness não são herdados.

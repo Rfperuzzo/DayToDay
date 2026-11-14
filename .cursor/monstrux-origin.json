@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "source_project": "Projeto Monstro",
+  "source_commit": "45247a54887a37cd3ed9b4c54aa2aa47fc565317",
+  "imported_on": "2026-11-14",
+  "target_project": "DayToDay",
+  "mode": "project-local-agent-and-skills-copy",
+  "external_skills": "19 complete project-local copies; exact reviewed tree hashes; no global changes or downloads",
+  "source_repository_read_only": true,
+  "files": [
+    {
+      "source_path": ".cursor/agents/monstro-ux.md",
+      "source_sha256": "1fe8b4525a6cab7aa7103a761b1a8cb0b7bd99a009c8522b6a11910586530fe7",
+      "local_sha256": "55503c2bdd88904629e3d250d49dff890efe9e8c6003ae722a61278644f7f900",
+      "adapted": true
+    },
+    {
+      "source_path": "docs/UX_SKILLS_LOCK.json",
+      "source_sha256": "8aab26b0547b76be754c97b47fbfc63daafeb698ef6699cf1c9868147fe4b538",
+      "local_sha256": "94644854a373a3b62473a6b8452ace1aed10a54ee448d22d97cb10d5f42d166b",
+      "adapted": true
+    },
+    {
+      "source_path": "tool/ux_surface_inventory.py",
+      "source_sha256": "9517f22a766eb1785dfa623e811f88b4ece72f960290c145ee367d456c9fcc51",
+      "local_sha256": "9517f22a766eb1785dfa623e811f88b4ece72f960290c145ee367d456c9fcc51",
+      "adapted": false
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-audit/SKILL.md",
+      "source_sha256": "a1f78ccda33d1dbab769eb3af238e21e1848f0396ed28da451b3a8782bb4acb4",
+      "local_sha256": "b3da10280727c28f73aab7d492f2b20565ec0893b10968f29f4fdb55241021cc",
+      "adapted": true
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-audit/references/component-contracts.md",
+      "source_sha256": "594c877e019a0cbfc81d79568301db3e9a2ee6191049b8a9d8b7c7fef79ad9c0",
+      "local_sha256": "594c877e019a0cbfc81d79568301db3e9a2ee6191049b8a9d8b7c7fef79ad9c0",
+      "adapted": false
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-audit/references/evaluation-cases.json",
+      "source_sha256": "6c6fe9a2d007e11a37bb753568605798c76e8fe1a239a758c0fbbcb30729019d",
+      "local_sha256": "6c6fe9a2d007e11a37bb753568605798c76e8fe1a239a758c0fbbcb30729019d",
+      "adapted": false
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-audit/references/evidence-format.md",
+      "source_sha256": "90c654fd836adbf42cd23bfd3a060eb12e6c6f23cb7599460db45bcf636eaf0b",
+      "local_sha256": "90c654fd836adbf42cd23bfd3a060eb12e6c6f23cb7599460db45bcf636eaf0b",
+      "adapted": false
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-audit/references/product-decisions.md",
+      "source_sha256": "bb1522a5c84f8a7839c0ded25ef5e053c0f814f5d56fd9384161d6f3413ea66e",
+      "local_sha256": "bb1522a5c84f8a7839c0ded25ef5e053c0f814f5d56fd9384161d6f3413ea66e",
+      "adapted": false
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-audit/references/quality-oracles.md",
+      "source_sha256": "abe9d9f82a3ae220b10539753a855cc2fbe1a52b0810b8c3662a4a92c63a02f8",
+      "local_sha256": "abe9d9f82a3ae220b10539753a855cc2fbe1a52b0810b8c3662a4a92c63a02f8",
+      "adapted": false
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-audit/references/runtime-validation.md",
+      "source_sha256": "15bea993f6a89d9e58a38b19504ece86f3a5c2b46261e9eb9061fc7763c9cc1e",
+      "local_sha256": "b8adbd7cb5d5ba76a9cfaec22c0a5f0e810c62e3572ff71cf7567a4c0eb2fe9b",
+      "adapted": true
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-audit/scripts/check_review_evidence.py",
+      "source_sha256": "dfd5e454eb49afb6b02babdec7e73fb1601741389e9a88ed12e3df032fefba2d",
+      "local_sha256": "dfd5e454eb49afb6b02babdec7e73fb1601741389e9a88ed12e3df032fefba2d",
+      "adapted": false
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-actions/SKILL.md",
+      "source_sha256": "0edbfc766cf2f8080300a9881a97db7a01b11a3d34c6169cc70bc009d5d9e4e1",
+      "local_sha256": "9d5708452f01f48de314f3c817ff58f673533a0152ae7e7277cbac0b68831e84",
+      "adapted": true
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-actions/agents/openai.yaml",
+      "source_sha256": "7d783ea19efcec07653e9027a9892fe9fc89d336e819d1d7f9a2e1c684e70531",
+      "local_sha256": "7d783ea19efcec07653e9027a9892fe9fc89d336e819d1d7f9a2e1c684e70531",
+      "adapted": false
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-actions/references/monstro-cases.md",
+      "source_sha256": "e5f8ea07c1d7e87393aaa2cdf0d56d8ae96d53fa7934d730b8ffb52d937e987b",
+      "local_sha256": "e5f8ea07c1d7e87393aaa2cdf0d56d8ae96d53fa7934d730b8ffb52d937e987b",
+      "adapted": false
+    },
+    {
+      "source_path": ".cursor/skills/monstro-ux-actions/references/placement-decisions.md",
+      "source_sha256": "f427abdedbe4041fdd07aaad003841f6a8daca4e9eaf2c911b002cd2a76558b1",
+      "local_sha256": "f427abdedbe4041fdd07aaad003841f6a8daca4e9eaf2c911b002cd2a76558b1",
+      "adapted": false
+    },
+    {
+      "source_path": "tool/validate_ux_skill_pack.py",
+      "source_sha256": "5491985bb46f5069d846a28d2d32355748b56128a7f3cc5cc5c7af767afc58a1",
+      "local_sha256": "eb544f298d2fcd4ce849dbd02ce330cdb48c7c0583d5023b5a20e2dbdecd60c5",
+      "adapted": true
+    }
+  ],
+  "local_additions": [
+    {
+      "path": "docs/MONSTRUX.md",
+      "sha256": "9f954d085a5c447d4229fb7bdf691963a6bd259849b7a5ca5b8216df64c620b9"
+    },
+    {
+      "path": ".cursor/skills/monstro-ux-audit/references/experience-transfer.md",
+      "sha256": "cfe22ded1fb70807bcd0d569776e46c80c8b7641365e5113b4e1dcbf5d6f6632"
+    },
+    {
+      "path": ".cursor/skills/monstro-ux-audit/references/daytoday-cases.json",
+      "sha256": "3175f9f2200735e926065695d1228790a349a3638fa3da654937d7c03156e456"
+    },
+    {
+      "path": ".cursor/skills/.gitattributes",
+      "sha256": "68a1e7ae4d727473aa796c20dd0e746ace218a86a224821a9dc958f51422feb9"
+    },
+    {
+      "path": ".cursor/skills/.gitignore",
+      "sha256": "34b7b6551fce8a938c931d104fab1183d777bdb29ac92bdbdbda6845fc034fa5"
+    }
+  ],
+  "experience_transfer": "documented procedures, references and calibration; no hidden model state or inherited audit results",
+  "external_copies": [
+    {
+      "name": "flutter-build-responsive-layout",
+      "local_path": ".cursor/skills/flutter-build-responsive-layout",
+      "tree_sha256": "2b3d802df9706ee0e4f4bf7c818d3b09085f19fc0de8de59e40242dfcac37325",
+      "file_count": 1,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "flutter-fix-layout-issues",
+      "local_path": ".cursor/skills/flutter-fix-layout-issues",
+      "tree_sha256": "6333dc8cece6572b413dbd780841dad348fba99c021ca8ed24701c8031526ad0",
+      "file_count": 1,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "flutter-add-widget-test",
+      "local_path": ".cursor/skills/flutter-add-widget-test",
+      "tree_sha256": "797b6821ba600130376de1f9858b51c451c42632eaf70ca3bcc18d6a3c3ec7a7",
+      "file_count": 1,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "dart-add-unit-test",
+      "local_path": ".cursor/skills/dart-add-unit-test",
+      "tree_sha256": "6d36a8d774832e24c0978a45942a1e3a0bb26933c3cc3aed1cae8b7739bae3fd",
+      "file_count": 1,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "dart-run-static-analysis",
+      "local_path": ".cursor/skills/dart-run-static-analysis",
+      "tree_sha256": "856ccc6c5fdbe12f53fe0ce609923400bd91be52034db38b86ce5dc21a1aa5ea",
+      "file_count": 1,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "dart-collect-coverage",
+      "local_path": ".cursor/skills/dart-collect-coverage",
+      "tree_sha256": "c01ef25a007e927a77fd156c05d43c21628df9d5d25d1bdc4410672a6f8fc0f7",
+      "file_count": 1,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "accessibility",
+      "local_path": ".cursor/skills/accessibility",
+      "tree_sha256": "4ac628fb96c9874e7a40ba3d0d55c8cf2e4c917652030813cccdf888734b0f45",
+      "file_count": 13,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "material-theming",
+      "local_path": ".cursor/skills/material-theming",
+      "tree_sha256": "0c7281912d3d39a7254ceb83cb465b3267c0bf8130c6781ed81dfd5a88cd7964",
+      "file_count": 6,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "animations",
+      "local_path": ".cursor/skills/animations",
+      "tree_sha256": "842f9d2259752fb28163298816deb3f909ff0d4ad63ea0ead203e0c1d4d2ef24",
+      "file_count": 7,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "web-design-guidelines",
+      "local_path": ".cursor/skills/web-design-guidelines",
+      "tree_sha256": "f910cd9c88f04e87d03b2b7829b56fcf50b3be4582965f12bc163e3f6b5b59d2",
+      "file_count": 1,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "frontend-design",
+      "local_path": ".cursor/skills/frontend-design",
+      "tree_sha256": "89a6e59de80320a32e8b4c597a329ef3c503f624a2e68874bb0475dfb66dbf4b",
+      "file_count": 2,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "webapp-testing",
+      "local_path": ".cursor/skills/webapp-testing",
+      "tree_sha256": "7dd9eedc497fbf8b5634a293190b11f93cf4b80f7cd6c1a775def12deadeebb9",
+      "file_count": 6,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "local_path": ".cursor/skills/ui-ux-pro-max",
+      "tree_sha256": "6054e0ebeb88a20ed073222277d78dd45cf169061e141da52b31c057ec276523",
+      "file_count": 73,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "design-critique",
+      "local_path": ".cursor/skills/design-critique",
+      "tree_sha256": "72e0cb6da785675868a95c2ea7e1b358d90ae0cf72c09ab274876042a6da4be5",
+      "file_count": 3,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "design-system",
+      "local_path": ".cursor/skills/design-system",
+      "tree_sha256": "fd885b5b738bac0d5005720e24242d6038dc3cffa4f3f536c4e56789fd66493b",
+      "file_count": 3,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "design-handoff",
+      "local_path": ".cursor/skills/design-handoff",
+      "tree_sha256": "7610eecb2f721e212b289863d3a33838ff4a04d8e16c7762c34aee1caa3b9ffe",
+      "file_count": 3,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "user-research",
+      "local_path": ".cursor/skills/user-research",
+      "tree_sha256": "1429222fffd3c1797bd79974181bfb1ad5593ce16684990073d312596e4d3e79",
+      "file_count": 2,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "research-synthesis",
+      "local_path": ".cursor/skills/research-synthesis",
+      "tree_sha256": "44d430f7b82bd1f6e0a9d20d104fe62eec3f9b70c1e7ce280f9b88da4ccf124b",
+      "file_count": 3,
+      "matches_fitness_lock": true
+    },
+    {
+      "name": "ux-copy",
+      "local_path": ".cursor/skills/ux-copy",
+      "tree_sha256": "e00f897d6a1160d44e58e89bc4d499a6a50abd44c3f188a85e2eebf0af2d0cce",
+      "file_count": 3,
+      "matches_fitness_lock": true
+    }
+  ],
+  "project_local_skill_count": 21
+}

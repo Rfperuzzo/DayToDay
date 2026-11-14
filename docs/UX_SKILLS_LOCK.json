@@ -1,0 +1,256 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-24",
+  "installRoot": ".cursor/skills",
+  "skills": [
+    {
+      "name": "flutter-build-responsive-layout",
+      "repo": "flutter/agent-plugins",
+      "ref": "f813a46b18456a20f37eb5784c091b7d945c3b4b",
+      "path": "skills/flutter-build-responsive-layout",
+      "sourceUrl": "https://github.com/flutter/agent-plugins/tree/f813a46b18456a20f37eb5784c091b7d945c3b4b/skills/flutter-build-responsive-layout",
+      "license": "BSD-3-Clause",
+      "treeSha256": "2b3d802df9706ee0e4f4bf7c818d3b09085f19fc0de8de59e40242dfcac37325",
+      "fileCount": 1
+    },
+    {
+      "name": "flutter-fix-layout-issues",
+      "repo": "flutter/agent-plugins",
+      "ref": "f813a46b18456a20f37eb5784c091b7d945c3b4b",
+      "path": "skills/flutter-fix-layout-issues",
+      "sourceUrl": "https://github.com/flutter/agent-plugins/tree/f813a46b18456a20f37eb5784c091b7d945c3b4b/skills/flutter-fix-layout-issues",
+      "license": "BSD-3-Clause",
+      "treeSha256": "6333dc8cece6572b413dbd780841dad348fba99c021ca8ed24701c8031526ad0",
+      "fileCount": 1
+    },
+    {
+      "name": "flutter-add-widget-test",
+      "repo": "flutter/agent-plugins",
+      "ref": "f813a46b18456a20f37eb5784c091b7d945c3b4b",
+      "path": "skills/flutter-add-widget-test",
+      "sourceUrl": "https://github.com/flutter/agent-plugins/tree/f813a46b18456a20f37eb5784c091b7d945c3b4b/skills/flutter-add-widget-test",
+      "license": "BSD-3-Clause",
+      "treeSha256": "797b6821ba600130376de1f9858b51c451c42632eaf70ca3bcc18d6a3c3ec7a7",
+      "fileCount": 1
+    },
+    {
+      "name": "dart-add-unit-test",
+      "repo": "flutter/agent-plugins",
+      "ref": "f813a46b18456a20f37eb5784c091b7d945c3b4b",
+      "path": "skills/dart-add-unit-test",
+      "sourceUrl": "https://github.com/flutter/agent-plugins/tree/f813a46b18456a20f37eb5784c091b7d945c3b4b/skills/dart-add-unit-test",
+      "license": "BSD-3-Clause",
+      "treeSha256": "6d36a8d774832e24c0978a45942a1e3a0bb26933c3cc3aed1cae8b7739bae3fd",
+      "fileCount": 1
+    },
+    {
+      "name": "dart-run-static-analysis",
+      "repo": "flutter/agent-plugins",
+      "ref": "f813a46b18456a20f37eb5784c091b7d945c3b4b",
+      "path": "skills/dart-run-static-analysis",
+      "sourceUrl": "https://github.com/flutter/agent-plugins/tree/f813a46b18456a20f37eb5784c091b7d945c3b4b/skills/dart-run-static-analysis",
+      "license": "BSD-3-Clause",
+      "treeSha256": "856ccc6c5fdbe12f53fe0ce609923400bd91be52034db38b86ce5dc21a1aa5ea",
+      "fileCount": 1
+    },
+    {
+      "name": "dart-collect-coverage",
+      "repo": "flutter/agent-plugins",
+      "ref": "f813a46b18456a20f37eb5784c091b7d945c3b4b",
+      "path": "skills/dart-collect-coverage",
+      "sourceUrl": "https://github.com/flutter/agent-plugins/tree/f813a46b18456a20f37eb5784c091b7d945c3b4b/skills/dart-collect-coverage",
+      "license": "BSD-3-Clause",
+      "treeSha256": "c01ef25a007e927a77fd156c05d43c21628df9d5d25d1bdc4410672a6f8fc0f7",
+      "fileCount": 1
+    },
+    {
+      "name": "accessibility",
+      "repo": "VeryGoodOpenSource/vgv-ai-flutter-plugin",
+      "ref": "c6ea9d9ab273e8836175ba0f99577948492c76a4",
+      "path": "skills/accessibility",
+      "sourceUrl": "https://github.com/VeryGoodOpenSource/vgv-ai-flutter-plugin/tree/c6ea9d9ab273e8836175ba0f99577948492c76a4/skills/accessibility",
+      "license": "MIT",
+      "treeSha256": "4ac628fb96c9874e7a40ba3d0d55c8cf2e4c917652030813cccdf888734b0f45",
+      "fileCount": 13
+    },
+    {
+      "name": "material-theming",
+      "repo": "VeryGoodOpenSource/vgv-ai-flutter-plugin",
+      "ref": "c6ea9d9ab273e8836175ba0f99577948492c76a4",
+      "path": "skills/material-theming",
+      "sourceUrl": "https://github.com/VeryGoodOpenSource/vgv-ai-flutter-plugin/tree/c6ea9d9ab273e8836175ba0f99577948492c76a4/skills/material-theming",
+      "license": "MIT",
+      "treeSha256": "0c7281912d3d39a7254ceb83cb465b3267c0bf8130c6781ed81dfd5a88cd7964",
+      "fileCount": 6
+    },
+    {
+      "name": "animations",
+      "repo": "VeryGoodOpenSource/vgv-ai-flutter-plugin",
+      "ref": "c6ea9d9ab273e8836175ba0f99577948492c76a4",
+      "path": "skills/animations",
+      "sourceUrl": "https://github.com/VeryGoodOpenSource/vgv-ai-flutter-plugin/tree/c6ea9d9ab273e8836175ba0f99577948492c76a4/skills/animations",
+      "license": "MIT",
+      "treeSha256": "842f9d2259752fb28163298816deb3f909ff0d4ad63ea0ead203e0c1d4d2ef24",
+      "fileCount": 7
+    },
+    {
+      "name": "web-design-guidelines",
+      "repo": "vercel-labs/agent-skills",
+      "ref": "063bee94c3f4df8453406c830b0a7df0f2860278",
+      "path": "skills/web-design-guidelines",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills/tree/063bee94c3f4df8453406c830b0a7df0f2860278/skills/web-design-guidelines",
+      "license": "Not declared in repository metadata",
+      "treeSha256": "f910cd9c88f04e87d03b2b7829b56fcf50b3be4582965f12bc163e3f6b5b59d2",
+      "fileCount": 1
+    },
+    {
+      "name": "frontend-design",
+      "repo": "anthropics/skills",
+      "ref": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "path": "skills/frontend-design",
+      "sourceUrl": "https://github.com/anthropics/skills/tree/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/frontend-design",
+      "license": "See bundled LICENSE.txt",
+      "treeSha256": "89a6e59de80320a32e8b4c597a329ef3c503f624a2e68874bb0475dfb66dbf4b",
+      "fileCount": 2
+    },
+    {
+      "name": "webapp-testing",
+      "repo": "anthropics/skills",
+      "ref": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "path": "skills/webapp-testing",
+      "sourceUrl": "https://github.com/anthropics/skills/tree/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/webapp-testing",
+      "license": "See bundled LICENSE.txt",
+      "treeSha256": "7dd9eedc497fbf8b5634a293190b11f93cf4b80f7cd6c1a775def12deadeebb9",
+      "fileCount": 6
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "ref": "d14efff8ed1faa4187f004f79926f428c8074ec7",
+      "path": ".claude/skills/ui-ux-pro-max",
+      "sourceUrl": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/tree/d14efff8ed1faa4187f004f79926f428c8074ec7/.claude/skills/ui-ux-pro-max",
+      "license": "MIT",
+      "treeSha256": "6054e0ebeb88a20ed073222277d78dd45cf169061e141da52b31c057ec276523",
+      "fileCount": 73
+    },
+    {
+      "name": "design-critique",
+      "repo": "anthropics/knowledge-work-plugins",
+      "ref": "33d3dea41a341b341d4f5da2e8801ae0c89be2b8",
+      "path": "design/skills/design-critique",
+      "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/33d3dea41a341b341d4f5da2e8801ae0c89be2b8/design/skills/design-critique",
+      "license": "Apache-2.0",
+      "sourceTreeSha256": "89353e97c4435937e3b57c7a428937973639a3b12330aa5dc6caf2f98afd62a4",
+      "patches": [
+        "Relocated shared CONNECTORS.md and changed only its Markdown link for standalone installation.",
+        "Added upstream root Apache-2.0 license file."
+      ],
+      "treeSha256": "72e0cb6da785675868a95c2ea7e1b358d90ae0cf72c09ab274876042a6da4be5",
+      "fileCount": 3
+    },
+    {
+      "name": "design-system",
+      "repo": "anthropics/knowledge-work-plugins",
+      "ref": "33d3dea41a341b341d4f5da2e8801ae0c89be2b8",
+      "path": "design/skills/design-system",
+      "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/33d3dea41a341b341d4f5da2e8801ae0c89be2b8/design/skills/design-system",
+      "license": "Apache-2.0",
+      "sourceTreeSha256": "8a7ed68bc1e86cd153a9116d59b58cfa8d96324bd11b2be6e9d2e8af7b444c22",
+      "patches": [
+        "Relocated shared CONNECTORS.md and changed only its Markdown link for standalone installation.",
+        "Added upstream root Apache-2.0 license file."
+      ],
+      "treeSha256": "fd885b5b738bac0d5005720e24242d6038dc3cffa4f3f536c4e56789fd66493b",
+      "fileCount": 3
+    },
+    {
+      "name": "design-handoff",
+      "repo": "anthropics/knowledge-work-plugins",
+      "ref": "33d3dea41a341b341d4f5da2e8801ae0c89be2b8",
+      "path": "design/skills/design-handoff",
+      "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/33d3dea41a341b341d4f5da2e8801ae0c89be2b8/design/skills/design-handoff",
+      "license": "Apache-2.0",
+      "sourceTreeSha256": "16383612defd4f62b45ad8510e87d2038fc70513782580096e5ca87cf891fcc6",
+      "patches": [
+        "Relocated shared CONNECTORS.md and changed only its Markdown link for standalone installation.",
+        "Added upstream root Apache-2.0 license file."
+      ],
+      "treeSha256": "7610eecb2f721e212b289863d3a33838ff4a04d8e16c7762c34aee1caa3b9ffe",
+      "fileCount": 3
+    },
+    {
+      "name": "user-research",
+      "repo": "anthropics/knowledge-work-plugins",
+      "ref": "33d3dea41a341b341d4f5da2e8801ae0c89be2b8",
+      "path": "design/skills/user-research",
+      "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/33d3dea41a341b341d4f5da2e8801ae0c89be2b8/design/skills/user-research",
+      "license": "Apache-2.0",
+      "sourceTreeSha256": "a1f7ec73d6f74ac1a2bbb03fad885a128d706a6cf1969deaea540ff6db7e032d",
+      "patches": [
+        "Added upstream root Apache-2.0 license file."
+      ],
+      "treeSha256": "1429222fffd3c1797bd79974181bfb1ad5593ce16684990073d312596e4d3e79",
+      "fileCount": 2
+    },
+    {
+      "name": "research-synthesis",
+      "repo": "anthropics/knowledge-work-plugins",
+      "ref": "33d3dea41a341b341d4f5da2e8801ae0c89be2b8",
+      "path": "design/skills/research-synthesis",
+      "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/33d3dea41a341b341d4f5da2e8801ae0c89be2b8/design/skills/research-synthesis",
+      "license": "Apache-2.0",
+      "sourceTreeSha256": "65248e7baf0d41c6739f49e036b2180e4d39c78e26fdef6abb9fa7d38d60e100",
+      "patches": [
+        "Relocated shared CONNECTORS.md and changed only its Markdown link for standalone installation.",
+        "Added upstream root Apache-2.0 license file."
+      ],
+      "treeSha256": "44d430f7b82bd1f6e0a9d20d104fe62eec3f9b70c1e7ce280f9b88da4ccf124b",
+      "fileCount": 3
+    },
+    {
+      "name": "ux-copy",
+      "repo": "anthropics/knowledge-work-plugins",
+      "ref": "33d3dea41a341b341d4f5da2e8801ae0c89be2b8",
+      "path": "design/skills/ux-copy",
+      "sourceUrl": "https://github.com/anthropics/knowledge-work-plugins/tree/33d3dea41a341b341d4f5da2e8801ae0c89be2b8/design/skills/ux-copy",
+      "license": "Apache-2.0",
+      "sourceTreeSha256": "1040c4cc3d94c8f47ff5a27bf2d904e4c65ddbc3e577c30094e807de9a49add9",
+      "patches": [
+        "Relocated shared CONNECTORS.md and changed only its Markdown link for standalone installation.",
+        "Added upstream root Apache-2.0 license file."
+      ],
+      "treeSha256": "e00f897d6a1160d44e58e89bc4d499a6a50abd44c3f188a85e2eebf0af2d0cce",
+      "fileCount": 3
+    }
+  ],
+  "notes": [
+    "Pinned source commits; no automatic updates.",
+    "Presence does not certify upstream advice or app accessibility.",
+    "Use project scope and current Flutter documentation when advice conflicts with existing architecture.",
+    "Original 13 upstream skills unmodified; six design skills have documented standalone connector-link and license adaptations. Python bytecode excluded.",
+    "DayToDay import: 19 external directories copied byte-for-byte from the reviewed host installation; no host changes or downloads. Two project skills adapted locally."
+  ],
+  "runtime": {
+    "pythonEnvironment": "~/.codex/ux-runtime",
+    "playwright": "1.64.1",
+    "requirements": [
+      "greenlet==3.5.6",
+      "playwright==1.64.1",
+      "pyee==14.0.0",
+      "PyYAML==6.0.3",
+      "typing_extensions==4.16.0"
+    ]
+  },
+  "projectSkills": [
+    {
+      "name": "monstro-ux-audit",
+      "path": ".cursor/skills/monstro-ux-audit",
+      "normalization": "UTF-8 text with LF for cross-platform checkout"
+    },
+    {
+      "name": "monstro-ux-actions",
+      "path": ".cursor/skills/monstro-ux-actions",
+      "normalization": "UTF-8 text with LF for cross-platform checkout"
+    }
+  ]
+}
