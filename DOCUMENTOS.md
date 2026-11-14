@@ -11,6 +11,11 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 
 ## Decisões confirmadas
 
+- Revisão MONSTRUX de 14/11/2026: fontes completas e sete jornadas revisadas;
+  melhorias e nova paleta revalidadas em capturas sintéticas 1x/2x. Resultado:
+  73 testes aprovados, análise limpa e dois builds debug. Evidências e condições
+  Android/assinatura ainda pendentes estão em docs/UX_REVIEW_20261114.md.
+
 - Android primeiro; a arquitetura não deve impedir uma futura versão iOS.
 - Flutter 3.44.2 e Dart 3.12.2.
 - Nome oficial: **DayToDay**.
@@ -20,7 +25,8 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - A distribuição de testes usa um instalador portátil para Windows com APK
   debug e ADB incluídos; Flutter e Android Studio não são necessários na
   máquina que fará a instalação por USB.
-- Identidade neutra: off-white, branco, grafite e cinza; vermelho apenas para erros e ações destrutivas.
+- Identidade acolhedora autorizada em 14/11/2026: verde-petróleo, verdes claros e
+  pêssego/terracota em apoio; vermelho apenas para erros e ações destrutivas.
 - Ícone oficial: calendário com check, gerado por scripts/generate_daytoday_icons.ps1 em todas as densidades Android. Arte anterior preservada como referência histórica.
 - A mudança para DayToDay preserva Application ID, pacote Dart, banco, canais nativos e URI do widget para manter dados em atualizações compatíveis.
 - O primeiro layout de produto é o painel diário, com calendário mensal
@@ -384,3 +390,7 @@ Validação desta mudança: análise estática sem problemas, 52 testes aprovado
   certifica WCAG nem substitui ensaios de aparelho, tela bloqueada/boot, launcher
   e revisão de publicação. A release ainda requer assinatura de produção pelo
   responsável; a configuração atual aponta para a chave debug.
+
+- Complemento visual autorizado em 14/11/2026: paleta acolhedora proposta pelo
+  MONSTRUX, aplicada ao tema, progresso, marca, ícones e widget nativo. A regra
+  anterior de paleta neutra foi substituída por esta decisão do responsável.

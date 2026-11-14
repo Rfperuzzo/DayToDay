@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rotina_jhenifer/app/app_dependencies.dart';
@@ -14,6 +15,79 @@ import 'package:rotina_jhenifer/features/alarms/presentation/alarm_router.dart';
 import 'package:rotina_jhenifer/main.dart';
 
 void main() {
+  testWidgets('barra Android recupera contraste após sair do alarme', (
+    tester,
+  ) async {
+    tester.view.padding = const FakeViewPadding(top: 24, bottom: 24);
+    addTearDown(tester.view.resetPadding);
+    final at = DateTime.utc(2026, 11, 14, 18);
+    final occurrence = ActivityOccurrence(
+      id: 'overlay',
+      activityId: 'overlay',
+      originalStartUtc: at,
+      scheduledStartUtc: at,
+      estimatedDuration: const Duration(minutes: 30),
+      priority: ActivityPriority.normal,
+      status: OccurrenceStatus.completed,
+    );
+    await tester.pumpWidget(
+      DayToDayApp(
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: TextButton(
+              onPressed: () => Navigator.push<void>(
+                context,
+                MaterialPageRoute(
+                  builder: (ringContext) => AlarmRingingScreen(
+                    alarm: RingingAlarmBinding(
+                      occurrenceId: 'overlay',
+                      nativeAlarmId: 1,
+                      scheduledAtUtc: at,
+                      title: 'Rotina',
+                      body: '',
+                    ),
+                    onRespond: (_) => Navigator.pushReplacement<void, void>(
+                      ringContext,
+                      MaterialPageRoute(
+                        builder: (resultContext) => AlarmResolvedScreen(
+                          title: 'Rotina',
+                          result: AlarmResponseResult(
+                            response: AlarmResponse.complete,
+                            occurrence: occurrence,
+                            adjustedOccurrences: [occurrence],
+                            alarmsSynchronized: true,
+                          ),
+                          timeZone: const DeviceTimeZoneService(),
+                          onDone: () => Navigator.pop(resultContext),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              child: const Text('Simular alarme'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(SystemChrome.latestStyle?.statusBarIconBrightness, Brightness.dark);
+    await tester.tap(find.text('Simular alarme'));
+    await tester.pumpAndSettle();
+    expect(SystemChrome.latestStyle?.statusBarIconBrightness, Brightness.light);
+    await tester.ensureVisible(find.text('Concluir'));
+    await tester.tap(find.text('Concluir'));
+    await tester.pumpAndSettle();
+    expect(find.text('Feito!'), findsOneWidget);
+    expect(SystemChrome.latestStyle?.statusBarIconBrightness, Brightness.dark);
+    await tester.ensureVisible(find.text('Voltar para minha rotina'));
+    await tester.tap(find.text('Voltar para minha rotina'));
+    await tester.pumpAndSettle();
+    expect(find.text('Simular alarme'), findsOneWidget);
+    expect(SystemChrome.latestStyle?.statusBarIconBrightness, Brightness.dark);
+  });
+
   testWidgets('aplica identidade visual ao aplicativo', (tester) async {
     await tester.pumpWidget(
       const DayToDayApp(

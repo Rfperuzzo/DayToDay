@@ -519,9 +519,16 @@ final class _BrandHeader extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ExcludeSemantics(
-              child: Icon(
-                Icons.event_available_rounded,
-                color: t.colorScheme.primary,
+              child: Container(
+                padding: const EdgeInsets.all(RotinaSpacing.sm),
+                decoration: BoxDecoration(
+                  color: t.colorScheme.tertiaryContainer,
+                  borderRadius: BorderRadius.circular(RotinaSpacing.md),
+                ),
+                child: Icon(
+                  Icons.event_available_rounded,
+                  color: t.colorScheme.tertiary,
+                ),
               ),
             ),
             const SizedBox(width: RotinaSpacing.sm),
@@ -581,6 +588,7 @@ final class _ProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     return Card(
+      color: t.colorScheme.tertiaryContainer,
       child: Padding(
         padding: const EdgeInsets.all(RotinaSpacing.md),
         child: Column(
@@ -588,10 +596,14 @@ final class _ProgressCard extends StatelessWidget {
           children: [
             Text(
               'Progresso · $completed de $total concluídas',
-              style: t.textTheme.labelLarge,
+              style: t.textTheme.labelLarge?.copyWith(
+                color: t.colorScheme.onTertiaryContainer,
+              ),
             ),
             const SizedBox(height: RotinaSpacing.sm),
             LinearProgressIndicator(
+              color: t.colorScheme.tertiary,
+              backgroundColor: t.colorScheme.surface,
               value: total == 0 ? 0 : completed / total,
               minHeight: 6,
               borderRadius: BorderRadius.circular(RotinaSpacing.xs),
@@ -628,7 +640,7 @@ final class _NextActivityCard extends StatelessWidget {
       key: const ValueKey('next-activity-card'),
       padding: const EdgeInsets.all(RotinaSpacing.lg),
       decoration: BoxDecoration(
-        color: colors.primary,
+        color: colors.primaryContainer,
         borderRadius: BorderRadius.circular(RotinaSpacing.lg),
       ),
       child: Column(
@@ -642,7 +654,7 @@ final class _NextActivityCard extends StatelessWidget {
                       ? 'Nenhuma atividade pendente neste dia'
                       : '${_relativeLabel(o.scheduledStartUtc)} · ${_time(timeZone, o.scheduledStartUtc)} · ${o.estimatedDuration.inMinutes} min',
                   style: t.textTheme.labelLarge?.copyWith(
-                    color: colors.onPrimary,
+                    color: colors.onPrimaryContainer,
                   ),
                 ),
               ),
@@ -650,7 +662,7 @@ final class _NextActivityCard extends StatelessWidget {
                 IconButton(
                   onPressed: onManage,
                   tooltip: 'Editar ou cancelar atividade',
-                  color: colors.onPrimary,
+                  color: colors.onPrimaryContainer,
                   icon: const Icon(Icons.more_horiz_rounded),
                 ),
             ],
@@ -659,28 +671,32 @@ final class _NextActivityCard extends StatelessWidget {
           Text(
             activity?.title ?? 'Um passo de cada vez',
             style: t.textTheme.headlineMedium?.copyWith(
-              color: colors.onPrimary,
+              color: colors.onPrimaryContainer,
             ),
           ),
           if (activity?.notes.isNotEmpty == true) ...[
             const SizedBox(height: RotinaSpacing.sm),
             Text(
               activity!.notes,
-              style: t.textTheme.bodyMedium?.copyWith(color: colors.onPrimary),
+              style: t.textTheme.bodyMedium?.copyWith(
+                color: colors.onPrimaryContainer,
+              ),
             ),
           ],
           if (o == null) ...[
             const SizedBox(height: RotinaSpacing.sm),
             Text(
               'Você pode conferir o dia ou planejar a próxima atividade.',
-              style: t.textTheme.bodyMedium?.copyWith(color: colors.onPrimary),
+              style: t.textTheme.bodyMedium?.copyWith(
+                color: colors.onPrimaryContainer,
+              ),
             ),
           ],
           if (o != null) ...[
             const SizedBox(height: RotinaSpacing.md),
             SizedBox(
               width: double.infinity,
-              child: FilledButton.tonalIcon(
+              child: FilledButton.icon(
                 onPressed: onComplete,
                 icon: const Icon(Icons.check_rounded),
                 label: const Text('Concluir atividade'),

@@ -42,7 +42,7 @@ fitness, como calibração. `daytoday-cases.json` acrescenta situações deste a
 
 Preservar rotina offline, recorrência, duração, prioridade, sequência de tarefas,
 histórico, dados locais e contratos de alarme. O alvo documentado é Android e
-PT-BR, com identidade neutra. Consulte DOCUMENTOS.md e os testes para decisões
+PT-BR, com identidade cromática aprovada. Consulte DOCUMENTOS.md e os testes para decisões
 atuais; nenhum exemplo histórico substitui essas fontes.
 
 Ao aprender algo novo nesta aplicação, registrar evidência, contexto, limite e

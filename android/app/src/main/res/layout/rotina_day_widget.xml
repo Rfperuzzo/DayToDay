@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#242723"
+            android:textColor="#172F2B"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#646860"
+            android:textColor="#4F6862"
             android:textSize="11sp" />
     </LinearLayout>
 
@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#242723"
+            android:textColor="#172F2B"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#646860"
+            android:textColor="#4F6862"
             android:textSize="11sp" />
     </LinearLayout>
 
@@ -136,7 +136,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#242723"
+            android:textColor="#172F2B"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -146,7 +146,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#646860"
+            android:textColor="#4F6862"
             android:textSize="11sp" />
     </LinearLayout>
 
@@ -166,7 +166,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#242723"
+            android:textColor="#172F2B"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -176,7 +176,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#646860"
+            android:textColor="#4F6862"
             android:textSize="11sp" />
     </LinearLayout>
 

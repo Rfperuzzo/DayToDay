@@ -347,7 +347,7 @@ final class _CalendarDayCard extends StatelessWidget {
             boxShadow: selected
                 ? const [
                     BoxShadow(
-                      color: Color(0x20343833),
+                      color: RotinaColors.softShadow,
                       blurRadius: 16,
                       offset: Offset(0, 6),
                     ),

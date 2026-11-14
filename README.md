@@ -19,7 +19,7 @@ conta e com os dados armazenados no próprio aparelho.
   uma tarefa, o app reorganiza a fila por importância, protegendo as durações.
 - **Widget Android:** veja as tarefas do dia e abra uma atividade na tela inicial.
 
-A identidade visual combina off-white, branco, cinza e grafite, com um ícone de
+A identidade visual combina verde-petróleo, superfícies claras e acentos pêssego, com um ícone de
 calendário e marca de conclusão. Os alarmes dependem dos acessos concedidos e das
 restrições do Android e do fabricante.
 

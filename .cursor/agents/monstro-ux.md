@@ -56,7 +56,7 @@ app fitness, sem modificar o repositório de origem. Referências de treino,
 cardio, GPS, XP e loja nas fontes históricas são exemplos, não requisitos daqui.
 
 Leia DOCUMENTOS.md, docs/REFERENCIA_VISUAL.md e os testes atuais. Preserve a
-identidade off-white/grafite, dados locais e identificadores de compatibilidade.
+identidade aprovada em docs/REFERENCIA_VISUAL.md, dados locais e identificadores de compatibilidade.
 Contextos prováveis: planejar o dia, identificar a próxima ação, concluir etapas
 e recuperar uma rotina interrompida. São hipóteses de uso, não pesquisa realizada.
 
@@ -205,7 +205,7 @@ Leia lib/core/presentation/rotina_theme.dart, lib/main.dart,
 lib/app/app_dependencies.dart, DOCUMENTOS.md e docs/REFERENCIA_VISUAL.md.
 Use RotinaTheme/RotinaColors/RotinaSpacing e os componentes reais do DayToDay.
 O alvo atual é Android/PT-BR; confirme plataformas/idiomas adicionais antes de
-prometer cobertura. O app tem uma identidade neutra, não as três paletas fitness.
+prometer cobertura. O app tem uma identidade cromática aprovada, não as três paletas fitness.
 Compare referências de mercado sem copiar assets ou introduzir serviços remotos.
 
 ## Cobertura verificável

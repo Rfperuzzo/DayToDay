@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'app/app_dependencies.dart';
 import 'app/startup_gate.dart';
@@ -31,6 +32,10 @@ class DayToDayApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'DayToDay',
       theme: RotinaTheme.light,
+      builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: child ?? const SizedBox.shrink(),
+      ),
       locale: const Locale("pt", "BR"),
       supportedLocales: const [Locale("pt", "BR")],
       localizationsDelegates: GlobalMaterialLocalizations.delegates,

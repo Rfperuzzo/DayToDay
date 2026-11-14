@@ -8,7 +8,7 @@ description: Propõe hierarquia, agrupamento e posicionamento de botões e açõ
 O objetivo é produzir uma organização recomendada e implementável para as ações
 da tela, não apenas dizer que os botões estão desalinhados. Leia DOCUMENTOS.md, o AGENTS.md se existir,
 o perfil `.cursor/agents/monstro-ux.md` e os componentes/tokens atuais. Preserve
-a identidade neutra, os tokens, PT-BR, funções, dados e autorizações da tarefa.
+a identidade cromática aprovada, os tokens, PT-BR, funções, dados e autorizações da tarefa.
 
 ## Entender a ação antes de escolher o lugar
 

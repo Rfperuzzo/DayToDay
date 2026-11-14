@@ -11,7 +11,7 @@
     {
       "source_path": ".cursor/agents/monstro-ux.md",
       "source_sha256": "1fe8b4525a6cab7aa7103a761b1a8cb0b7bd99a009c8522b6a11910586530fe7",
-      "local_sha256": "55503c2bdd88904629e3d250d49dff890efe9e8c6003ae722a61278644f7f900",
+      "local_sha256": "31762a1388752a8f680a475c02637c6f8d46bcb6a627b264c28fe5ddda5b468d",
       "adapted": true
     },
     {
@@ -77,7 +77,7 @@
     {
       "source_path": ".cursor/skills/monstro-ux-actions/SKILL.md",
       "source_sha256": "0edbfc766cf2f8080300a9881a97db7a01b11a3d34c6169cc70bc009d5d9e4e1",
-      "local_sha256": "9d5708452f01f48de314f3c817ff58f673533a0152ae7e7277cbac0b68831e84",
+      "local_sha256": "87f53a7a883507ac013a0d3ef93b364cacb5d64a1037d24adf7d937aaea62b8e",
       "adapted": true
     },
     {
@@ -112,7 +112,7 @@
     },
     {
       "path": ".cursor/skills/monstro-ux-audit/references/experience-transfer.md",
-      "sha256": "cfe22ded1fb70807bcd0d569776e46c80c8b7641365e5113b4e1dcbf5d6f6632"
+      "sha256": "b6a2b4393e2d05a25c24cc45c44b4c1e6314a1af148f3549eebcd2fc63dbfdb7"
     },
     {
       "path": ".cursor/skills/monstro-ux-audit/references/daytoday-cases.json",
@@ -263,5 +263,6 @@
       "matches_fitness_lock": true
     }
   ],
-  "project_local_skill_count": 21
+  "project_local_skill_count": 21,
+  "context_update": "2026-11-14: user authorized warm teal/peach palette; original fitness sources not accessed."
 }

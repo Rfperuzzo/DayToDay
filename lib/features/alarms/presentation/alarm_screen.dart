@@ -135,7 +135,7 @@ final class _AlarmRingingScreenState extends State<AlarmRingingScreen> {
                             borderRadius: BorderRadius.circular(32),
                             boxShadow: const [
                               BoxShadow(
-                                color: Color(0x4D242723),
+                                color: RotinaColors.alarmShadow,
                                 blurRadius: 38,
                                 offset: Offset(0, 18),
                               ),
