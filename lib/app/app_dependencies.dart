@@ -160,8 +160,8 @@ final class AppDependencies {
   final AlarmEventProcessor eventProcessor;
 
   static Future<AppDependencies> create() async {
-    final database = AppDatabase.defaults();
     final timeZone = await IanaTimeZoneService.create();
+    final database = AppDatabase.defaults();
     final alarmGateway = AndroidAlarmGateway();
     await alarmGateway.initialize();
     final activities = DriftActivityRepository(database);

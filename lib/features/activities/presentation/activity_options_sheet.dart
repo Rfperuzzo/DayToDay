@@ -4,10 +4,12 @@ import '../../../core/presentation/rotina_theme.dart';
 import '../../../core/time/clock.dart';
 import '../../../core/time/time_zone_service.dart';
 import '../application/activity_manager.dart';
+import '../application/schedule_availability.dart';
 import '../domain/activity.dart';
 import '../domain/activity_occurrence.dart';
 import '../domain/activity_recurrence_preset.dart';
 import '../domain/recurrence_rule.dart';
+import 'activity_recurrence_selector.dart';
 
 enum ActivityOption { complete, edit, subtasks, cancel }
 
@@ -121,6 +123,7 @@ final class EditActivitySheet extends StatefulWidget {
     required this.occurrence,
     required this.timeZone,
     this.clock = const SystemClock(),
+    this.onSave,
     super.key,
   });
 
@@ -128,6 +131,7 @@ final class EditActivitySheet extends StatefulWidget {
   final ActivityOccurrence occurrence;
   final TimeZoneService timeZone;
   final Clock clock;
+  final Future<ActivityMutationResult> Function(ActivityEditDraft)? onSave;
 
   @override
   State<EditActivitySheet> createState() => _EditActivitySheetState();
@@ -135,6 +139,8 @@ final class EditActivitySheet extends StatefulWidget {
 
 final class _EditActivitySheetState extends State<EditActivitySheet> {
   final _formKey = GlobalKey<FormState>();
+  bool _saving = false;
+  String? _error;
   late final TextEditingController _titleController;
   late TimeOfDay _time;
   late ActivityRecurrencePreset _recurrence;
@@ -158,162 +164,174 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-      child: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 48,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: RotinaColors.outline,
-                      borderRadius: BorderRadius.circular(99),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 22),
-                Row(
+    return PopScope(
+      canPop: !_saving,
+      child: AbsorbPointer(
+        absorbing: _saving,
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: SafeArea(
+            top: false,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        'Editar atividade',
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                    ),
-                    IconButton.filledTonal(
-                      onPressed: () => Navigator.pop(context),
-                      tooltip: 'Fechar',
-                      icon: const Icon(Icons.close_rounded),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'O novo nome e horário valerão para esta atividade e as próximas repetições.',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 24),
-                TextFormField(
-                  controller: _titleController,
-                  autofocus: true,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: const InputDecoration(
-                    labelText: 'Nome da atividade',
-                    prefixIcon: Icon(Icons.edit_rounded),
-                  ),
-                  validator: (value) => value == null || value.trim().isEmpty
-                      ? 'Digite o nome da atividade.'
-                      : null,
-                ),
-                const SizedBox(height: 16),
-                Material(
-                  color: RotinaColors.surfaceSoft,
-                  borderRadius: BorderRadius.circular(20),
-                  child: ListTile(
-                    onTap: _pickTime,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    leading: const Icon(
-                      Icons.schedule_rounded,
-                      color: RotinaColors.primary,
-                    ),
-                    title: const Text('Horário'),
-                    subtitle: Text(_time.format(context)),
-                    trailing: const Icon(Icons.chevron_right_rounded),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Duração',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelLarge?.copyWith(color: RotinaColors.text),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    for (final minutes in const [15, 30, 45, 60, 90])
-                      ChoiceChip(
-                        label: Text('$minutes min'),
-                        selected: _durationMinutes == minutes,
-                        onSelected: (_) =>
-                            setState(() => _durationMinutes = minutes),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Repetição',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelLarge?.copyWith(color: RotinaColors.text),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: SegmentedButton<ActivityRecurrencePreset>(
-                    segments: const [
-                      ButtonSegment(
-                        value: ActivityRecurrencePreset.once,
-                        label: Text('Só este dia'),
-                      ),
-                      ButtonSegment(
-                        value: ActivityRecurrencePreset.daily,
-                        label: Text('Todo dia'),
-                      ),
-                      ButtonSegment(
-                        value: ActivityRecurrencePreset.weekdays,
-                        label: Text('Seg–sex'),
-                      ),
-                    ],
-                    selected: {_recurrence},
-                    showSelectedIcon: false,
-                    onSelectionChanged: (value) =>
-                        setState(() => _recurrence = value.single),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: RotinaColors.primarySoft,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(Icons.alarm_rounded, color: RotinaColors.primary),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'Os alarmes antigos serão substituídos automaticamente.',
+                    Center(
+                      child: Container(
+                        width: 48,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: RotinaColors.outline,
+                          borderRadius: BorderRadius.circular(99),
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 22),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Editar atividade',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ),
+                        IconButton.filledTonal(
+                          onPressed: _saving
+                              ? null
+                              : () => Navigator.pop(context),
+                          tooltip: 'Fechar',
+                          icon: const Icon(Icons.close_rounded),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'O novo nome e horário valerão para esta atividade e as próximas repetições.',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 24),
+                    TextFormField(
+                      controller: _titleController,
+                      autofocus: true,
+                      textCapitalization: TextCapitalization.sentences,
+                      decoration: const InputDecoration(
+                        labelText: 'Nome da atividade',
+                        prefixIcon: Icon(Icons.edit_rounded),
+                      ),
+                      validator: (value) =>
+                          value == null || value.trim().isEmpty
+                          ? 'Digite o nome da atividade.'
+                          : null,
+                    ),
+                    const SizedBox(height: 16),
+                    Material(
+                      color: RotinaColors.surfaceSoft,
+                      borderRadius: BorderRadius.circular(20),
+                      child: ListTile(
+                        onTap: _pickTime,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        leading: const Icon(
+                          Icons.schedule_rounded,
+                          color: RotinaColors.primary,
+                        ),
+                        title: const Text('Horário'),
+                        subtitle: Text(_time.format(context)),
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Duração',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: RotinaColors.text,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final minutes in const [15, 30, 45, 60, 90])
+                          ChoiceChip(
+                            label: Text('$minutes min'),
+                            selected: _durationMinutes == minutes,
+                            onSelected: (_) =>
+                                setState(() => _durationMinutes = minutes),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Repetição',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: RotinaColors.text,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ActivityRecurrenceSelector(
+                        value: _recurrence,
+                        onChanged: (value) =>
+                            setState(() => _recurrence = value),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: RotinaColors.primarySoft,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.alarm_rounded,
+                            color: RotinaColors.primary,
+                          ),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'Os alarmes antigos serão substituídos automaticamente.',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    if (_error != null) ...[
+                      Semantics(
+                        liveRegion: true,
+                        child: Text(
+                          _error!,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
                     ],
-                  ),
+                    FilledButton.icon(
+                      onPressed: _saving ? null : _submit,
+                      icon: const Icon(Icons.save_rounded),
+                      label: Text(_saving ? 'Salvando…' : 'Salvar alterações'),
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 56),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 24),
-                FilledButton.icon(
-                  onPressed: _submit,
-                  icon: const Icon(Icons.save_rounded),
-                  label: const Text('Salvar alterações'),
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 56),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -334,7 +352,8 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
     }
   }
 
-  void _submit() {
+  Future<void> _submit() async {
+    if (_saving) return;
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -360,16 +379,44 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
         return;
       }
     }
-    Navigator.pop(
-      context,
-      ActivityEditDraft(
-        title: _titleController.text,
-        hour: _time.hour,
-        minute: _time.minute,
-        recurrence: _recurrence,
-        estimatedDuration: Duration(minutes: _durationMinutes),
-      ),
+    final draft = ActivityEditDraft(
+      title: _titleController.text,
+      hour: _time.hour,
+      minute: _time.minute,
+      recurrence: _recurrence,
+      estimatedDuration: Duration(minutes: _durationMinutes),
     );
+    final save = widget.onSave;
+    if (save == null) {
+      Navigator.pop(context, draft);
+      return;
+    }
+    FocusScope.of(context).unfocus();
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+    try {
+      final result = await save(draft);
+      if (mounted) Navigator.pop(context, result);
+    } on ScheduleConflictException catch (error) {
+      final local = widget.timeZone.toLocal(error.nextAvailableUtc);
+      if (mounted) {
+        setState(
+          () => _error =
+              'Esse intervalo está ocupado. Próximo horário livre: ${local.day}/${local.month}/${local.year} às ${local.hour.toString().padLeft(2, "0")}:${local.minute.toString().padLeft(2, "0")}. Ajuste o horário e tente novamente.',
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => _error =
+              'Não foi possível salvar. Suas alterações continuam aqui para tentar novamente.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
   }
 }
 

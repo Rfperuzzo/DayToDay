@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rotina_jhenifer/main.dart';
 import 'package:rotina_jhenifer/core/time/clock.dart';
 import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
 import 'package:rotina_jhenifer/features/activities/presentation/new_activity_sheet.dart';
@@ -29,10 +30,7 @@ void main() {
     await tester.enterText(find.byType(TextFormField).first, 'Treino');
     await tester.enterText(find.byType(TextFormField).last, 'Academia');
     expect(find.bySemanticsLabel('Nome da atividade'), findsOneWidget);
-    expect(
-      find.bySemanticsLabel('Local ou observação (opcional)'),
-      findsOneWidget,
-    );
+    expect(find.bySemanticsLabel('Observação (opcional)'), findsOneWidget);
     expect(tester.takeException(), isNull);
     semantics.dispose();
   });
@@ -78,6 +76,53 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  testWidgets('data distante do calendário abre seletor sem faixa inválida', (
+    tester,
+  ) async {
+    final clock = _MutableClock(DateTime.utc(2026, 8, 29, 12));
+    await tester.binding.setSurfaceSize(const Size(360, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      DayToDayApp(
+        home: Scaffold(
+          body: NewActivitySheet(
+            initialDay: DateTime(2099),
+            timeZone: const _UtcTimeZone(),
+            permissions: _DelayedPermissionGateway(clock),
+            clock: clock,
+            onCreate: (_) async => throw StateError('Não deve salvar'),
+          ),
+        ),
+      ),
+    );
+    await tester.ensureVisible(find.text('1 jan'));
+    await tester.tap(find.text('1 jan'));
+    await tester.pumpAndSettle();
+    final dialog = tester.widget<DatePickerDialog>(
+      find.byType(DatePickerDialog),
+    );
+    expect(dialog.initialDate, DateTime(2099));
+    expect(dialog.lastDate.isBefore(DateTime(2099)), isFalse);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('Cancelar'));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('hora segue o idioma português da aplicação', (tester) async {
+    await tester.pumpWidget(
+      DayToDayApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) =>
+                Text(const TimeOfDay(hour: 16, minute: 5).format(context)),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('16:05'), findsOneWidget);
   });
 }
 

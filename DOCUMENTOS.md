@@ -25,7 +25,7 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - A mudança para DayToDay preserva Application ID, pacote Dart, banco, canais nativos e URI do widget para manter dados em atualizações compatíveis.
 - O primeiro layout de produto é o painel diário, com calendário mensal
   contínuo, progresso, próxima atividade e conclusão rápida.
-- O cadastro nasce do botão flutuante central e cobre título, observação, dia,
+- O cadastro nasce da ação inferior rotulada Nova atividade e cobre título, observação, dia,
   horário, duração, prioridade e repetição.
 - Repetições disponíveis no primeiro fluxo: única, diária e dias úteis.
 - Permissões do alarme são explicadas e solicitadas no contexto do primeiro
@@ -350,3 +350,37 @@ Validação desta mudança: análise estática sem problemas, 52 testes aprovado
   verifica o pacote sem executar inferência.
 - A importação não muda a aplicação e não equivale a revisão de UX executada
   ou aprovação para loja. Testes/resultados do fitness não são herdados.
+
+
+## Revisão MONSTRUX no DayToDay — 14/11/2026
+
+- Revisão independente com o perfil e as 21 skills locais, selecionadas por
+  necessidade. Leitura completa de 52 fontes Dart/Kotlin e 12 arquivos de
+  configuração/layout, organizada nas sete jornadas. O repositório fitness
+  não foi consultado ou modificado nesta rodada.
+- O painel prioriza a próxima ação; progresso compacto, ação Nova atividade
+  rotulada, navegação de semana/Hoje e estados com horário, duração e prioridade.
+- Criação/edição impedem saída e alteração durante gravação. O editor mantém
+  o rascunho e o erro de conflito para corrigir e tentar novamente. As escolhas
+  de recorrência são equivalentes e adaptáveis ao texto; regras não mudaram.
+- Subtarefas usam rolagem por slivers, inclusive com teclado/texto ampliado.
+  Feedback tátil não bloqueia a conclusão da gravação local.
+- Localização PT-BR usa flutter_localizations do próprio SDK e intl em cache;
+  nenhum SDK foi atualizado. A confirmação de reagendamento inclui a data.
+- A revisão dos acessos de alarmes fica disponível no painel e nas respostas
+  degradadas. A interface comunica o estado verificado, sem prometer superar
+  as restrições do Android/fabricante. Permissões continuam dependentes de ação
+  explícita da pessoa e das APIs existentes.
+- Inicialização oferece nova tentativa. GMT/UTC são tratados explicitamente;
+  fuso desconhecido continua erro, sem fallback silencioso. Identificadores de
+  app/banco e contratos do motor, repositórios e dados permanecem estáveis.
+- O widget vazio recebe a ação de abrir que anuncia; deep link obsoleto é
+  recusado antes das opções. Cancelamento é identificado no resumo nativo.
+- Fixtures de UI usam banco em memória e gateways fake, no alvo opcional
+  tool/ux_preview.dart. Não integram o entrypoint de produção e não comprovam
+  entrega nativa de alarme. Capturas v1/v2 foram descartadas por cache de build;
+  v3 foi validada por conteúdo do APK e condição visível do destino.
+- Resultados e cobertura detalhados em docs/UX_REVIEW_20261114.md. A rodada não
+  certifica WCAG nem substitui ensaios de aparelho, tela bloqueada/boot, launcher
+  e revisão de publicação. A release ainda requer assinatura de produção pelo
+  responsável; a configuração atual aponta para a chave debug.

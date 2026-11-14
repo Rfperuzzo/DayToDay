@@ -69,10 +69,10 @@ void main() {
       ),
     );
 
-    expect(find.text('0 de 1 concluídas'), findsOneWidget);
+    expect(find.text('Progresso · 0 de 1 concluídas'), findsOneWidget);
     expect(find.text('Treino de pernas'), findsNWidgets(2));
     expect(
-      tester.getBottomLeft(find.byType(CustomScrollView)).dy,
+      tester.getBottomLeft(find.byKey(const ValueKey('daily-scroll'))).dy,
       lessThanOrEqualTo(
         tester.getTopLeft(find.byTooltip('Adicionar atividade')).dy,
       ),
@@ -152,13 +152,13 @@ void main() {
         ),
       ),
     );
-    await tester.drag(find.byType(CustomScrollView), const Offset(0, -430));
+    await tester.drag(
+      find.byKey(const ValueKey('daily-scroll')),
+      const Offset(0, -430),
+    );
     await tester.pumpAndSettle();
 
-    expect(
-      find.text('Disponível após concluir a tarefa anterior'),
-      findsOneWidget,
-    );
+    expect(find.text('Após concluir a anterior · Normal'), findsOneWidget);
     await tester.tap(find.byKey(ValueKey('complete-${second.id}')));
     expect(completed, isNull);
     final completionTarget = find.byKey(ValueKey('complete-${first.id}'));
@@ -200,7 +200,7 @@ void main() {
       ),
     );
 
-    expect(find.text('sábado, 16:05'), findsOneWidget);
+    expect(find.text('sábado, 29/08/2026 às 16:05'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

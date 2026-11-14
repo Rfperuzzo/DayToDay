@@ -64,6 +64,7 @@ class RotinaDayWidgetProvider : AppWidgetProvider() {
             widgetId: Int,
         ) {
             val views = RemoteViews(context.packageName, R.layout.rotina_day_widget)
+            views.setOnClickPendingIntent(R.id.widget_empty, openAppIntent(context, widgetId + 20_000))
             val snapshot = readSnapshot(context)
             val tasks = snapshot?.tasks.orEmpty()
             val total = snapshot?.totalCount ?: 0
@@ -182,7 +183,8 @@ class RotinaDayWidgetProvider : AppWidgetProvider() {
 
         private fun decoratedTitle(task: WidgetTask): String = when {
             task.status == "completed" -> "✓ ${task.title}"
-            task.status == "skipped" -> "— ${task.title}"
+            task.status == "skipped" -> "Pulada · ${task.title}"
+            task.status == "cancelled" -> "Cancelada · ${task.title}"
             task.isLocked -> "🔒 ${task.title}"
             else -> task.title
         }

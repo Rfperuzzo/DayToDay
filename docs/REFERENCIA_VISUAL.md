@@ -30,3 +30,11 @@ grafite e cartões claros, com os mesmos tons de texto.
 
 O aplicativo continua offline. Identificadores de armazenamento e integração
 Android permanecem estáveis para preservar dados em atualizações compatíveis.
+
+
+## Hierarquia refinada em 14/11/2026
+
+Cabeçalho compacto sem avatar de conta inexistente. Data/calendário preservados,
+próxima atividade antes do progresso compacto, lista com estado e horário, ação
+inferior Nova atividade rotulada. Componentes deixam o texto ampliar e rolar;
+recorrência usa opções que quebram linha. A identidade neutra é preservada.

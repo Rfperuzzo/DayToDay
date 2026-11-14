@@ -7,6 +7,7 @@ import '../../../app/app_dependencies.dart';
 import '../application/alarm_response_service.dart';
 import '../domain/alarm_gateway.dart';
 import 'alarm_screen.dart';
+import 'alarm_access_sheet.dart';
 
 final class AlarmRouter extends ConsumerStatefulWidget {
   const AlarmRouter({required this.child, super.key});
@@ -64,6 +65,10 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
         result: result,
         timeZone: ref.watch(timeZoneServiceProvider),
         onDone: _finishResolution,
+        onReviewAccess: () => showAlarmAccessSheet(
+          context,
+          ref.read(alarmPermissionGatewayProvider),
+        ),
       );
     }
     return AlarmRingingScreen(

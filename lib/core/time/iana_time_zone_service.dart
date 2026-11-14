@@ -9,11 +9,18 @@ final class IanaTimeZoneService implements TimeZoneService {
 
   final tz.Location _location;
 
-  static Future<IanaTimeZoneService> create() async {
+  factory IanaTimeZoneService.fromIdentifier(String identifier) {
     tz_data.initializeTimeZones();
+    // Common zero-offset identifiers are aliases omitted by some TZ databases.
+    if (identifier == 'GMT' || identifier == 'UTC') {
+      return IanaTimeZoneService._(tz.UTC);
+    }
+    return IanaTimeZoneService._(tz.getLocation(identifier));
+  }
+
+  static Future<IanaTimeZoneService> create() async {
     final deviceTimeZone = await FlutterTimezone.getLocalTimezone();
-    final location = tz.getLocation(deviceTimeZone.identifier);
-    return IanaTimeZoneService._(location);
+    return IanaTimeZoneService.fromIdentifier(deviceTimeZone.identifier);
   }
 
   @override

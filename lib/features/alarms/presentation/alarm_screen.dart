@@ -276,6 +276,7 @@ final class AlarmResolvedScreen extends StatelessWidget {
     required this.result,
     required this.timeZone,
     required this.onDone,
+    this.onReviewAccess,
     super.key,
   });
 
@@ -283,6 +284,7 @@ final class AlarmResolvedScreen extends StatelessWidget {
   final AlarmResponseResult result;
   final TimeZoneService timeZone;
   final VoidCallback onDone;
+  final VoidCallback? onReviewAccess;
 
   @override
   Widget build(BuildContext context) {
@@ -383,6 +385,12 @@ final class AlarmResolvedScreen extends StatelessWidget {
                         ),
                       ),
                     ],
+                    if (!result.alarmsSynchronized && onReviewAccess != null)
+                      TextButton.icon(
+                        onPressed: onReviewAccess,
+                        icon: const Icon(Icons.notifications_none_rounded),
+                        label: const Text('Revisar acessos dos alarmes'),
+                      ),
                     const SizedBox(height: 34),
                     FilledButton.icon(
                       onPressed: onDone,
@@ -455,5 +463,5 @@ String _dateAndTime(TimeZoneService timeZone, DateTime utc) {
   ];
   final time =
       '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
-  return '${weekdays[local.weekday - 1]}, $time';
+  return '${weekdays[local.weekday - 1]}, ${local.day.toString().padLeft(2, "0")}/${local.month.toString().padLeft(2, "0")}/${local.year} às $time';
 }

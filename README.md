@@ -1,4 +1,4 @@
-# DayToDay oi oi oi
+# DayToDay
 
 **Sua rotina, no seu ritmo.**
 

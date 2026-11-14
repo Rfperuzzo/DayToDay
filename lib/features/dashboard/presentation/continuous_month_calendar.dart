@@ -106,13 +106,41 @@ final class _ContinuousMonthCalendarState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          _monthYearLabel(_visibleMonth),
-          key: const ValueKey('calendar-month-label'),
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: RotinaColors.primary,
-            fontWeight: FontWeight.w800,
-          ),
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: RotinaSpacing.sm,
+          runSpacing: RotinaSpacing.xs,
+          children: [
+            Text(
+              _monthYearLabel(_visibleMonth),
+              key: const ValueKey('calendar-month-label'),
+              style: theme.textTheme.titleLarge,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () => _navigateWeek(-1),
+                  tooltip: 'Semana anterior',
+                  icon: const Icon(Icons.chevron_left_rounded),
+                ),
+                TextButton(
+                  onPressed: () {
+                    final today = DateUtils.dateOnly(DateTime.now());
+                    widget.onSelected(today);
+                    _revealDay(today);
+                  },
+                  child: const Text('Hoje'),
+                ),
+                IconButton(
+                  onPressed: () => _navigateWeek(1),
+                  tooltip: 'Próxima semana',
+                  icon: const Icon(Icons.chevron_right_rounded),
+                ),
+              ],
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -149,6 +177,39 @@ final class _ContinuousMonthCalendarState
           ),
         ),
       ],
+    );
+  }
+
+  void _navigateWeek(int direction) {
+    if (!_controller.hasClients || _itemExtent == null) return;
+    final target = (_controller.offset + direction * _itemExtent! * 7).clamp(
+      0.0,
+      _controller.position.maxScrollExtent,
+    );
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.jumpTo(target);
+      return;
+    }
+    _controller.animateTo(
+      target,
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  void _revealDay(DateTime day) {
+    if (!_controller.hasClients || _itemExtent == null) return;
+    final index = _calendarDayDifference(_firstDay, day);
+    final target = (index * _itemExtent! - (_viewportWidth! - _itemExtent!) / 2)
+        .clamp(0.0, _controller.position.maxScrollExtent);
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.jumpTo(target);
+      return;
+    }
+    _controller.animateTo(
+      target,
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
     );
   }
 
@@ -197,6 +258,10 @@ final class _ContinuousMonthCalendarState
     final target = _centerOffsetFor(
       widget.selectedDay,
     ).clamp(0.0, _controller.position.maxScrollExtent);
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.jumpTo(target);
+      return;
+    }
     _controller.animateTo(
       target,
       duration: const Duration(milliseconds: 320),
@@ -272,7 +337,9 @@ final class _CalendarDayCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 220),
+          duration: MediaQuery.disableAnimationsOf(context)
+              ? Duration.zero
+              : const Duration(milliseconds: 220),
           width: double.infinity,
           decoration: BoxDecoration(
             color: selected ? RotinaColors.primary : RotinaColors.surfaceStrong,
