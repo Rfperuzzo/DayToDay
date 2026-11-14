@@ -71,6 +71,12 @@ void main() {
 
     expect(find.text('0 de 1 concluídas'), findsOneWidget);
     expect(find.text('Treino de pernas'), findsNWidgets(2));
+    expect(
+      tester.getBottomLeft(find.byType(CustomScrollView)).dy,
+      lessThanOrEqualTo(
+        tester.getTopLeft(find.byTooltip('Adicionar atividade')).dy,
+      ),
+    );
     final task = find.byKey(ValueKey('task-${occurrence.id}'));
     await tester.ensureVisible(task);
     await tester.pumpAndSettle();
@@ -155,7 +161,11 @@ void main() {
     );
     await tester.tap(find.byKey(ValueKey('complete-${second.id}')));
     expect(completed, isNull);
-    await tester.tap(find.byKey(ValueKey('complete-${first.id}')));
+    final completionTarget = find.byKey(ValueKey('complete-${first.id}'));
+    expect(tester.getSize(completionTarget), const Size(48, 48));
+    await tester.tapAt(
+      tester.getTopLeft(completionTarget) + const Offset(2, 24),
+    );
     expect(completed, same(first));
     expect(tester.takeException(), isNull);
   });

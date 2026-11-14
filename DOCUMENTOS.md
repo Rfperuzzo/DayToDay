@@ -315,3 +315,22 @@ bateria. Depois, evoluir a explicação do Resgate para nomear qual compromisso
 foi protegido.
 
 Validação desta mudança: análise estática sem problemas, 52 testes aprovados e APK debug compilado. Painel renderizado em teste visual; teste em aparelho físico não realizado nesta revisão.
+
+
+## Piloto local MONSTRUX — 28/10/2026
+
+- Instalação de desenvolvimento isolada do APK, sem dependência Flutter/Android nova.
+- Código, dados e regras de rotina preservados; esta rodada prepara uma auditoria UX supervisionada.
+- Na preparação inicial, a proteção da franquia bloqueou a sessão. Depois, a primeira análise limitada concluiu com 8.368 tokens e a revisão da síntese ampliada com 8.731. Nenhuma API paga ou modelo local.
+- Plano, validações e falha de inicialização em GMT documentados em [MONSTRUX_PILOT.md](docs/MONSTRUX_PILOT.md).
+- MONSTRUX privado e controles não são publicados neste repositório público.
+
+
+## Ajustes UX supervisionados — 28/10/2026
+
+- Calendário dimensionado pelas fontes e escala do sistema: sete dias no tamanho normal e faixa rolável com cartões maiores para texto ampliado, sem limitar a preferência de texto da pessoa.
+- Ação central de adicionar em área inferior reservada, sem cobrir a rolagem do painel.
+- Nome, observação e nova subtarefa com rótulos persistentes; conclusão com área de toque de 48 dp, mantendo a ordem de liberação das tarefas.
+- Menu de edição descreve nome, horário, duração e repetição já disponíveis.
+- Paleta, identificadores, banco, regras, motor de rotina e integração de alarmes preservados. O achado GMT permanece aberto.
+- Análise estática sem problemas, 54 testes aprovados e APK debug compilado. Escopo, atribuição e limites da revisão em [ux-review.md](docs/monstrux/ux-review.md).

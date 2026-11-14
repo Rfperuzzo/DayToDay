@@ -89,8 +89,8 @@ final class ActivityOptionsSheet extends StatelessWidget {
             ],
             _OptionTile(
               icon: Icons.edit_calendar_rounded,
-              title: 'Editar nome ou horário',
-              subtitle: 'Atualiza esta atividade e as próximas repetições.',
+              title: 'Editar atividade',
+              subtitle: 'Nome, horário, duração e repetição.',
               onTap: () => Navigator.pop(context, ActivityOption.edit),
             ),
             const SizedBox(height: 10),

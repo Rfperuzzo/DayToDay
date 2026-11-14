@@ -39,10 +39,10 @@ void main() {
 
     await tester.tap(find.text('Abrir opções'));
     await tester.pumpAndSettle();
-    expect(find.text('Editar nome ou horário'), findsOneWidget);
+    expect(find.text('Editar atividade'), findsOneWidget);
     expect(find.text('Subtarefas'), findsOneWidget);
     expect(find.text('Cancelar atividade'), findsOneWidget);
-    await tester.tap(find.text('Editar nome ou horário'));
+    await tester.tap(find.text('Editar atividade'));
     await tester.pumpAndSettle();
 
     expect(selected, ActivityOption.edit);

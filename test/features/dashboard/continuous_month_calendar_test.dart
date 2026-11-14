@@ -1,8 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rotina_jhenifer/core/presentation/rotina_theme.dart';
 import 'package:rotina_jhenifer/features/dashboard/presentation/continuous_month_calendar.dart';
 
 void main() {
+  testWidgets('calendário mantém textos e seleção legíveis a 200%', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(320, 720));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    DateTime? selected;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: RotinaTheme.light,
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: const TextScaler.linear(2)),
+          child: child!,
+        ),
+        home: Scaffold(
+          body: ContinuousMonthCalendar(
+            selectedDay: DateTime(2026, 10, 28),
+            onSelected: (day) => selected = day,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final card = find.byKey(const ValueKey('calendar-day-2026-10-28'));
+    final weekday = find.descendant(of: card, matching: find.text('QUA'));
+    final number = find.descendant(of: card, matching: find.text('28'));
+    final cardRect = tester.getRect(card);
+    for (final label in [weekday, number]) {
+      final labelRect = tester.getRect(label);
+      expect(cardRect.contains(labelRect.topLeft), isTrue);
+      expect(cardRect.contains(labelRect.bottomRight), isTrue);
+    }
+    expect(tester.takeException(), isNull);
+    await tester.tap(card);
+    expect(selected, DateTime(2026, 10, 28));
+    await tester.drag(
+      find.byKey(const ValueKey('continuous-month-calendar-list')),
+      const Offset(-220, 0),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
+
   test('calcula meses com 28, 29, 30 e 31 dias', () {
     expect(daysInCalendarMonth(2025, DateTime.february), 28);
     expect(daysInCalendarMonth(2024, DateTime.february), 29);

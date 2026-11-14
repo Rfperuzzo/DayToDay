@@ -387,17 +387,26 @@ final class TodayDashboard extends StatelessWidget {
     final next = DailyTaskSequence.firstAvailable(sortedOccurrences);
 
     return Scaffold(
-      floatingActionButton: onAddRequested == null
+      bottomNavigationBar: onAddRequested == null
           ? null
-          : FloatingActionButton.large(
-              onPressed: onAddRequested,
-              tooltip: 'Adicionar atividade',
-              backgroundColor: RotinaColors.primary,
-              foregroundColor: Colors.white,
-              shape: const CircleBorder(),
-              child: const Icon(Icons.add_rounded, size: 34),
+          : ColoredBox(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: SafeArea(
+                top: false,
+                minimum: const EdgeInsets.all(RotinaSpacing.sm),
+                child: Center(
+                  heightFactor: 1,
+                  child: FloatingActionButton.large(
+                    onPressed: onAddRequested,
+                    tooltip: 'Adicionar atividade',
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    shape: const CircleBorder(),
+                    child: const Icon(Icons.add_rounded, size: 34),
+                  ),
+                ),
+              ),
             ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SafeArea(
         bottom: false,
         child: CustomScrollView(
@@ -408,7 +417,12 @@ final class TodayDashboard extends StatelessWidget {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 800),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 28, 20, 120),
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      top: 28,
+                      right: 20,
+                      bottom: RotinaSpacing.lg,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -962,41 +976,46 @@ final class _TaskTile extends StatelessWidget {
                       key: ValueKey('complete-${occurrence.id}'),
                       onTap: terminal || isLocked ? null : onComplete,
                       customBorder: const CircleBorder(),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        width: 38,
-                        height: 38,
-                        decoration: BoxDecoration(
-                          color: completed
-                              ? RotinaColors.primary
-                              : Colors.transparent,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: completed
-                                ? RotinaColors.primary
-                                : RotinaColors.outline,
-                            width: 3,
+                      child: SizedBox.square(
+                        dimension: RotinaDimensions.minimumTouchTarget,
+                        child: Center(
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              color: completed
+                                  ? RotinaColors.primary
+                                  : Colors.transparent,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: completed
+                                    ? RotinaColors.primary
+                                    : RotinaColors.outline,
+                                width: 3,
+                              ),
+                            ),
+                            child: completed
+                                ? const Icon(
+                                    Icons.check_rounded,
+                                    color: Colors.white,
+                                    size: 23,
+                                  )
+                                : isLocked
+                                ? const Icon(
+                                    Icons.lock_outline_rounded,
+                                    color: RotinaColors.textMuted,
+                                    size: 19,
+                                  )
+                                : skipped
+                                ? const Icon(
+                                    Icons.remove_rounded,
+                                    color: RotinaColors.textMuted,
+                                    size: 22,
+                                  )
+                                : null,
                           ),
                         ),
-                        child: completed
-                            ? const Icon(
-                                Icons.check_rounded,
-                                color: Colors.white,
-                                size: 23,
-                              )
-                            : isLocked
-                            ? const Icon(
-                                Icons.lock_outline_rounded,
-                                color: RotinaColors.textMuted,
-                                size: 19,
-                              )
-                            : skipped
-                            ? const Icon(
-                                Icons.remove_rounded,
-                                color: RotinaColors.textMuted,
-                                size: 22,
-                              )
-                            : null,
                       ),
                     ),
                   ),
