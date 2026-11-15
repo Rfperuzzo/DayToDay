@@ -8,6 +8,8 @@ final class DayWidgetTask {
     required this.status,
     required this.priority,
     required this.isLocked,
+    this.isReminder = false,
+    this.isSilenced = false,
   });
 
   final String occurrenceId;
@@ -18,6 +20,8 @@ final class DayWidgetTask {
   final String status;
   final String priority;
   final bool isLocked;
+  final bool isReminder;
+  final bool isSilenced;
 
   Map<String, Object> toJson() => {
     'occurrenceId': occurrenceId,
@@ -28,6 +32,8 @@ final class DayWidgetTask {
     'status': status,
     'priority': priority,
     'isLocked': isLocked,
+    'isReminder': isReminder,
+    'isSilenced': isSilenced,
   };
 }
 

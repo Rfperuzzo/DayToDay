@@ -53,6 +53,8 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
   late DateTime _day;
   late TimeOfDay _time;
   var _durationMinutes = 30;
+  bool _reserveTime = false;
+  Set<int> _customWeekdays = {DateTime.monday};
   var _priority = ActivityPriority.normal;
   var _recurrence = ActivityRecurrencePreset.once;
   var _saving = false;
@@ -127,7 +129,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Escolha o que fazer, quando começar e quanto tempo reservar.',
+                      'Escolha a atividade e o horário. Reserve tempo se precisar.',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 24),
@@ -140,7 +142,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                       textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         labelText: 'Nome da atividade',
-                        hintText: 'Ex.: Ler por 30 minutos',
+                        hintText: 'Ex.: Beber água',
                         prefixIcon: Icon(Icons.checklist_rounded),
                       ),
                       validator: (value) =>
@@ -194,26 +196,43 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                       },
                     ),
                     const SizedBox(height: 24),
-                    _SectionLabel(label: 'Duração'),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        for (final minutes in const [15, 30, 45, 60, 90])
-                          ChoiceChip(
-                            label: Text('$minutes min'),
-                            selected: _durationMinutes == minutes,
-                            onSelected: (_) =>
-                                setState(() => _durationMinutes = minutes),
-                          ),
-                      ],
+                    SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Reservar tempo na agenda'),
+                      subtitle: Text(
+                        _reserveTime
+                            ? 'Reserva um intervalo e evita sobreposição com outros blocos.'
+                            : 'Lembrete: avisa no horário, sem reservar sua agenda.',
+                      ),
+                      value: _reserveTime,
+                      onChanged: (value) =>
+                          setState(() => _reserveTime = value),
                     ),
-                    const SizedBox(height: 24),
+                    if (_reserveTime) ...[
+                      _SectionLabel(label: 'Duração'),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          for (final minutes in const [15, 30, 45, 60, 90])
+                            ChoiceChip(
+                              label: Text('$minutes min'),
+                              selected: _durationMinutes == minutes,
+                              onSelected: (_) =>
+                                  setState(() => _durationMinutes = minutes),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                    ],
                     _SectionLabel(label: 'Repetição'),
                     const SizedBox(height: 8),
                     ActivityRecurrenceSelector(
                       value: _recurrence,
+                      customWeekdays: _customWeekdays,
+                      onWeekdaysChanged: (days) =>
+                          setState(() => _customWeekdays = days),
                       onChanged: (value) => setState(() => _recurrence = value),
                     ),
                     const SizedBox(height: 24),
@@ -264,7 +283,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                           SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'O alarme pode tocar e vibrar até você responder ou até o fim da duração. O Android pode exigir acessos especiais.',
+                              'O aviso toca uma vez. Parar alarme não conclui a atividade. O Android pode exigir acessos especiais.',
                               style: TextStyle(
                                 color: RotinaColors.text,
                                 height: 1.4,
@@ -381,6 +400,11 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
         return;
       }
       final recurrence = switch (_recurrence) {
+        ActivityRecurrencePreset.custom => WeeklyRecurrence(
+          weekdays: _customWeekdays,
+          hour: _time.hour,
+          minute: _time.minute,
+        ),
         ActivityRecurrencePreset.once => OneOffRecurrence(scheduledAtUtc),
         ActivityRecurrencePreset.daily => WeeklyRecurrence.daily(
           hour: _time.hour,
@@ -402,12 +426,15 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
         ActivityDraft(
           title: _titleController.text,
           notes: _notesController.text,
-          estimatedDuration: Duration(minutes: _durationMinutes),
+          kind: _reserveTime ? ActivityKind.timeBlock : ActivityKind.reminder,
+          estimatedDuration: _reserveTime
+              ? Duration(minutes: _durationMinutes)
+              : Duration.zero,
           priority: _priority,
           recurrence: recurrence,
         ),
       );
-      await HapticFeedback.lightImpact();
+      HapticFeedback.lightImpact().ignore();
       if (mounted) {
         Navigator.pop(
           context,

@@ -11,7 +11,7 @@ import '../domain/activity_recurrence_preset.dart';
 import '../domain/recurrence_rule.dart';
 import 'activity_recurrence_selector.dart';
 
-enum ActivityOption { complete, edit, subtasks, cancel }
+enum ActivityOption { complete, postpone, edit, subtasks, cancel }
 
 final class ActivityOptionsSheet extends StatelessWidget {
   const ActivityOptionsSheet({
@@ -80,6 +80,18 @@ final class ActivityOptionsSheet extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
+            if (occurrence.isReminder &&
+                (occurrence.status == OccurrenceStatus.scheduled ||
+                    occurrence.status == OccurrenceStatus.ringing ||
+                    occurrence.status == OccurrenceStatus.postponed)) ...[
+              _OptionTile(
+                icon: Icons.snooze_rounded,
+                title: 'Lembrar em 10 minutos',
+                subtitle: 'Muda só este aviso, sem alterar sua repetição.',
+                onTap: () => Navigator.pop(context, ActivityOption.postpone),
+              ),
+              const SizedBox(height: 10),
+            ],
             if (showComplete) ...[
               _OptionTile(
                 icon: Icons.check_circle_rounded,
@@ -92,7 +104,7 @@ final class ActivityOptionsSheet extends StatelessWidget {
             _OptionTile(
               icon: Icons.edit_calendar_rounded,
               title: 'Editar atividade',
-              subtitle: 'Nome, horário, duração e repetição.',
+              subtitle: 'Horário, repetição e reserva de tempo opcional.',
               onTap: () => Navigator.pop(context, ActivityOption.edit),
             ),
             const SizedBox(height: 10),
@@ -145,6 +157,8 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
   late TimeOfDay _time;
   late ActivityRecurrencePreset _recurrence;
   late int _durationMinutes;
+  bool _reserveTime = false;
+  Set<int> _customWeekdays = {DateTime.monday};
 
   @override
   void initState() {
@@ -153,7 +167,13 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
     final local = widget.timeZone.toLocal(widget.occurrence.scheduledStartUtc);
     _time = TimeOfDay.fromDateTime(local);
     _recurrence = _presetFor(widget.activity.recurrence);
-    _durationMinutes = widget.activity.estimatedDuration.inMinutes;
+    _reserveTime = !widget.activity.isReminder;
+    _durationMinutes = _reserveTime
+        ? widget.activity.estimatedDuration.inMinutes
+        : 30;
+    if (widget.activity.recurrence case WeeklyRecurrence weekly) {
+      _customWeekdays = {...weekly.weekdays};
+    }
   }
 
   @override
@@ -248,27 +268,41 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      'Duração',
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: RotinaColors.text,
+                    SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Reservar tempo na agenda'),
+                      subtitle: Text(
+                        _reserveTime
+                            ? 'Reserva um intervalo e evita sobreposição com outros blocos.'
+                            : 'Lembrete: avisa no horário, sem reservar sua agenda.',
                       ),
+                      value: _reserveTime,
+                      onChanged: (value) =>
+                          setState(() => _reserveTime = value),
                     ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        for (final minutes in const [15, 30, 45, 60, 90])
-                          ChoiceChip(
-                            label: Text('$minutes min'),
-                            selected: _durationMinutes == minutes,
-                            onSelected: (_) =>
-                                setState(() => _durationMinutes = minutes),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
+                    if (_reserveTime) ...[
+                      Text(
+                        'Duração',
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: RotinaColors.text,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          for (final minutes in const [15, 30, 45, 60, 90])
+                            ChoiceChip(
+                              label: Text('$minutes min'),
+                              selected: _durationMinutes == minutes,
+                              onSelected: (_) =>
+                                  setState(() => _durationMinutes = minutes),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     Text(
                       'Repetição',
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -280,6 +314,9 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
                       width: double.infinity,
                       child: ActivityRecurrenceSelector(
                         value: _recurrence,
+                        customWeekdays: _customWeekdays,
+                        onWeekdaysChanged: (days) =>
+                            setState(() => _customWeekdays = days),
                         onChanged: (value) =>
                             setState(() => _recurrence = value),
                       ),
@@ -384,7 +421,11 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
       hour: _time.hour,
       minute: _time.minute,
       recurrence: _recurrence,
-      estimatedDuration: Duration(minutes: _durationMinutes),
+      customWeekdays: _customWeekdays,
+      kind: _reserveTime ? ActivityKind.timeBlock : ActivityKind.reminder,
+      estimatedDuration: _reserveTime
+          ? Duration(minutes: _durationMinutes)
+          : Duration.zero,
     );
     final save = widget.onSave;
     if (save == null) {
@@ -487,5 +528,8 @@ ActivityRecurrencePreset _presetFor(RecurrenceRule recurrence) {
   if (weekly.weekdays.length == DateTime.daysPerWeek) {
     return ActivityRecurrencePreset.daily;
   }
-  return ActivityRecurrencePreset.weekdays;
+  return weekly.weekdays.length == 5 &&
+          weekly.weekdays.containsAll({1, 2, 3, 4, 5})
+      ? ActivityRecurrencePreset.weekdays
+      : ActivityRecurrencePreset.custom;
 }

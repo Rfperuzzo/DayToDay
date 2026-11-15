@@ -92,7 +92,7 @@ class RotinaDayWidgetProvider : AppWidgetProvider() {
                     views.setTextViewText(titleIds[index], decoratedTitle(task))
                     views.setTextViewText(
                         metaIds[index],
-                        "${task.timeLabel} • ${task.durationMinutes} min • ${priorityLabel(task.priority)}",
+                        "${task.timeLabel} • ${if (task.isReminder) "Lembrete" else "${task.durationMinutes} min"} • ${priorityLabel(task.priority)}",
                     )
                     views.setInt(
                         rowIds[index],
@@ -162,6 +162,8 @@ class RotinaDayWidgetProvider : AppWidgetProvider() {
                                     title = item.optString("title", "Atividade"),
                                     timeLabel = item.optString("timeLabel", "--:--"),
                                     durationMinutes = item.optInt("durationMinutes"),
+                                    isReminder = item.optBoolean("isReminder", false),
+                                    isSilenced = item.optBoolean("isSilenced", false),
                                     status = item.optString("status", "scheduled"),
                                     priority = item.optString("priority", "normal"),
                                     isLocked = item.optBoolean("isLocked"),
@@ -185,6 +187,7 @@ class RotinaDayWidgetProvider : AppWidgetProvider() {
             task.status == "completed" -> "✓ ${task.title}"
             task.status == "skipped" -> "Pulada · ${task.title}"
             task.status == "cancelled" -> "Cancelada · ${task.title}"
+            task.isSilenced -> "Pendente · aviso silenciado · ${task.title}"
             task.isLocked -> "🔒 ${task.title}"
             else -> task.title
         }
@@ -241,6 +244,8 @@ private data class WidgetTask(
     val title: String,
     val timeLabel: String,
     val durationMinutes: Int,
+    val isReminder: Boolean,
+    val isSilenced: Boolean,
     val status: String,
     val priority: String,
     val isLocked: Boolean,

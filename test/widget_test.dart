@@ -166,7 +166,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('tela de alarme exige uma das três respostas', (tester) async {
+  testWidgets('tela de alarme separa silêncio, conclusão e adiamento', (
+    tester,
+  ) async {
     AlarmResponse? response;
     final scheduledAt = DateTime.now().toUtc();
 
@@ -187,9 +189,17 @@ void main() {
 
     expect(find.text('Treino de pernas'), findsOneWidget);
     expect(find.text('Concluir'), findsOneWidget);
-    expect(find.text('Agora não — reorganizar'), findsOneWidget);
+    expect(find.text('Parar alarme'), findsOneWidget);
+    expect(find.text('Adiar atividade'), findsOneWidget);
     expect(find.text('Pular somente hoje'), findsOneWidget);
-    await tester.tap(find.text('Agora não — reorganizar'));
+    await tester.ensureVisible(find.text('Parar alarme'));
+    await tester.tap(find.text('Parar alarme'));
+    expect(response, AlarmResponse.silence);
+    await tester.ensureVisible(find.text('Concluir'));
+    await tester.tap(find.text('Concluir'));
+    expect(response, AlarmResponse.complete);
+    await tester.ensureVisible(find.text('Adiar atividade'));
+    await tester.tap(find.text('Adiar atividade'));
     expect(response, AlarmResponse.nowNot);
     expect(tester.takeException(), isNull);
   });

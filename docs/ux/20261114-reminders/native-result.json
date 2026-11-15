@@ -1,0 +1,21 @@
+{
+  "rings": [
+    910001,
+    910002,
+    910003,
+    910004
+  ],
+  "phase1Remaining": [],
+  "remaining": [],
+  "passed": true,
+  "foregroundServiceRemaining": false,
+  "nativeCompletionIds": [
+    910001,
+    910002,
+    910004
+  ],
+  "manualStopObserved": true,
+  "conditions": "Android35 dedicated AVD; background via HOME before first alarm; synthetic1.2s tone; phase1 simultaneous, phase2 second alarm2s later and manual stop at1.15s; not force-stopped or locked",
+  "probeSha256": "6510ae9bc77fb36a44e1596a4af276b6127a6bb94ab4cf50af628f4f38d31a0f",
+  "apkSha256": "e3a6e5ac96246f97d4eea92fe9dd36e855211a5dd96ed8ca51585f1a3981fc30"
+}

@@ -84,6 +84,7 @@ void main() {
     await tester.enterText(find.byType(TextFormField), 'Treino de força');
     await tester.tap(find.text('Todo dia'));
     await tester.pump();
+    await tester.ensureVisible(find.text('Salvar alterações'));
     await tester.tap(find.text('Salvar alterações'));
     await tester.pumpAndSettle();
 

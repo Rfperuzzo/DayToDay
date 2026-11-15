@@ -1,5 +1,7 @@
 import 'recurrence_rule.dart';
 
+enum ActivityKind { reminder, timeBlock }
+
 enum ActivityPriority { low, normal, high }
 
 final class Activity {
@@ -11,6 +13,7 @@ final class Activity {
     required RecurrenceRule recurrence,
     required DateTime createdAtUtc,
     required DateTime updatedAtUtc,
+    ActivityKind kind = ActivityKind.timeBlock,
     String notes = '',
     Duration? preparationLead,
     bool isActive = true,
@@ -23,7 +26,7 @@ final class Activity {
     if (normalizedTitle.isEmpty) {
       throw ArgumentError.value(title, 'title', 'O título é obrigatório.');
     }
-    if (estimatedDuration <= Duration.zero) {
+    if (kind == ActivityKind.timeBlock && estimatedDuration <= Duration.zero) {
       throw ArgumentError.value(
         estimatedDuration,
         'estimatedDuration',
@@ -41,7 +44,10 @@ final class Activity {
       id: normalizedId,
       title: normalizedTitle,
       notes: notes.trim(),
-      estimatedDuration: estimatedDuration,
+      kind: kind,
+      estimatedDuration: kind == ActivityKind.reminder
+          ? Duration.zero
+          : estimatedDuration,
       priority: priority,
       recurrence: recurrence,
       preparationLead: preparationLead,
@@ -52,6 +58,7 @@ final class Activity {
   }
 
   const Activity._({
+    required this.kind,
     required this.id,
     required this.title,
     required this.notes,
@@ -64,6 +71,8 @@ final class Activity {
     required this.updatedAtUtc,
   });
 
+  final ActivityKind kind;
+  bool get isReminder => kind == ActivityKind.reminder;
   final String id;
   final String title;
   final String notes;
@@ -76,6 +85,7 @@ final class Activity {
   final DateTime updatedAtUtc;
 
   Activity copyWith({
+    ActivityKind? kind,
     String? title,
     String? notes,
     Duration? estimatedDuration,
@@ -86,6 +96,7 @@ final class Activity {
     DateTime? updatedAtUtc,
   }) {
     return Activity(
+      kind: kind ?? this.kind,
       id: id,
       title: title ?? this.title,
       notes: notes ?? this.notes,

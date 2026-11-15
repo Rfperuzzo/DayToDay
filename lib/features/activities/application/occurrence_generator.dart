@@ -97,6 +97,7 @@ final class OccurrenceGenerator {
     return ActivityOccurrence(
       id: '${activity.id}:${normalized.microsecondsSinceEpoch}',
       activityId: activity.id,
+      kind: activity.kind,
       originalStartUtc: normalized,
       scheduledStartUtc: normalized,
       estimatedDuration: activity.estimatedDuration,

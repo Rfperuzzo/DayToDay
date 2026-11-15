@@ -7,7 +7,7 @@ import '../../settings/domain/user_preferences.dart';
 import '../domain/alarm_gateway.dart';
 import 'alarm_reconciler.dart';
 
-enum AlarmResponse { complete, nowNot, skipToday }
+enum AlarmResponse { silence, complete, nowNot, skipToday }
 
 final class AlarmResponseResult {
   const AlarmResponseResult({
@@ -54,8 +54,54 @@ final class AlarmResponseService {
       throw StateError('A ocorrência do alarme não foi encontrada.');
     }
 
+    if (response == AlarmResponse.silence) {
+      final now = _clock.nowUtc();
+      final pending =
+          occurrence.status == OccurrenceStatus.scheduled ||
+          occurrence.status == OccurrenceStatus.ringing ||
+          occurrence.status == OccurrenceStatus.postponed;
+      final updated = pending && occurrence.acknowledgedAtUtc == null
+          ? occurrence.copyWith(acknowledgedAtUtc: now)
+          : occurrence;
+      if (!identical(updated, occurrence)) {
+        await _occurrences.update(updated);
+        await _events.append(
+          ActivityEvent(
+            id: '${occurrence.id}:silenced',
+            occurrenceId: occurrence.id,
+            type: ActivityEventType.alarmSilenced,
+            occurredAtUtc: now,
+          ),
+        );
+      }
+      await _alarms.cancel(occurrenceId);
+      var synchronized = true;
+      try {
+        await _alarmReconciler.reconcile(_preferences);
+      } catch (_) {
+        synchronized = false;
+      }
+      return AlarmResponseResult(
+        response: response,
+        occurrence: updated,
+        adjustedOccurrences: const [],
+        alarmsSynchronized: synchronized,
+      );
+    }
+    if (occurrence.status == OccurrenceStatus.completed ||
+        occurrence.status == OccurrenceStatus.skipped ||
+        occurrence.status == OccurrenceStatus.cancelled) {
+      await _alarms.cancel(occurrenceId);
+      return AlarmResponseResult(
+        response: response,
+        occurrence: occurrence,
+        adjustedOccurrences: const [],
+        alarmsSynchronized: true,
+      );
+    }
     await _alarms.cancel(occurrenceId);
     return switch (response) {
+      AlarmResponse.silence => throw StateError('Handled above'),
       AlarmResponse.complete => _finish(
         occurrence,
         response,

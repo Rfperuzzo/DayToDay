@@ -1,4 +1,5 @@
 enum ActivityEventType {
+  alarmSilenced,
   completed,
   nowNot,
   skipped,

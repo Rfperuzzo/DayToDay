@@ -11,6 +11,12 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 
 ## Decisões confirmadas
 
+- Revisão de lembretes de 14/11/2026: schema 3 aditivo, dados antigos como
+  timeBlock, novos lembretes sem reserva, ciência separada de conclusão.
+  102 testes, análise limpa e ensaio nativo Android35 com fila/stop/cleanup.
+  A fonte atual é docs/UX_LEMBRETES_20261114.md; a rodada cromática abaixo é
+  histórica e suas contagens não incluem estas mudanças.
+
 - Revisão MONSTRUX de 14/11/2026: fontes completas e sete jornadas revisadas;
   melhorias e nova paleta revalidadas em capturas sintéticas 1x/2x. Resultado:
   73 testes aprovados, análise limpa e dois builds debug. Evidências e condições
@@ -32,36 +38,44 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - O primeiro layout de produto é o painel diário, com calendário mensal
   contínuo, progresso, próxima atividade e conclusão rápida.
 - O cadastro nasce da ação inferior rotulada Nova atividade e cobre título, observação, dia,
-  horário, duração, prioridade e repetição.
-- Repetições disponíveis no primeiro fluxo: única, diária e dias úteis.
+  horário, reserva de tempo opcional, prioridade e repetição.
+- Repetições: uma vez, todo dia, dias úteis e seleção de dias específicos. A
+  edição preserva exatamente a máscara personalizada existente.
 - Permissões do alarme são explicadas e solicitadas no contexto do primeiro
   cadastro. A atividade continua salva se algum acesso for negado.
 - Quando o plugin informa que um alarme está tocando, o app substitui o painel
   pela tela de resposta e impede voltar sem uma decisão explícita.
-- O resultado de **Agora não** mostra o novo horário e quantas atividades foram
+- O resultado de **Adiar atividade** mostra o novo horário e quantas atividades foram
   ajustadas antes de retornar ao painel.
 - Atividades podem ser únicas, diárias ou repetidas em dias da semana.
-- Todo alarme é forte: áudio em loop, vibração, tela cheia quando autorizada e
-  tentativa de tocar durante Não Perturbe.
-- O alarme toca até uma resposta explícita — **Concluir**, **Agora não** ou
-  **Pular hoje** — ou até o fim da duração reservada. Se a duração terminar sem
-  resposta, a tarefa entra automaticamente na recuperação por importância.
-- **Agora não** encerra o toque e o motor escolhe automaticamente o próximo
-  espaço livre.
+- O som executa uma vez, com vibração e tela cheia quando autorizada. O fim
+  nativo limpa a fila e o serviço sem concluir nem registrar ciência da tarefa.
+- **Parar alarme** no app silencia e registra ciência, mantendo pendência.
+  **Concluir** registra realização; **Pular somente hoje** afeta só a ocorrência.
+  A notificação Android também permite parar, sem inventar conclusão/ciência.
+- **Adiar atividade** reorganiza um bloco para intervalo livre; num lembrete,
+  adia dez minutos sem mover outras atividades. O menu do lembrete oferece
+  **Lembrar em 10 minutos** mesmo depois de silenciar.
+- Duração não controla toque, confirmação nem conclusão. O Timer antigo do
+  Router que interpretava o fim da reserva como omissão foi retirado.
 - O dia útil padrão vai de 07h a 22h.
 - O motor respeita prioridade e duração, evita sobreposições, tenta no máximo
   três reagendamentos no mesmo dia e depois leva a ocorrência para o próximo
   dia disponível.
-- A duração é obrigatória no cadastro e editável depois. O intervalo inteiro
-  fica reservado; o app recusa um horário cuja duração invada outra tarefa e
-  informa o próximo horário livre.
-- As tarefas pendentes de cada dia formam uma sequência. Apenas a primeira fica
-  disponível para conclusão e recebe alarme; as seguintes permanecem bloqueadas
-  até a anterior ser concluída, pulada ou cancelada.
+- Cadastro padrão é lembrete, sem intervalo reservado. **Reservar tempo na
+  agenda** ativa duração positiva para um bloco. Lembretes têm kind explícito e
+  duração técnica zero, são ignorados pelos conflitos nos dois sentidos e não
+  deslocam blocos. Não existe duração oculta de trinta minutos.
+- Somente blocos pendentes formam a sequência: o primeiro é liberado; os outros
+  aguardam conclusão/pulo/cancelamento. Lembretes podem avisar e ser concluídos
+  independentemente. Silenciar um bloco não o conclui nem libera o seguinte.
+- Silenciados continuam na lista como **Aviso silenciado · Pendente**, sem mudar
+  progresso. Lembretes silenciados não monopolizam o cartão de próxima ação.
+- Filtro **Só pendentes** afeta apenas a lista; conserva dados e progresso total.
 - Uma tarefa disponível pode ser concluída antes do horário ou do fim estimado.
   A conclusão antecipada libera imediatamente a próxima tarefa e reconcilia os
   alarmes do Android.
-- Quando a tarefa atual perde sua janela sem confirmação, ela é comparada com a
+- Quando um bloco é detectado como expirado após reinício, ele é comparado com a
   próxima. Se sua importância for maior, ocupa o próximo horário e desloca a
   outra; a tarefa deslocada repete a comparação com o restante da fila.
 - Importância igual ou menor não toma o lugar de uma tarefa mais importante. Ao
@@ -71,8 +85,8 @@ e a rotina pode ser reorganizada automaticamente sem enviar dados para a nuvem.
 - A recorrência original nunca é deslocada por um reagendamento; somente a
   ocorrência atual muda.
 - Tocar em uma tarefa abre ações para editar, gerenciar subtarefas ou cancelar.
-  A edição permite alterar nome, horário, duração e repetição entre **Só este
-  dia**, **Todo dia** e **Seg–sex**. A nova regra vale para a atividade e suas
+  A edição permite alterar nome, horário, reserva opcional e repetição entre
+  **Uma vez**, **Todo dia**, **Seg–sex** e **Dias específicos**. A nova regra vale para a atividade e suas
   próximas ocorrências, substituindo os alarmes antigos. O cancelamento exige
   confirmação, desativa a atividade e remove todos os alarmes futuros.
 - Subtarefas são etapas persistentes vinculadas à atividade principal. Podem
@@ -168,12 +182,12 @@ local e dias da semana para continuarem no mesmo horário após mudança de fuso
   fuso e após cada ação em um alarme.
 - Não permitir que deslizar a notificação silencie acidentalmente um alarme.
 - Alarmes simultâneos devem tocar sequencialmente, nunca misturar áudios.
-- Para cada dia, somente a primeira ocorrência pendente fica agendada no
-  Android. Ao concluir antecipadamente, pular ou cancelar, a reconciliação
-  remove o alarme anterior e prepara a próxima ocorrência liberada.
-- O tempo de duração viaja no payload do alarme. A tela inicia a recuperação ao
-  final desse período sem resposta; um alarme expirado após reinício também
-  aciona a regra. Recusa técnica da plataforma não é tratada como omissão da
+- Para cada dia, agendar lembretes independentes e o primeiro bloco pendente,
+  respeitando limite de 200. Não rearmar silenciado ou horário passado; conservar
+  binding pendente já iniciado durante a reconciliação de outro item.
+- Payload antigo com duração continua legível, mas não define prazo de toque.
+  Um bloco expirado após reinício pode acionar recuperação; lembrete expirado
+  permanece pendente sem deslocar a agenda. Recusa técnica da plataforma não é tratada como omissão da
   usuária.
 - Permissão negada é um estado operacional degradado, não uma exceção fatal.
 - Nunca afirmar que um alarme é garantido quando o fabricante ou o Android o
@@ -394,3 +408,27 @@ Validação desta mudança: análise estática sem problemas, 52 testes aprovado
 - Complemento visual autorizado em 14/11/2026: paleta acolhedora proposta pelo
   MONSTRUX, aplicada ao tema, progresso, marca, ícones e widget nativo. A regra
   anterior de paleta neutra foi substituída por esta decisão do responsável.
+
+
+## Evolução funcional — lembretes e blocos (14/11/2026)
+
+Schema 3 acrescenta kind com default timeBlock nas duas tabelas e
+acknowledgedAtUtc opcional em ocorrências; preserva IDs, vínculos, duração,
+recorrência, progresso e histórico. Migrações de schemas 1 e 2 foram testadas.
+Geração/edição não sobrescrevem ocorrências já concluídas de mesmo ID; histórico
+de realização permanece distinto do evento alarmSilenced.
+
+Biblioteca alarm 5.12.0 copiada do cache para third_party/alarm, com licença MIT,
+hashes originais e patch de completion documentado. Somente o Kotlin de
+AlarmService foi modificado no pacote; a resolução offline mudou só essa origem.
+Cache compartilhado e repositório fitness não foram modificados. A aplicação
+sobrescreve AlarmReceiver para exported=false, mantendo PendingIntents internos.
+Ver ensaio nativo e limites no relatório específico; ADB shell não é teste de
+um app terceiro sem privilégios.
+
+Sem promessa de duração fixa do som: uma execução depende do arquivo/Android.
+Native stop/fim natural não são prova de ciência humana nem conclusão.
+Recorrência semanal ainda não tem startDate separado; a escolha de dias passa
+a estar disponível, sem inventar essa outra função. Ensaios em aparelhos reais,
+tela bloqueada, boot/force-stop, launcher/TalkBack e assinatura release continuam
+pendentes antes da loja. Nenhum merge, upload ou serviço pago foi executado.

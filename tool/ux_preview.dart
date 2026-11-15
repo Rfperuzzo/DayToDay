@@ -27,13 +27,21 @@ Future<void> main() async {
   final activities = DriftActivityRepository(db);
   final occurrences = DriftOccurrenceRepository(db);
   final subtasks = DriftSubtaskRepository(db);
-  final titles = ['Planejar o dia', 'Foco no projeto', 'Pausa para caminhar'];
+  final titles = [
+    'Planejar o dia',
+    'Beber água',
+    'Estudar',
+    'Pausa para caminhar',
+  ];
   for (var i = 0; i < titles.length; i++) {
-    final at = now.add(Duration(minutes: i == 0 ? -40 : 120 + (i - 1) * 45));
+    final at = now.add(Duration(minutes: i == 0 ? -40 : 30 + (i - 1) * 45));
     final a = Activity(
       id: 'ux-$i',
+      kind: i < 2 ? ActivityKind.reminder : ActivityKind.timeBlock,
       title: titles[i],
-      notes: 'Reserve este momento para cuidar da sua rotina.',
+      notes: i < 2
+          ? 'Uma pausa para cuidar de você.'
+          : 'Reserve este momento para cuidar da sua rotina.',
       estimatedDuration: const Duration(minutes: 30),
       priority: i == 1 ? ActivityPriority.high : ActivityPriority.normal,
       recurrence: OneOffRecurrence(at),
@@ -43,6 +51,7 @@ Future<void> main() async {
     final o = ActivityOccurrence(
       id: '${a.id}:${at.microsecondsSinceEpoch}',
       activityId: a.id,
+      kind: a.kind,
       originalStartUtc: at,
       scheduledStartUtc: at,
       estimatedDuration: a.estimatedDuration,
@@ -60,7 +69,7 @@ Future<void> main() async {
     Subtask(
       id: 'ux-sub-1',
       activityId: focus.id,
-      title: 'Separar o material',
+      title: 'Encher o copo',
       position: 0,
       createdAtUtc: now,
     ),
@@ -69,7 +78,7 @@ Future<void> main() async {
     Subtask(
       id: 'ux-sub-2',
       activityId: focus.id,
-      title: 'Revisar as prioridades',
+      title: 'Beber um copo de água',
       position: 1,
       isCompleted: true,
       completedAtUtc: now,

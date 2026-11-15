@@ -34,6 +34,8 @@ abstract final class DayWidgetSnapshotBuilder {
               timeZone.toLocal(occurrence.scheduledStartUtc),
             ),
             durationMinutes: occurrence.estimatedDuration.inMinutes,
+            isReminder: occurrence.isReminder,
+            isSilenced: occurrence.acknowledgedAtUtc != null,
             status: occurrence.status.name,
             priority: occurrence.priority.name,
             isLocked: DailyTaskSequence.isLocked(

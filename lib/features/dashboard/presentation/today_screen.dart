@@ -14,6 +14,7 @@ import '../../activities/presentation/activity_options_sheet.dart';
 import '../../activities/presentation/new_activity_sheet.dart';
 import '../../activities/presentation/subtasks_sheet.dart';
 import '../../alarms/presentation/alarm_access_sheet.dart';
+import '../../alarms/application/alarm_response_service.dart';
 import '../../home_widget/domain/day_widget_gateway.dart';
 import '../application/day_providers.dart';
 import '../application/daily_task_sequence.dart';
@@ -170,6 +171,8 @@ final class TodayScreen extends ConsumerWidget {
       return;
     }
     switch (option) {
+      case ActivityOption.postpone:
+        await _postponeReminder(context, ref, occurrence);
       case ActivityOption.complete:
         await _completeOccurrence(context, ref, occurrence);
       case ActivityOption.edit:
@@ -178,6 +181,42 @@ final class TodayScreen extends ConsumerWidget {
         await _openSubtasks(context, activity);
       case ActivityOption.cancel:
         await _cancelActivity(context, ref, activity, occurrence);
+    }
+  }
+
+  Future<void> _postponeReminder(
+    BuildContext context,
+    WidgetRef ref,
+    ActivityOccurrence occurrence,
+  ) async {
+    if (!occurrence.isReminder) return;
+    try {
+      final result = await ref
+          .read(alarmResponseServiceProvider)
+          .respond(occurrenceId: occurrence.id, response: AlarmResponse.nowNot);
+      if (!context.mounted) return;
+      final local = ref
+          .read(timeZoneServiceProvider)
+          .toLocal(result.occurrence.scheduledStartUtc);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            result.alarmsSynchronized
+                ? 'Lembrete adiado para ${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}.'
+                : 'Lembrete adiado. Revise os acessos do alarme.',
+          ),
+        ),
+      );
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Não foi possível adiar o lembrete. Tente novamente.',
+            ),
+          ),
+        );
+      }
     }
   }
 
@@ -219,7 +258,10 @@ final class TodayScreen extends ConsumerWidget {
     final available = DailyTaskSequence.firstAvailable(pending);
     final showComplete =
         occurrence.status == OccurrenceStatus.scheduled &&
-        available?.id == occurrence.id;
+        !DailyTaskSequence.isLocked(
+          occurrence: occurrence,
+          available: available,
+        );
     if (context.mounted) {
       await _openActivityOptions(
         context,
@@ -351,7 +393,7 @@ final class TodayScreen extends ConsumerWidget {
   }
 }
 
-final class TodayDashboard extends StatelessWidget {
+final class TodayDashboard extends StatefulWidget {
   const TodayDashboard({
     required this.selectedDay,
     required this.activities,
@@ -376,7 +418,25 @@ final class TodayDashboard extends StatelessWidget {
   final VoidCallback? onAddRequested;
   final VoidCallback? onAlarmAccessRequested;
   @override
+  State<TodayDashboard> createState() => _TodayDashboardState();
+}
+
+final class _TodayDashboardState extends State<TodayDashboard> {
+  bool _onlyPending = false;
+  @override
   Widget build(BuildContext context) {
+    final TodayDashboard(
+      :selectedDay,
+      :activities,
+      :occurrences,
+      :timeZone,
+      :onDaySelected,
+      :onComplete,
+      :onVisibleMonthChanged,
+      :onManage,
+      :onAddRequested,
+      :onAlarmAccessRequested,
+    ) = widget;
     final theme = Theme.of(context);
     final sorted = [...occurrences]
       ..sort((a, b) => a.scheduledStartUtc.compareTo(b.scheduledStartUtc));
@@ -384,11 +444,22 @@ final class TodayDashboard extends StatelessWidget {
     final completed = sorted
         .where((o) => o.status == OccurrenceStatus.completed)
         .length;
-    final next = DailyTaskSequence.firstAvailable(sorted);
+    final next = DailyTaskSequence.nextAction(sorted);
+    final availableBlock = DailyTaskSequence.firstAvailable(sorted);
+    final visible = _onlyPending
+        ? sorted
+              .where(
+                (o) =>
+                    o.status == OccurrenceStatus.scheduled ||
+                    o.status == OccurrenceStatus.ringing ||
+                    o.status == OccurrenceStatus.postponed,
+              )
+              .toList()
+        : sorted;
     VoidCallback? manage(ActivityOccurrence o) {
       final a = byId[o.activityId];
       return a?.isActive == true && onManage != null
-          ? () => onManage!(a!, o)
+          ? () => onManage(a!, o)
           : null;
     }
 
@@ -472,7 +543,21 @@ final class TodayDashboard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: RotinaSpacing.md),
-                      for (final o in sorted)
+                      FilterChip(
+                        label: const Text('Só pendentes'),
+                        selected: _onlyPending,
+                        materialTapTargetSize: MaterialTapTargetSize.padded,
+                        onSelected: (selected) =>
+                            setState(() => _onlyPending = selected),
+                      ),
+                      if (visible.isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: RotinaSpacing.md,
+                          ),
+                          child: Text('Nenhuma pendência neste dia.'),
+                        ),
+                      for (final o in visible)
                         Padding(
                           padding: const EdgeInsets.only(
                             bottom: RotinaSpacing.sm,
@@ -484,7 +569,7 @@ final class TodayDashboard extends StatelessWidget {
                             isNext: o.id == next?.id,
                             isLocked: DailyTaskSequence.isLocked(
                               occurrence: o,
-                              available: next,
+                              available: availableBlock,
                             ),
                             onComplete: () => onComplete(o),
                             onManage: manage(o),
@@ -651,8 +736,8 @@ final class _NextActivityCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   o == null
-                      ? 'Nenhuma atividade pendente neste dia'
-                      : '${_relativeLabel(o.scheduledStartUtc)} · ${_time(timeZone, o.scheduledStartUtc)} · ${o.estimatedDuration.inMinutes} min',
+                      ? 'Sem novos avisos neste dia'
+                      : '${_relativeLabel(o.scheduledStartUtc)} · ${_time(timeZone, o.scheduledStartUtc)} · ${o.isReminder ? 'Lembrete' : '${o.estimatedDuration.inMinutes} min'}',
                   style: t.textTheme.labelLarge?.copyWith(
                     color: colors.onPrimaryContainer,
                   ),
@@ -686,7 +771,7 @@ final class _NextActivityCard extends StatelessWidget {
           if (o == null) ...[
             const SizedBox(height: RotinaSpacing.sm),
             Text(
-              'Você pode conferir o dia ou planejar a próxima atividade.',
+              'Confira suas atividades na lista abaixo ou planeje a próxima.',
               style: t.textTheme.bodyMedium?.copyWith(
                 color: colors.onPrimaryContainer,
               ),
@@ -740,6 +825,8 @@ final class _TaskTile extends StatelessWidget {
         ? 'Pulada'
         : cancelled
         ? 'Cancelada'
+        : occurrence.acknowledgedAtUtc != null
+        ? 'Aviso silenciado · Pendente'
         : isLocked
         ? 'Após concluir a anterior'
         : active
@@ -808,7 +895,7 @@ final class _TaskTile extends StatelessWidget {
                       ),
                       const SizedBox(height: RotinaSpacing.xs),
                       Text(
-                        '${_time(timeZone, occurrence.scheduledStartUtc)} · ${occurrence.estimatedDuration.inMinutes} min',
+                        '${_time(timeZone, occurrence.scheduledStartUtc)} · ${occurrence.isReminder ? 'Lembrete' : '${occurrence.estimatedDuration.inMinutes} min'}',
                         style: t.textTheme.bodyMedium,
                       ),
                       const SizedBox(height: RotinaSpacing.xs),

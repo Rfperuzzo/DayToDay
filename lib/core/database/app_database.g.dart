@@ -48,6 +48,16 @@ class $ActivitiesTable extends Activities
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('timeBlock'),
+  );
   static const VerificationMeta _priorityMeta = const VerificationMeta(
     'priority',
   );
@@ -167,6 +177,7 @@ class $ActivitiesTable extends Activities
     title,
     notes,
     durationMinutes,
+    kind,
     priority,
     recurrenceType,
     oneOffAtUtc,
@@ -219,6 +230,12 @@ class $ActivitiesTable extends Activities
       );
     } else if (isInserting) {
       context.missing(_durationMinutesMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
     }
     if (data.containsKey('priority')) {
       context.handle(
@@ -334,6 +351,10 @@ class $ActivitiesTable extends Activities
         DriftSqlType.int,
         data['${effectivePrefix}duration_minutes'],
       )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
       priority: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}priority'],
@@ -388,6 +409,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
   final String title;
   final String notes;
   final int durationMinutes;
+  final String kind;
   final String priority;
   final String recurrenceType;
   final DateTime? oneOffAtUtc;
@@ -403,6 +425,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
     required this.title,
     required this.notes,
     required this.durationMinutes,
+    required this.kind,
     required this.priority,
     required this.recurrenceType,
     this.oneOffAtUtc,
@@ -421,6 +444,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
     map['title'] = Variable<String>(title);
     map['notes'] = Variable<String>(notes);
     map['duration_minutes'] = Variable<int>(durationMinutes);
+    map['kind'] = Variable<String>(kind);
     map['priority'] = Variable<String>(priority);
     map['recurrence_type'] = Variable<String>(recurrenceType);
     if (!nullToAbsent || oneOffAtUtc != null) {
@@ -450,6 +474,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
       title: Value(title),
       notes: Value(notes),
       durationMinutes: Value(durationMinutes),
+      kind: Value(kind),
       priority: Value(priority),
       recurrenceType: Value(recurrenceType),
       oneOffAtUtc: oneOffAtUtc == null && nullToAbsent
@@ -483,6 +508,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
       title: serializer.fromJson<String>(json['title']),
       notes: serializer.fromJson<String>(json['notes']),
       durationMinutes: serializer.fromJson<int>(json['durationMinutes']),
+      kind: serializer.fromJson<String>(json['kind']),
       priority: serializer.fromJson<String>(json['priority']),
       recurrenceType: serializer.fromJson<String>(json['recurrenceType']),
       oneOffAtUtc: serializer.fromJson<DateTime?>(json['oneOffAtUtc']),
@@ -505,6 +531,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
       'title': serializer.toJson<String>(title),
       'notes': serializer.toJson<String>(notes),
       'durationMinutes': serializer.toJson<int>(durationMinutes),
+      'kind': serializer.toJson<String>(kind),
       'priority': serializer.toJson<String>(priority),
       'recurrenceType': serializer.toJson<String>(recurrenceType),
       'oneOffAtUtc': serializer.toJson<DateTime?>(oneOffAtUtc),
@@ -523,6 +550,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
     String? title,
     String? notes,
     int? durationMinutes,
+    String? kind,
     String? priority,
     String? recurrenceType,
     Value<DateTime?> oneOffAtUtc = const Value.absent(),
@@ -538,6 +566,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
     title: title ?? this.title,
     notes: notes ?? this.notes,
     durationMinutes: durationMinutes ?? this.durationMinutes,
+    kind: kind ?? this.kind,
     priority: priority ?? this.priority,
     recurrenceType: recurrenceType ?? this.recurrenceType,
     oneOffAtUtc: oneOffAtUtc.present ? oneOffAtUtc.value : this.oneOffAtUtc,
@@ -559,6 +588,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
       durationMinutes: data.durationMinutes.present
           ? data.durationMinutes.value
           : this.durationMinutes,
+      kind: data.kind.present ? data.kind.value : this.kind,
       priority: data.priority.present ? data.priority.value : this.priority,
       recurrenceType: data.recurrenceType.present
           ? data.recurrenceType.value
@@ -593,6 +623,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
           ..write('title: $title, ')
           ..write('notes: $notes, ')
           ..write('durationMinutes: $durationMinutes, ')
+          ..write('kind: $kind, ')
           ..write('priority: $priority, ')
           ..write('recurrenceType: $recurrenceType, ')
           ..write('oneOffAtUtc: $oneOffAtUtc, ')
@@ -613,6 +644,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
     title,
     notes,
     durationMinutes,
+    kind,
     priority,
     recurrenceType,
     oneOffAtUtc,
@@ -632,6 +664,7 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
           other.title == this.title &&
           other.notes == this.notes &&
           other.durationMinutes == this.durationMinutes &&
+          other.kind == this.kind &&
           other.priority == this.priority &&
           other.recurrenceType == this.recurrenceType &&
           other.oneOffAtUtc == this.oneOffAtUtc &&
@@ -649,6 +682,7 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
   final Value<String> title;
   final Value<String> notes;
   final Value<int> durationMinutes;
+  final Value<String> kind;
   final Value<String> priority;
   final Value<String> recurrenceType;
   final Value<DateTime?> oneOffAtUtc;
@@ -665,6 +699,7 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
     this.title = const Value.absent(),
     this.notes = const Value.absent(),
     this.durationMinutes = const Value.absent(),
+    this.kind = const Value.absent(),
     this.priority = const Value.absent(),
     this.recurrenceType = const Value.absent(),
     this.oneOffAtUtc = const Value.absent(),
@@ -682,6 +717,7 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
     required String title,
     this.notes = const Value.absent(),
     required int durationMinutes,
+    this.kind = const Value.absent(),
     required String priority,
     required String recurrenceType,
     this.oneOffAtUtc = const Value.absent(),
@@ -705,6 +741,7 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
     Expression<String>? title,
     Expression<String>? notes,
     Expression<int>? durationMinutes,
+    Expression<String>? kind,
     Expression<String>? priority,
     Expression<String>? recurrenceType,
     Expression<DateTime>? oneOffAtUtc,
@@ -722,6 +759,7 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
       if (title != null) 'title': title,
       if (notes != null) 'notes': notes,
       if (durationMinutes != null) 'duration_minutes': durationMinutes,
+      if (kind != null) 'kind': kind,
       if (priority != null) 'priority': priority,
       if (recurrenceType != null) 'recurrence_type': recurrenceType,
       if (oneOffAtUtc != null) 'one_off_at_utc': oneOffAtUtc,
@@ -742,6 +780,7 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
     Value<String>? title,
     Value<String>? notes,
     Value<int>? durationMinutes,
+    Value<String>? kind,
     Value<String>? priority,
     Value<String>? recurrenceType,
     Value<DateTime?>? oneOffAtUtc,
@@ -759,6 +798,7 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
       title: title ?? this.title,
       notes: notes ?? this.notes,
       durationMinutes: durationMinutes ?? this.durationMinutes,
+      kind: kind ?? this.kind,
       priority: priority ?? this.priority,
       recurrenceType: recurrenceType ?? this.recurrenceType,
       oneOffAtUtc: oneOffAtUtc ?? this.oneOffAtUtc,
@@ -788,6 +828,9 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
     }
     if (durationMinutes.present) {
       map['duration_minutes'] = Variable<int>(durationMinutes.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
     }
     if (priority.present) {
       map['priority'] = Variable<String>(priority.value);
@@ -834,6 +877,7 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
           ..write('title: $title, ')
           ..write('notes: $notes, ')
           ..write('durationMinutes: $durationMinutes, ')
+          ..write('kind: $kind, ')
           ..write('priority: $priority, ')
           ..write('recurrenceType: $recurrenceType, ')
           ..write('oneOffAtUtc: $oneOffAtUtc, ')
@@ -856,6 +900,18 @@ class $OccurrencesTable extends Occurrences
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $OccurrencesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _acknowledgedAtUtcMeta = const VerificationMeta(
+    'acknowledgedAtUtc',
+  );
+  @override
+  late final GeneratedColumn<DateTime> acknowledgedAtUtc =
+      GeneratedColumn<DateTime>(
+        'acknowledged_at_utc',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -925,6 +981,16 @@ class $OccurrencesTable extends Occurrences
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('timeBlock'),
+  );
   static const VerificationMeta _priorityMeta = const VerificationMeta(
     'priority',
   );
@@ -959,12 +1025,14 @@ class $OccurrencesTable extends Occurrences
   );
   @override
   List<GeneratedColumn> get $columns => [
+    acknowledgedAtUtc,
     id,
     nativeAlarmId,
     activityId,
     originalStartUtc,
     scheduledStartUtc,
     durationMinutes,
+    kind,
     priority,
     status,
     attempt,
@@ -981,6 +1049,15 @@ class $OccurrencesTable extends Occurrences
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('acknowledged_at_utc')) {
+      context.handle(
+        _acknowledgedAtUtcMeta,
+        acknowledgedAtUtc.isAcceptableOrUnknown(
+          data['acknowledged_at_utc']!,
+          _acknowledgedAtUtcMeta,
+        ),
+      );
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
@@ -1038,6 +1115,12 @@ class $OccurrencesTable extends Occurrences
     } else if (isInserting) {
       context.missing(_durationMinutesMeta);
     }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    }
     if (data.containsKey('priority')) {
       context.handle(
         _priorityMeta,
@@ -1069,6 +1152,10 @@ class $OccurrencesTable extends Occurrences
   OccurrenceRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return OccurrenceRow(
+      acknowledgedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}acknowledged_at_utc'],
+      ),
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
@@ -1093,6 +1180,10 @@ class $OccurrencesTable extends Occurrences
         DriftSqlType.int,
         data['${effectivePrefix}duration_minutes'],
       )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
       priority: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}priority'],
@@ -1115,22 +1206,26 @@ class $OccurrencesTable extends Occurrences
 }
 
 class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
+  final DateTime? acknowledgedAtUtc;
   final String id;
   final int nativeAlarmId;
   final String activityId;
   final DateTime originalStartUtc;
   final DateTime scheduledStartUtc;
   final int durationMinutes;
+  final String kind;
   final String priority;
   final String status;
   final int attempt;
   const OccurrenceRow({
+    this.acknowledgedAtUtc,
     required this.id,
     required this.nativeAlarmId,
     required this.activityId,
     required this.originalStartUtc,
     required this.scheduledStartUtc,
     required this.durationMinutes,
+    required this.kind,
     required this.priority,
     required this.status,
     required this.attempt,
@@ -1138,12 +1233,16 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (!nullToAbsent || acknowledgedAtUtc != null) {
+      map['acknowledged_at_utc'] = Variable<DateTime>(acknowledgedAtUtc);
+    }
     map['id'] = Variable<String>(id);
     map['native_alarm_id'] = Variable<int>(nativeAlarmId);
     map['activity_id'] = Variable<String>(activityId);
     map['original_start_utc'] = Variable<DateTime>(originalStartUtc);
     map['scheduled_start_utc'] = Variable<DateTime>(scheduledStartUtc);
     map['duration_minutes'] = Variable<int>(durationMinutes);
+    map['kind'] = Variable<String>(kind);
     map['priority'] = Variable<String>(priority);
     map['status'] = Variable<String>(status);
     map['attempt'] = Variable<int>(attempt);
@@ -1152,12 +1251,16 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
 
   OccurrencesCompanion toCompanion(bool nullToAbsent) {
     return OccurrencesCompanion(
+      acknowledgedAtUtc: acknowledgedAtUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(acknowledgedAtUtc),
       id: Value(id),
       nativeAlarmId: Value(nativeAlarmId),
       activityId: Value(activityId),
       originalStartUtc: Value(originalStartUtc),
       scheduledStartUtc: Value(scheduledStartUtc),
       durationMinutes: Value(durationMinutes),
+      kind: Value(kind),
       priority: Value(priority),
       status: Value(status),
       attempt: Value(attempt),
@@ -1170,6 +1273,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return OccurrenceRow(
+      acknowledgedAtUtc: serializer.fromJson<DateTime?>(
+        json['acknowledgedAtUtc'],
+      ),
       id: serializer.fromJson<String>(json['id']),
       nativeAlarmId: serializer.fromJson<int>(json['nativeAlarmId']),
       activityId: serializer.fromJson<String>(json['activityId']),
@@ -1178,6 +1284,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
         json['scheduledStartUtc'],
       ),
       durationMinutes: serializer.fromJson<int>(json['durationMinutes']),
+      kind: serializer.fromJson<String>(json['kind']),
       priority: serializer.fromJson<String>(json['priority']),
       status: serializer.fromJson<String>(json['status']),
       attempt: serializer.fromJson<int>(json['attempt']),
@@ -1187,12 +1294,14 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'acknowledgedAtUtc': serializer.toJson<DateTime?>(acknowledgedAtUtc),
       'id': serializer.toJson<String>(id),
       'nativeAlarmId': serializer.toJson<int>(nativeAlarmId),
       'activityId': serializer.toJson<String>(activityId),
       'originalStartUtc': serializer.toJson<DateTime>(originalStartUtc),
       'scheduledStartUtc': serializer.toJson<DateTime>(scheduledStartUtc),
       'durationMinutes': serializer.toJson<int>(durationMinutes),
+      'kind': serializer.toJson<String>(kind),
       'priority': serializer.toJson<String>(priority),
       'status': serializer.toJson<String>(status),
       'attempt': serializer.toJson<int>(attempt),
@@ -1200,28 +1309,37 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   }
 
   OccurrenceRow copyWith({
+    Value<DateTime?> acknowledgedAtUtc = const Value.absent(),
     String? id,
     int? nativeAlarmId,
     String? activityId,
     DateTime? originalStartUtc,
     DateTime? scheduledStartUtc,
     int? durationMinutes,
+    String? kind,
     String? priority,
     String? status,
     int? attempt,
   }) => OccurrenceRow(
+    acknowledgedAtUtc: acknowledgedAtUtc.present
+        ? acknowledgedAtUtc.value
+        : this.acknowledgedAtUtc,
     id: id ?? this.id,
     nativeAlarmId: nativeAlarmId ?? this.nativeAlarmId,
     activityId: activityId ?? this.activityId,
     originalStartUtc: originalStartUtc ?? this.originalStartUtc,
     scheduledStartUtc: scheduledStartUtc ?? this.scheduledStartUtc,
     durationMinutes: durationMinutes ?? this.durationMinutes,
+    kind: kind ?? this.kind,
     priority: priority ?? this.priority,
     status: status ?? this.status,
     attempt: attempt ?? this.attempt,
   );
   OccurrenceRow copyWithCompanion(OccurrencesCompanion data) {
     return OccurrenceRow(
+      acknowledgedAtUtc: data.acknowledgedAtUtc.present
+          ? data.acknowledgedAtUtc.value
+          : this.acknowledgedAtUtc,
       id: data.id.present ? data.id.value : this.id,
       nativeAlarmId: data.nativeAlarmId.present
           ? data.nativeAlarmId.value
@@ -1238,6 +1356,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       durationMinutes: data.durationMinutes.present
           ? data.durationMinutes.value
           : this.durationMinutes,
+      kind: data.kind.present ? data.kind.value : this.kind,
       priority: data.priority.present ? data.priority.value : this.priority,
       status: data.status.present ? data.status.value : this.status,
       attempt: data.attempt.present ? data.attempt.value : this.attempt,
@@ -1247,12 +1366,14 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   @override
   String toString() {
     return (StringBuffer('OccurrenceRow(')
+          ..write('acknowledgedAtUtc: $acknowledgedAtUtc, ')
           ..write('id: $id, ')
           ..write('nativeAlarmId: $nativeAlarmId, ')
           ..write('activityId: $activityId, ')
           ..write('originalStartUtc: $originalStartUtc, ')
           ..write('scheduledStartUtc: $scheduledStartUtc, ')
           ..write('durationMinutes: $durationMinutes, ')
+          ..write('kind: $kind, ')
           ..write('priority: $priority, ')
           ..write('status: $status, ')
           ..write('attempt: $attempt')
@@ -1262,12 +1383,14 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
 
   @override
   int get hashCode => Object.hash(
+    acknowledgedAtUtc,
     id,
     nativeAlarmId,
     activityId,
     originalStartUtc,
     scheduledStartUtc,
     durationMinutes,
+    kind,
     priority,
     status,
     attempt,
@@ -1276,47 +1399,55 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is OccurrenceRow &&
+          other.acknowledgedAtUtc == this.acknowledgedAtUtc &&
           other.id == this.id &&
           other.nativeAlarmId == this.nativeAlarmId &&
           other.activityId == this.activityId &&
           other.originalStartUtc == this.originalStartUtc &&
           other.scheduledStartUtc == this.scheduledStartUtc &&
           other.durationMinutes == this.durationMinutes &&
+          other.kind == this.kind &&
           other.priority == this.priority &&
           other.status == this.status &&
           other.attempt == this.attempt);
 }
 
 class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
+  final Value<DateTime?> acknowledgedAtUtc;
   final Value<String> id;
   final Value<int> nativeAlarmId;
   final Value<String> activityId;
   final Value<DateTime> originalStartUtc;
   final Value<DateTime> scheduledStartUtc;
   final Value<int> durationMinutes;
+  final Value<String> kind;
   final Value<String> priority;
   final Value<String> status;
   final Value<int> attempt;
   final Value<int> rowid;
   const OccurrencesCompanion({
+    this.acknowledgedAtUtc = const Value.absent(),
     this.id = const Value.absent(),
     this.nativeAlarmId = const Value.absent(),
     this.activityId = const Value.absent(),
     this.originalStartUtc = const Value.absent(),
     this.scheduledStartUtc = const Value.absent(),
     this.durationMinutes = const Value.absent(),
+    this.kind = const Value.absent(),
     this.priority = const Value.absent(),
     this.status = const Value.absent(),
     this.attempt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   OccurrencesCompanion.insert({
+    this.acknowledgedAtUtc = const Value.absent(),
     required String id,
     required int nativeAlarmId,
     required String activityId,
     required DateTime originalStartUtc,
     required DateTime scheduledStartUtc,
     required int durationMinutes,
+    this.kind = const Value.absent(),
     required String priority,
     required String status,
     this.attempt = const Value.absent(),
@@ -1330,24 +1461,28 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
        priority = Value(priority),
        status = Value(status);
   static Insertable<OccurrenceRow> custom({
+    Expression<DateTime>? acknowledgedAtUtc,
     Expression<String>? id,
     Expression<int>? nativeAlarmId,
     Expression<String>? activityId,
     Expression<DateTime>? originalStartUtc,
     Expression<DateTime>? scheduledStartUtc,
     Expression<int>? durationMinutes,
+    Expression<String>? kind,
     Expression<String>? priority,
     Expression<String>? status,
     Expression<int>? attempt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (acknowledgedAtUtc != null) 'acknowledged_at_utc': acknowledgedAtUtc,
       if (id != null) 'id': id,
       if (nativeAlarmId != null) 'native_alarm_id': nativeAlarmId,
       if (activityId != null) 'activity_id': activityId,
       if (originalStartUtc != null) 'original_start_utc': originalStartUtc,
       if (scheduledStartUtc != null) 'scheduled_start_utc': scheduledStartUtc,
       if (durationMinutes != null) 'duration_minutes': durationMinutes,
+      if (kind != null) 'kind': kind,
       if (priority != null) 'priority': priority,
       if (status != null) 'status': status,
       if (attempt != null) 'attempt': attempt,
@@ -1356,24 +1491,28 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   }
 
   OccurrencesCompanion copyWith({
+    Value<DateTime?>? acknowledgedAtUtc,
     Value<String>? id,
     Value<int>? nativeAlarmId,
     Value<String>? activityId,
     Value<DateTime>? originalStartUtc,
     Value<DateTime>? scheduledStartUtc,
     Value<int>? durationMinutes,
+    Value<String>? kind,
     Value<String>? priority,
     Value<String>? status,
     Value<int>? attempt,
     Value<int>? rowid,
   }) {
     return OccurrencesCompanion(
+      acknowledgedAtUtc: acknowledgedAtUtc ?? this.acknowledgedAtUtc,
       id: id ?? this.id,
       nativeAlarmId: nativeAlarmId ?? this.nativeAlarmId,
       activityId: activityId ?? this.activityId,
       originalStartUtc: originalStartUtc ?? this.originalStartUtc,
       scheduledStartUtc: scheduledStartUtc ?? this.scheduledStartUtc,
       durationMinutes: durationMinutes ?? this.durationMinutes,
+      kind: kind ?? this.kind,
       priority: priority ?? this.priority,
       status: status ?? this.status,
       attempt: attempt ?? this.attempt,
@@ -1384,6 +1523,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (acknowledgedAtUtc.present) {
+      map['acknowledged_at_utc'] = Variable<DateTime>(acknowledgedAtUtc.value);
+    }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
@@ -1401,6 +1543,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     }
     if (durationMinutes.present) {
       map['duration_minutes'] = Variable<int>(durationMinutes.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
     }
     if (priority.present) {
       map['priority'] = Variable<String>(priority.value);
@@ -1420,12 +1565,14 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   @override
   String toString() {
     return (StringBuffer('OccurrencesCompanion(')
+          ..write('acknowledgedAtUtc: $acknowledgedAtUtc, ')
           ..write('id: $id, ')
           ..write('nativeAlarmId: $nativeAlarmId, ')
           ..write('activityId: $activityId, ')
           ..write('originalStartUtc: $originalStartUtc, ')
           ..write('scheduledStartUtc: $scheduledStartUtc, ')
           ..write('durationMinutes: $durationMinutes, ')
+          ..write('kind: $kind, ')
           ..write('priority: $priority, ')
           ..write('status: $status, ')
           ..write('attempt: $attempt, ')
@@ -3030,6 +3177,7 @@ typedef $$ActivitiesTableCreateCompanionBuilder =
       required String title,
       Value<String> notes,
       required int durationMinutes,
+      Value<String> kind,
       required String priority,
       required String recurrenceType,
       Value<DateTime?> oneOffAtUtc,
@@ -3048,6 +3196,7 @@ typedef $$ActivitiesTableUpdateCompanionBuilder =
       Value<String> title,
       Value<String> notes,
       Value<int> durationMinutes,
+      Value<String> kind,
       Value<String> priority,
       Value<String> recurrenceType,
       Value<DateTime?> oneOffAtUtc,
@@ -3128,6 +3277,11 @@ class $$ActivitiesTableFilterComposer
 
   ColumnFilters<int> get durationMinutes => $composableBuilder(
     column: $table.durationMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3261,6 +3415,11 @@ class $$ActivitiesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get priority => $composableBuilder(
     column: $table.priority,
     builder: (column) => ColumnOrderings(column),
@@ -3334,6 +3493,9 @@ class $$ActivitiesTableAnnotationComposer
     column: $table.durationMinutes,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
 
   GeneratedColumn<String> get priority =>
       $composableBuilder(column: $table.priority, builder: (column) => column);
@@ -3462,6 +3624,7 @@ class $$ActivitiesTableTableManager
                 Value<String> title = const Value.absent(),
                 Value<String> notes = const Value.absent(),
                 Value<int> durationMinutes = const Value.absent(),
+                Value<String> kind = const Value.absent(),
                 Value<String> priority = const Value.absent(),
                 Value<String> recurrenceType = const Value.absent(),
                 Value<DateTime?> oneOffAtUtc = const Value.absent(),
@@ -3478,6 +3641,7 @@ class $$ActivitiesTableTableManager
                 title: title,
                 notes: notes,
                 durationMinutes: durationMinutes,
+                kind: kind,
                 priority: priority,
                 recurrenceType: recurrenceType,
                 oneOffAtUtc: oneOffAtUtc,
@@ -3496,6 +3660,7 @@ class $$ActivitiesTableTableManager
                 required String title,
                 Value<String> notes = const Value.absent(),
                 required int durationMinutes,
+                Value<String> kind = const Value.absent(),
                 required String priority,
                 required String recurrenceType,
                 Value<DateTime?> oneOffAtUtc = const Value.absent(),
@@ -3512,6 +3677,7 @@ class $$ActivitiesTableTableManager
                 title: title,
                 notes: notes,
                 durationMinutes: durationMinutes,
+                kind: kind,
                 priority: priority,
                 recurrenceType: recurrenceType,
                 oneOffAtUtc: oneOffAtUtc,
@@ -3609,12 +3775,14 @@ typedef $$ActivitiesTableProcessedTableManager =
     >;
 typedef $$OccurrencesTableCreateCompanionBuilder =
     OccurrencesCompanion Function({
+      Value<DateTime?> acknowledgedAtUtc,
       required String id,
       required int nativeAlarmId,
       required String activityId,
       required DateTime originalStartUtc,
       required DateTime scheduledStartUtc,
       required int durationMinutes,
+      Value<String> kind,
       required String priority,
       required String status,
       Value<int> attempt,
@@ -3622,12 +3790,14 @@ typedef $$OccurrencesTableCreateCompanionBuilder =
     });
 typedef $$OccurrencesTableUpdateCompanionBuilder =
     OccurrencesCompanion Function({
+      Value<DateTime?> acknowledgedAtUtc,
       Value<String> id,
       Value<int> nativeAlarmId,
       Value<String> activityId,
       Value<DateTime> originalStartUtc,
       Value<DateTime> scheduledStartUtc,
       Value<int> durationMinutes,
+      Value<String> kind,
       Value<String> priority,
       Value<String> status,
       Value<int> attempt,
@@ -3683,6 +3853,11 @@ class $$OccurrencesTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get acknowledgedAtUtc => $composableBuilder(
+    column: $table.acknowledgedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnFilters(column),
@@ -3705,6 +3880,11 @@ class $$OccurrencesTableFilterComposer
 
   ColumnFilters<int> get durationMinutes => $composableBuilder(
     column: $table.durationMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3781,6 +3961,11 @@ class $$OccurrencesTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get acknowledgedAtUtc => $composableBuilder(
+    column: $table.acknowledgedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
     builder: (column) => ColumnOrderings(column),
@@ -3803,6 +3988,11 @@ class $$OccurrencesTableOrderingComposer
 
   ColumnOrderings<int> get durationMinutes => $composableBuilder(
     column: $table.durationMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -3854,6 +4044,11 @@ class $$OccurrencesTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get acknowledgedAtUtc => $composableBuilder(
+    column: $table.acknowledgedAtUtc,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
@@ -3876,6 +4071,9 @@ class $$OccurrencesTableAnnotationComposer
     column: $table.durationMinutes,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
 
   GeneratedColumn<String> get priority =>
       $composableBuilder(column: $table.priority, builder: (column) => column);
@@ -3963,23 +4161,27 @@ class $$OccurrencesTableTableManager
               $$OccurrencesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime?> acknowledgedAtUtc = const Value.absent(),
                 Value<String> id = const Value.absent(),
                 Value<int> nativeAlarmId = const Value.absent(),
                 Value<String> activityId = const Value.absent(),
                 Value<DateTime> originalStartUtc = const Value.absent(),
                 Value<DateTime> scheduledStartUtc = const Value.absent(),
                 Value<int> durationMinutes = const Value.absent(),
+                Value<String> kind = const Value.absent(),
                 Value<String> priority = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<int> attempt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion(
+                acknowledgedAtUtc: acknowledgedAtUtc,
                 id: id,
                 nativeAlarmId: nativeAlarmId,
                 activityId: activityId,
                 originalStartUtc: originalStartUtc,
                 scheduledStartUtc: scheduledStartUtc,
                 durationMinutes: durationMinutes,
+                kind: kind,
                 priority: priority,
                 status: status,
                 attempt: attempt,
@@ -3987,23 +4189,27 @@ class $$OccurrencesTableTableManager
               ),
           createCompanionCallback:
               ({
+                Value<DateTime?> acknowledgedAtUtc = const Value.absent(),
                 required String id,
                 required int nativeAlarmId,
                 required String activityId,
                 required DateTime originalStartUtc,
                 required DateTime scheduledStartUtc,
                 required int durationMinutes,
+                Value<String> kind = const Value.absent(),
                 required String priority,
                 required String status,
                 Value<int> attempt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion.insert(
+                acknowledgedAtUtc: acknowledgedAtUtc,
                 id: id,
                 nativeAlarmId: nativeAlarmId,
                 activityId: activityId,
                 originalStartUtc: originalStartUtc,
                 scheduledStartUtc: scheduledStartUtc,
                 durationMinutes: durationMinutes,
+                kind: kind,
                 priority: priority,
                 status: status,
                 attempt: attempt,

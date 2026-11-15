@@ -32,18 +32,31 @@ final class AlarmReconciler {
   Future<void> reconcile(UserPreferences preferences) async {
     final now = _clock.nowUtc();
     final until = now.add(Duration(days: preferences.scheduleHorizonDays));
-    final desired = await _occurrences.findScheduledBetween(now, until);
+    final localNow = _timeZone.toLocal(now);
+    final dayStart = _timeZone.localComponentsToUtc(
+      DateTime(localNow.year, localNow.month, localNow.day),
+    );
+    final desired = await _occurrences.findScheduledBetween(dayStart, until);
     desired.sort(
       (left, right) =>
           left.scheduledStartUtc.compareTo(right.scheduledStartUtc),
     );
-    final sequential = _firstOccurrenceOfEachDay(desired);
-    final limited = sequential.take(preferences.maxPendingAlarms).toList();
-    _validateNativeIds(limited.map((item) => item.id));
-
     final existing = {
       for (final item in await _alarms.scheduled()) item.occurrenceId: item,
     };
+    final sequential =
+        _firstOccurrenceOfEachDay(desired)
+            .where(
+              (item) =>
+                  item.acknowledgedAtUtc == null &&
+                  (!item.scheduledStartUtc.isBefore(now) ||
+                      existing.containsKey(item.id)),
+            )
+            .toList()
+          ..sort((a, b) => a.scheduledStartUtc.compareTo(b.scheduledStartUtc));
+    final limited = sequential.take(preferences.maxPendingAlarms).toList();
+    _validateNativeIds(limited.map((item) => item.id));
+
     final desiredIds = limited.map((item) => item.id).toSet();
 
     for (final stale in existing.keys.where(
@@ -53,6 +66,8 @@ final class AlarmReconciler {
     }
 
     for (final occurrence in limited) {
+      // Retain an existing due/ringing alarm, but never recreate an overdue one.
+      if (occurrence.scheduledStartUtc.isBefore(now)) continue;
       final binding = existing[occurrence.id];
       if (binding?.scheduledAtUtc == occurrence.scheduledStartUtc) {
         continue;
@@ -64,7 +79,7 @@ final class AlarmReconciler {
           scheduledAtUtc: occurrence.scheduledStartUtc,
           estimatedDuration: occurrence.estimatedDuration,
           title: activity?.title ?? 'Atividade do DayToDay',
-          body: 'Hora da sua atividade. Abra para responder.',
+          body: 'Pare o aviso ou marque como feito no DayToDay.',
         ),
       );
     }
@@ -76,7 +91,8 @@ final class AlarmReconciler {
     final seenDays = <String>{};
     return [
       for (final occurrence in occurrences)
-        if (seenDays.add(_localDayKey(occurrence.scheduledStartUtc)))
+        if (occurrence.isReminder ||
+            seenDays.add(_localDayKey(occurrence.scheduledStartUtc)))
           occurrence,
     ];
   }

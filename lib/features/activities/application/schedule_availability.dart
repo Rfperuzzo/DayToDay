@@ -23,8 +23,10 @@ abstract final class ScheduleAvailability {
     String? ignoredActivityId,
   }) {
     for (final candidate in candidates) {
+      if (candidate.isReminder) continue;
       for (final blocking in existing) {
-        if (blocking.activityId == ignoredActivityId ||
+        if (blocking.isReminder ||
+            blocking.activityId == ignoredActivityId ||
             !_blocksTime(blocking.status)) {
           continue;
         }

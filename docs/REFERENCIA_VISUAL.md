@@ -55,3 +55,13 @@ Tokens em RotinaColors/ColorScheme; XML do widget e fundos adaptativos recebem
 os equivalentes, pois não herdam ThemeData. Testes conferem contraste dos pares
 de texto e correspondência das superfícies nativas. Vermelho continua exclusivo
 de falhas/destruição. Isso não equivale a certificação de acessibilidade.
+
+
+## Lembretes e reserva opcional — 14/11/2026
+
+O formulário começa com Reservar tempo desligado, exemplo Beber água e ajuda
+explícita. Duração aparece somente no bloco. Dias específicos usa chips que
+quebram linha, mantendo pelo menos um dia. A lista distingue Lembrete de minutos
+reservados e mostra ciência pendente sem tratar como concluída. Só pendentes não
+altera o progresso. No alarme, Parar é a ação primária e Concluir é separada.
+Evidências desta rodada: ux/20261114-reminders/README.md.

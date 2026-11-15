@@ -8,16 +8,23 @@ conta e com os dados armazenados no próprio aparelho.
 
 ## Funcionalidades
 
-- **Painel diário:** calendário contínuo, progresso e próxima atividade.
-- **Rotinas flexíveis:** atividades únicas, diárias ou em dias da semana, com
-  horário, duração e prioridade.
-- **Subtarefas:** organize cada atividade em etapas e acompanhe sua conclusão.
-- **Sequência diária:** conclua a tarefa atual para liberar a próxima, inclusive
-  antes do horário previsto.
-- **Alarmes:** áudio em loop, vibração e tela cheia quando autorizada pelo Android.
-- **Reagendamento inteligente:** ao escolher **Agora não** ou perder a janela de
-  uma tarefa, o app reorganiza a fila por importância, protegendo as durações.
-- **Widget Android:** veja as tarefas do dia e abra uma atividade na tela inicial.
+- **Lembrete simples por padrão:** horário e repetição, sem reserva de tempo.
+- **Reservar tempo, opcional:** blocos com duração e proteção contra sobreposição.
+- **Repetição flexível:** uma vez, todo dia, dias úteis ou dias específicos.
+- **Painel diário:** calendário, progresso, próxima ação e filtro Só pendentes.
+- **Parar alarme separado de Concluir:** silenciar mantém a atividade pendente.
+- **Lembrar em 10 minutos:** adia somente o lembrete, sem mover outras tarefas.
+- **Subtarefas:** organize cada atividade em etapas e acompanhe a conclusão.
+- **Sequência dos blocos:** conclua, pule ou cancele o bloco atual para liberar o próximo;
+  lembretes funcionam independentemente dessa sequência.
+- **Alarmes:** execução única do som, vibração e tela cheia quando autorizada.
+- **Reorganização:** blocos podem buscar outro intervalo livre; sua duração é
+  reserva de agenda, não tempo de toque. Lembretes não provocam cascata.
+- **Widget Android:** modos, horários e estados aparecem no resumo do dia.
+
+Atividades existentes são preservadas como blocos na migração para schema 3.
+Sem conta, assinatura ou serviço pago. A comparação com apps atuais, a revisão
+independente e os ensaios estão em [UX de lembretes](docs/UX_LEMBRETES_20261114.md).
 
 A identidade visual combina verde-petróleo, superfícies claras e acentos pêssego, com um ícone de
 calendário e marca de conclusão. Os alarmes dependem dos acessos concedidos e das

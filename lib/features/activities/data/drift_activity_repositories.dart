@@ -187,6 +187,7 @@ ActivitiesCompanion _activityCompanion(domain.Activity activity) {
     id: Value(activity.id),
     title: Value(activity.title),
     notes: Value(activity.notes),
+    kind: Value(activity.kind.name),
     durationMinutes: Value(activity.estimatedDuration.inMinutes),
     priority: Value(activity.priority.name),
     recurrenceType: Value(recurrence is OneOffRecurrence ? 'oneOff' : 'weekly'),
@@ -223,6 +224,7 @@ domain.Activity _activityFromRow(ActivityRow row) {
     id: row.id,
     title: row.title,
     notes: row.notes,
+    kind: domain.ActivityKind.values.byName(row.kind),
     estimatedDuration: Duration(minutes: row.durationMinutes),
     priority: domain.ActivityPriority.values.byName(row.priority),
     recurrence: recurrence,
@@ -242,6 +244,8 @@ OccurrencesCompanion _occurrenceCompanion(ActivityOccurrence occurrence) {
     activityId: Value(occurrence.activityId),
     originalStartUtc: Value(occurrence.originalStartUtc),
     scheduledStartUtc: Value(occurrence.scheduledStartUtc),
+    kind: Value(occurrence.kind.name),
+    acknowledgedAtUtc: Value(occurrence.acknowledgedAtUtc),
     durationMinutes: Value(occurrence.estimatedDuration.inMinutes),
     priority: Value(occurrence.priority.name),
     status: Value(occurrence.status.name),
@@ -255,10 +259,12 @@ ActivityOccurrence _occurrenceFromRow(OccurrenceRow row) {
     activityId: row.activityId,
     originalStartUtc: row.originalStartUtc.toUtc(),
     scheduledStartUtc: row.scheduledStartUtc.toUtc(),
+    kind: domain.ActivityKind.values.byName(row.kind),
     estimatedDuration: Duration(minutes: row.durationMinutes),
     priority: domain.ActivityPriority.values.byName(row.priority),
     status: OccurrenceStatus.values.byName(row.status),
     attempt: row.attempt,
+    acknowledgedAtUtc: row.acknowledgedAtUtc?.toUtc(),
   );
 }
 
