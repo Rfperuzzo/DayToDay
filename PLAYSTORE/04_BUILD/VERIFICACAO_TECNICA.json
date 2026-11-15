@@ -1,0 +1,193 @@
+{
+  "date": "2026-11-15",
+  "app_source_commit": "eb4ce7ac27403187c1d0faba620b1bbc293c73fa",
+  "package": "com.senhoritajhenifer.rotina",
+  "targetSdk": "36",
+  "minSdk": "24",
+  "permissions": [
+    "android.permission.POST_NOTIFICATIONS",
+    "android.permission.RECEIVE_BOOT_COMPLETED",
+    "android.permission.WAKE_LOCK",
+    "android.permission.VIBRATE",
+    "android.permission.USE_EXACT_ALARM",
+    "android.permission.USE_FULL_SCREEN_INTENT",
+    "android.permission.ACCESS_NOTIFICATION_POLICY",
+    "android.permission.FOREGROUND_SERVICE",
+    "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+    "com.senhoritajhenifer.rotina.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+  ],
+  "alarmReceiverExported": "false",
+  "internetPermissionInRelease": false,
+  "aabUnsigned": true,
+  "aabSignatureEntries": [],
+  "zipalign16kbApkPassed": true,
+  "nativeLibraries": [
+    {
+      "file": "base/lib/arm64-v8a/libapp.so",
+      "bits": 64,
+      "loadAlignments": [
+        65536,
+        65536,
+        65536
+      ],
+      "static16kb": true
+    },
+    {
+      "file": "base/lib/arm64-v8a/libdartjni.so",
+      "bits": 64,
+      "loadAlignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "static16kb": true
+    },
+    {
+      "file": "base/lib/arm64-v8a/libdatastore_shared_counter.so",
+      "bits": 64,
+      "loadAlignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "static16kb": true
+    },
+    {
+      "file": "base/lib/arm64-v8a/libflutter.so",
+      "bits": 64,
+      "loadAlignments": [
+        65536,
+        65536,
+        65536
+      ],
+      "static16kb": true
+    },
+    {
+      "file": "base/lib/arm64-v8a/libsqlite3.so",
+      "bits": 64,
+      "loadAlignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "static16kb": true
+    },
+    {
+      "file": "base/lib/armeabi-v7a/libapp.so",
+      "bits": 32,
+      "loadAlignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "static16kb": null
+    },
+    {
+      "file": "base/lib/armeabi-v7a/libdartjni.so",
+      "bits": 32,
+      "loadAlignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "static16kb": null
+    },
+    {
+      "file": "base/lib/armeabi-v7a/libdatastore_shared_counter.so",
+      "bits": 32,
+      "loadAlignments": [
+        16384,
+        16384
+      ],
+      "static16kb": null
+    },
+    {
+      "file": "base/lib/armeabi-v7a/libflutter.so",
+      "bits": 32,
+      "loadAlignments": [
+        65536,
+        65536,
+        65536
+      ],
+      "static16kb": null
+    },
+    {
+      "file": "base/lib/armeabi-v7a/libsqlite3.so",
+      "bits": 32,
+      "loadAlignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "static16kb": null
+    },
+    {
+      "file": "base/lib/x86_64/libapp.so",
+      "bits": 64,
+      "loadAlignments": [
+        65536,
+        65536,
+        65536
+      ],
+      "static16kb": true
+    },
+    {
+      "file": "base/lib/x86_64/libdartjni.so",
+      "bits": 64,
+      "loadAlignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "static16kb": true
+    },
+    {
+      "file": "base/lib/x86_64/libdatastore_shared_counter.so",
+      "bits": 64,
+      "loadAlignments": [
+        16384,
+        16384
+      ],
+      "static16kb": true
+    },
+    {
+      "file": "base/lib/x86_64/libflutter.so",
+      "bits": 64,
+      "loadAlignments": [
+        65536,
+        65536,
+        65536
+      ],
+      "static16kb": true
+    },
+    {
+      "file": "base/lib/x86_64/libsqlite3.so",
+      "bits": 64,
+      "loadAlignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "static16kb": true
+    }
+  ],
+  "elf64Static16kbPassed": true,
+  "runtime16kbTested": false,
+  "readyForPlayUpload": false,
+  "artifacts": [
+    {
+      "file": "DayToDay-1.0.0-1-SEM-ASSINATURA-NAO-ENVIAR.aab",
+      "bytes": 62279815,
+      "sha256": "61e5c479e39fc580eb3486583498a26723f0812305bab2d12a75910b0410649d"
+    },
+    {
+      "file": "DayToDay-1.0.0-1-SEM-ASSINATURA-NAO-INSTALAR.apk",
+      "bytes": 64127132,
+      "sha256": "ae8b048daef01b53da4f5b6ce95e9d04d84878c18b2ddfbf169006afd6f8c337"
+    }
+  ],
+  "releaseStartupOnAvdPassed": true,
+  "releaseStartupTestSigning": "Temporary existing Android debug key, QA APK outside kit; not an upload key",
+  "avd": "DayToDayMonstrux35 / emulator-5554",
+  "avdMemoryPageBytes": 4096
+}

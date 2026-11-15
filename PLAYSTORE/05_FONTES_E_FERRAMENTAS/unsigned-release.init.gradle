@@ -1,0 +1,8 @@
+// Build-only override. Never edits the app Gradle file or creates a signing key.
+gradle.beforeProject { p ->
+    p.pluginManager.withPlugin('com.android.application') {
+        p.extensions.getByName('androidComponents').finalizeDsl { androidDsl ->
+            androidDsl.buildTypes.getByName('release').signingConfig = null
+        }
+    }
+}
