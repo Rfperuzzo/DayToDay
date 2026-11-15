@@ -31,8 +31,23 @@ for ext in ['*.jks','*.keystore','*.p12','key.properties']:
  assert not list(root.rglob(ext)),f'Signing secret inside kit: {ext}'
 privacy=(root/'03_POLITICAS_E_DECLARACOES/PRIVACIDADE.md').read_text(encoding='utf-8')
 assert 'desativar atividades' in privacy and 'excluir atividades' not in privacy
-report={'date':'2026-11-15','packChecksPassed':True,'readyToPublish':False,'textLengths':lengths,'images':results,
- 'publicationPending':['Upload signing key/certificate','Public privacy URL and access inside app','Restricted-permission declarations/eligibility','Play Console forms and required physical/pre-launch tests']}
+technical=json.loads((root/'04_BUILD/VERIFICACAO_TECNICA.json').read_text(encoding='utf-8'))
+assert technical['aabSignatureVerified'] and not technical['aabUnsigned']
+assert technical['bundletoolValidationPassed'] and not technical['debugCertificate']
+assert contact['privacy_policy_url']=='https://rfperuzzo.github.io/DayToDay/privacidade.html'
+assert 'android.permission.USE_EXACT_ALARM' not in technical['permissions']
+assert 'android.permission.SCHEDULE_EXACT_ALARM' in technical['permissions']
+assert (root/'02_VISUAIS/DEMONSTRACAO-ALARME.mp4').stat().st_size>100000
+assert (root/'04_BUILD/CERTIFICADO-PUBLICO-UPLOAD.pem').read_text().startswith('-----BEGIN CERTIFICATE-----')
+for name in ['DayToDay-1.0.0-1-PRODUCAO.aab','DayToDay-1.0.0-1-PRODUCAO-TESTE.apk']:
+ path=root/'04_BUILD'/name
+ if path.exists():
+  recorded=next(x for x in technical['binaries'] if x['file']==name)
+  assert hashlib.sha256(path.read_bytes()).hexdigest()==recorded['sha256'],name
+binary_available=(root/'04_BUILD/DayToDay-1.0.0-1-PRODUCAO.aab').exists()
+report={'date':'2026-11-15','packChecksPassed':True,'readyForConsoleUpload':binary_available,'readyToPublish':False,'textLengths':lengths,'images':results,
+ 'publicationPending':['Owner console setup, declarations and Play App Signing','Account-specific eligibility/testing and pre-launch review','Final owner submission; physical-device and 16KB runtime checks remain documented'],
+ 'privateKeysOrPasswordsIncluded':False,'signedBinaryAvailable':binary_available}
 (root/'06_VALIDACAO').mkdir(exist_ok=True)
 (root/'06_VALIDACAO/VALIDACAO_DO_KIT.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-print(json.dumps({'packChecksPassed':True,'readyToPublish':False,'images':len(results),'textLengths':lengths},ensure_ascii=False))
+print(json.dumps({'packChecksPassed':True,'readyToPublish':False,'readyForConsoleUpload':binary_available,'images':len(results),'textLengths':lengths},ensure_ascii=False))

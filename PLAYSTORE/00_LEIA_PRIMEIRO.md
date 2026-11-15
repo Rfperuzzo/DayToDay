@@ -1,45 +1,39 @@
-# PLAYSTORE — DayToDay
+# PLAYSTORE — DayToDay, entrega para envio
 
-Preparado em **15/11/2026**. Abra também **00_ABRIR_AQUI.html** para navegar pelo kit.
+Atualizado em **15/11/2026**. Abra **00_ABRIR_AQUI.html** e siga
+**PASSO_A_PASSO_PLAY_CONSOLE.md**. O app não foi enviado nem publicado na loja.
 
-**Os materiais estão preparados. O app ainda não está liberado para upload de
-produção:** falta assinatura do titular, política publicada/acessível no app e
-fechamento das declarações e ensaios da loja. Nada foi publicado ou pago.
+## Pronto nesta entrega
 
-## Onde está cada material
+- **04_BUILD/DayToDay-1.0.0-1-PRODUCAO.aab:** pacote assinado para o campo App Bundle.
+- **04_BUILD/DayToDay-1.0.0-1-PRODUCAO-TESTE.apk:** somente instalação de teste.
+- **01_TEXTOS/pt-BR:** nome, descrições e notas; contato e ficha preenchidos no JSON.
+- **02_VISUAIS/ENVIAR_NO_CONSOLE:** seis screenshots de telefone, ícone e destaque
+  nas dimensões da loja; ordem e textos alternativos acompanham a pasta.
+- **03_POLITICAS_E_DECLARACOES:** política própria pública, Segurança dos dados,
+  questionários e textos de permissões para copiar.
+- **02_VISUAIS/DEMONSTRACAO-ALARME.mp4:** demonstração real da versão assinada;
+  o guia de vídeo informa sua URL pública e limites do ensaio.
+- **04_BUILD/ASSINATURA_E_BACKUP.md:** guarda da chave e backup. Chave privada e senha
+  nunca entram nesta pasta, ZIP ou GitHub. Só o certificado público acompanha o kit.
+- **06_VALIDACAO:** resultados e limites. 107 testes aprovados e análise sem problemas.
 
-- **01_TEXTOS/pt-BR:** título, descrição curta, descrição completa e notas da versão,
-  prontos para copiar. O JSON da ficha traz os dados públicos reaproveitados do
-  Consistência, conforme pedido: Thales Melo da Silva / thalesmelodasilva@gmail.com.
-- **01_TEXTOS/COMENTARIOS_PARA_REVISAO.md:** explicação do funcionamento e passagem
-  sugerida ao revisor. RESPOSTAS_A_AVALIACOES contém modelos de atendimento, nunca
-  avaliações ou depoimentos fictícios.
-- **02_VISUAIS/ENVIAR_NO_CONSOLE:** seis imagens de telefone em ordem, ícone512 e
-  destaque1024x500. Somente esta pasta contém os arquivos gráficos para upload.
-  As imagens de exemplo usam a interface real, sem inventar funcionalidades.
-- **02_VISUAIS/originais:** capturas de origem, para rastreabilidade. Não enviar
-  esses arquivos1080x2400 diretamente: a proporção excede o limite da ficha.
-- **03_POLITICAS_E_DECLARACOES:** política própria em Markdown/HTML, proposta de
-  Segurança dos dados e guia de declarações. A política do fitness não foi copiada.
-- **04_BUILD:** AAB e APK release sem assinatura, identificados como NÃO ENVIAR,
-  mais verificações técnicas. Binários ficam fora do Git e entram na cópia ZIP.
-- **05_FONTES_E_FERRAMENTAS:** fontes de arte, renderizador local, scripts de build/
-  assinatura, validador e referências oficiais. Nenhuma senha ou chave está no kit.
-- **06_VALIDACAO:** relatório técnico e revisão do MONSTRUX, com limites explícitos.
+Política pública: https://rfperuzzo.github.io/DayToDay/privacidade.html
+Acesso no app: final do painel > Privacidade e suporte. O texto funciona offline.
+O binário usa SCHEDULE_EXACT_ALARM concedida pelo usuário; a permissão restrita
+USE_EXACT_ALARM foi removida. Release não usa certificado debug.
 
-## Sequência para publicar com controle
+Confirmado pelo titular: primeira publicação, gratuito, Brasil, público-alvo a
+partir de 13 anos, sem direcionamento infantil. O Google calcula a classificação.
+Não houve cobrança, uso de API paga ou acesso ao repositório fitness.
 
-1. Conferir identidade, pacote permanente e versionCode na conta correta.
-2. Publicar a política HTML em URL pública válida e disponibilizá-la dentro do app.
-3. Resolver elegibilidade/declarar alarmes exatos, tela cheia e serviço de áudio.
-4. Assinar o AAB com a chave de upload do titular, mantida fora deste repositório.
-5. Testar a versão assinada via faixa interna, pré-lançamento e aparelhos reais.
-6. Preencher acesso, Segurança dos dados, público, IARC, preço e distribuição.
-7. Fazer teste fechado se a conta exigir e solicitar produção quando elegível.
-8. Revisar todo o conteúdo e só então enviar para análise da Google Play.
+## O que só acontece no Play Console
 
-Use CHECKLIST_PUBLICACAO.md. Um build bem-sucedido ou este kit não representam
-aprovação da loja. O merge no GitHub é separado da publicação na Google Play.
+Criar a ficha na sua conta, aceitar/configurar Play App Signing, copiar os campos,
+enviar o AAB, executar a faixa interna/pré-lançamento, cumprir eventual teste
+fechado exigido pela conta e enviar para revisão. Aprovação e prazos são do Google.
+Os checkboxes desses atos ficam desmarcados porque não foram executados.
 
-Não foram abertos ou alterados arquivos do repositório fitness. Apenas a ficha
-pública foi consultada para obter os dados que você autorizou reutilizar.
+O teste local ocorreu em emulador Android 15 de 4 KB. Alinhamento de 16 KB foi
+verificado estaticamente, não houve ensaio em sistema 16 KB nem aparelhos físicos.
+Esses limites não são ocultados por uma declaração de aprovação universal.

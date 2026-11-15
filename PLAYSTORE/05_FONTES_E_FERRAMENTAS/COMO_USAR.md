@@ -1,47 +1,22 @@
-# Reproduzir e conferir os materiais
+# Ferramentas locais da entrega
 
-Os PNGs e textos já estão preparados; as ferramentas abaixo são opcionais.
+A entrega já inclui o AAB PRODUCAO assinado. Não precisa compilar nem assinar
+novamente para o primeiro envio. Binários são locais/no ZIP, ignorados pelo Git.
 
-## Conferir sem instalar pacotes
+- Gerar-Producao.ps1: build offline com chave exclusiva protegida pelo Windows.
+  Na mesma máquina/usuário, informe -ProjectRoot se o projeto estiver em outro local.
+  -CriarPrimeiraChave é somente para a primeira criação; recusa sobrescrever a chave.
+- Backup-Assinatura.ps1: exporta backup PKCS12 protegido por senha escolhida pelo
+  titular, fora do projeto. Leia 04_BUILD/ASSINATURA_E_BACKUP.md.
+- validar_kit.py: confere dimensões, textos, integridade e ausência de chaves privadas.
+- Gerar-AAB-SemAssinatura.ps1 e Assinar-AAB.ps1: ferramentas alternativas de diagnóstico;
+  não são necessárias para o AAB final entregue. O primeiro exige liberação explícita
+  de build sem assinatura e nomeia seus arquivos como NÃO ENVIAR.
+- arte/: fontes HTML/SVG dos oito materiais comerciais já renderizados.
+- preparar_materiais.py: gerador histórico da primeira prévia, bloqueado após a
+  consolidação da assinatura para não sobrescrever as declarações/política atuais.
+  Edite a fonte específica se precisar alterar uma imagem ou documento.
 
-Na raiz do projeto: `python -B PLAYSTORE/05_FONTES_E_FERRAMENTAS/validar_kit.py`.
-O validador usa só a biblioteca padrão do Python e verifica dimensões, formato,
-textos, alt text e ausência de chaves na pasta. PASS do kit não significa liberação
-para upload: readyToPublish permanece false enquanto faltarem as etapas do titular.
-
-## Recriar as artes
-
-Executar `preparar_materiais.py --render` com Python e Playwright locais e Google
-Chrome instalado. O ambiente de preparação já possuía essas ferramentas; nenhum
-gerador de imagens ou serviço pago foi usado. São HTML/CSS/SVG locais com as
-capturas reais incluídas em 02_VISUAIS/originais, sem retocar a interface do app.
-Os fontes usam Segoe UI/Arial; fontes não são redistribuídas. Em outro sistema,
-uma fonte substituta pode mudar a composição: renderizar e revisar novamente.
-O script reescreve os textos gerados; ajuste o fonte antes de regenerar.
-
-## Build release
-
-Na pasta do projeto, execute Gerar-AAB-SemAssinatura.ps1. Fora do projeto,
-informe -ProjectRoot. O padrão é offline; se faltar um artefato público do SDK,
-o parâmetro -PermitirDownloadDeDependencias permite obtê-lo dos repositórios de
-build configurados. Isso não muda versões nem usa modelos/API pagos.
-
-O script usa o JDK do Android Studio quando disponível e restaura JAVA_HOME.
-O override de assinatura é só dessa execução: não altera build.gradle.kts nem
-cria uma chave. Não rode uma versão normal com debug signing e a chame de produção.
-
-## Chave e assinatura do titular
-
-Use a chave de upload correta da conta/ficha. Se for necessário criar uma chave,
-faça isso no Android Studio (Build > Generate Signed Bundle/APK), escolhendo
-armazenamento privado fora do repositório; registre o backup seguro e as credenciais.
-Não foi criada ou copiada nenhuma chave real neste trabalho.
-
-Para assinar a cópia sem assinatura, execute Assinar-AAB.ps1 -KeyStore com o
-caminho privado e -Alias com o alias correto. A senha é solicitada pelo jarsigner
-no terminal. Não deve constar de argumentos, arquivos do kit ou mensagens.
-O script verifica a assinatura e rejeita certificado Android Debug. Certificado
-de upload e configuração Play App Signing devem ser conferidos pelo titular.
-
-Arquivos assinados ainda exigem o checklist de publicação, ensaio via faixa
-interna e revisão do Console. Nenhum script faz upload, compra ou publicação.
+Nenhuma ferramenta publica na loja, chama inferência, usa API paga ou contém uma senha.
+Gradle release falha sem configuração de upload; nunca recai em certificado debug.
+Para futuras versões atualize versão/código e revise nomes de artefatos dos scripts.

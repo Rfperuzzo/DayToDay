@@ -1,3 +1,8 @@
+# Registro histórico da primeira preparação
+
+Este relatório antecede a assinatura e a política pública. Para o estado atual,
+leia ENTREGA_PRODUCAO.md nesta pasta e VERIFICACAO_TECNICA.json.
+
 # MONSTRUX — revisão de apresentação para Play Store
 
 Data15/11/2026. Escopo: claims, narrativa e revisão visual de materiais locais;

@@ -1,3 +1,8 @@
+# Registro histórico da primeira preparação
+
+Este relatório antecede a assinatura e a política pública. Para o estado atual,
+leia ENTREGA_PRODUCAO.md nesta pasta e VERIFICACAO_TECNICA.json.
+
 # Conferência final do kit —15/11/2026
 
 App1.0.0+1, pacote com.senhoritajhenifer.rotina, fonte eb4ce7a.

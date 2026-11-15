@@ -6,6 +6,8 @@ import json,hashlib,shutil,html,subprocess
 
 ROOT=Path(__file__).resolve().parents[2]
 KIT=ROOT/'PLAYSTORE'
+if (KIT/'04_BUILD/CERTIFICADO-PUBLICO-UPLOAD.pem').exists():
+ raise SystemExit('Kit de producao consolidado: gerador historico bloqueado para nao sobrescrever politica, declaracoes e verificacoes atuais. Edite as fontes de arte e documentos especificos.')
 DATE='15/11/2026'
 def write(path,text):
  p=KIT/path;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text.strip()+'\n',encoding='utf-8')

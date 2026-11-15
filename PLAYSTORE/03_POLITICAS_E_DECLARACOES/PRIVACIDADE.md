@@ -50,6 +50,14 @@ acessos de alarmes no app. Ao entrar em contato por e-mail, o conteúdo enviado
 será utilizado para responder ao pedido, segundo as políticas do provedor de
 e-mail; não envie informações sensíveis desnecessárias.
 
+## Página pública da política
+
+Ao escolher abrir a versão pública no navegador, você acessa uma página hospedada
+no GitHub Pages. O provedor pode tratar dados técnicos da visita, como endereço IP,
+conforme sua própria política: https://docs.github.com/pt/site-policy/privacy-policies/github-general-privacy-statement.
+O app também oferece esta política para leitura offline, sem enviar sua rotina
+para a página. O suporte por e-mail é iniciado por você fora do app.
+
 ## Alterações e contato
 
 Esta política deve ser atualizada se novas funções mudarem o tratamento dos

@@ -12,11 +12,16 @@
   "app_or_game": "App",
   "ads": false,
   "accounts_required": false,
-  "pricing": "Confirmar no Play Console; nenhum preco e prometido nos materiais",
-  "privacy_policy_url": null,
-  "support_website_url": null,
+  "pricing": "Gratuito — confirmado pelo titular",
+  "privacy_policy_url": "https://rfperuzzo.github.io/DayToDay/privacidade.html",
+  "support_website_url": "https://rfperuzzo.github.io/DayToDay/",
   "content_rating": "Atribuida pelo IARC apos questionario",
-  "target_audience": "Responsavel deve selecionar os grupos etarios realmente pretendidos; nao declarar Families por padrao",
+  "target_audience": "13–15, 16–17 e 18+; sem direcionamento a menores de 13 anos — confirmado pelo titular",
   "privacy_contact": "thalesmelodasilva@gmail.com",
-  "last_verified": "2026-11-15"
+  "last_verified": "2026-11-15",
+  "launch_countries": [
+    "Brasil"
+  ],
+  "publishing_status": "Não enviado: publicação exclusivamente pelo titular",
+  "launch_preferences_confirmed": true
 }

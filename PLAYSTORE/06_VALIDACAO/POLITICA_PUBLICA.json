@@ -1,0 +1,18 @@
+[
+  {
+    "url": "https://rfperuzzo.github.io/DayToDay/privacidade.html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "sha256": "62fb71c342f4e4011725abc45a3167ae403abb00498e796dc2c13b664c56fe13",
+    "matchesDelivery": true,
+    "checkedAt": "2026-11-15"
+  },
+  {
+    "url": "https://rfperuzzo.github.io/DayToDay/demonstracao-alarme.mp4",
+    "httpStatus": 200,
+    "contentType": "video/mp4",
+    "sha256": "ef42c21f600bc8190dd2f8a5593dd1d102e47ee419ef6799ec75309b400169e2",
+    "matchesDelivery": true,
+    "checkedAt": "2026-11-15"
+  }
+]

@@ -1,35 +1,33 @@
-# Checklist de publicação
+# Checklist — entrega e atos do publicador
 
-## Materiais preparados
+## Preparado e conferido localmente
 
-- [x] Nome, descrições e notas da versão em pt-BR.
-- [x] Seis screenshots1080x1920, PNG RGB; destaque1024x500; ícone512 RGBA.
-- [x] Dados de exemplo, ordem das imagens e textos alternativos.
-- [x] Contato do mesmo publicador do fitness, verificado na ficha pública.
-- [x] Política própria do DayToDay em HTML e Markdown.
-- [x] Propostas de declarações, notas ao revisor e roteiro de vídeo.
-- [x] Build release sem assinatura e verificações de arquivo/manifest/bibliotecas.
-- [x] Código e ensaios de UX documentados; nenhuma alegação de publicação aprovada.
+- [x] Textos pt-BR, contato, categoria e respostas de conteúdo preenchidos.
+- [x] Escolhas confirmadas: gratuito, Brasil, público 13+, sem direcionamento infantil.
+- [x] Seis screenshots 1080x1920 RGB, destaque 1024x500 RGB, ícone 512 RGBA.
+- [x] Política própria em HTTPS pública, sem login, conferida com o arquivo entregue.
+- [x] Privacidade e suporte no app, texto offline e abertura de navegador externo.
+- [x] SCHEDULE_EXACT_ALARM solicitado ao usuário; USE_EXACT_ALARM removida do release.
+- [x] Primeira chave de upload exclusiva, fora do Git/kit; senha protegida pelo Windows.
+- [x] AAB de produção assinado e verificado; certificado público e hashes entregues.
+- [x] APK da mesma fonte/certificado instalado em emulador dedicado.
+- [x] 107 testes aprovados; análise sem problemas; bundletool validate aprovado.
+- [x] Gravação real e link público de demonstração para o revisor.
+- [x] Manifesto final e alinhamento estático ELF/ZIP para 16 KB verificados.
 
-## Confirmar antes do upload
+## Publicação pelo titular — não executar por esta entrega
 
-- [ ] Conta Play, identidade e domínio/contato corretos para este produto.
-- [ ] Confirmar ID **com.senhoritajhenifer.rotina** antes da primeira publicação.
-- [ ] Confirmar versão1.0.0/código1; aumentar o código se já utilizado nessa ficha.
-- [ ] Chave de upload correta e AAB de produção assinado/verificado; nunca debug.
-- [ ] Política em URL pública HTTPS válida, sem login/edição pública, e acesso
-  à política dentro do app. O app atual ainda não oferece esse acesso.
-- [ ] Aprovação/enquadramento real de USE_EXACT_ALARM; não presumir elegibilidade.
-- [ ] Declarações de tela cheia e serviço em primeiro plano; vídeo real se exigido.
-- [ ] Formulário Segurança dos dados fiel ao binário final e às regras de backup.
-- [ ] Público-alvo, classificação IARC, anúncios, acesso, preço e países definidos.
-- [ ] Página publicada/revisada com os gráficos corretos para telefone.
-- [ ] Faixa interna e relatório de pré-lançamento sem falhas impeditivas.
-- [ ] Ensaios físicos de som/vibração, permissões negadas, bloqueio de tela,
-  bateria/OEM, fuso/data, reinício, force-stop, instalação/atualização e acessibilidade.
-- [ ] Execução em ambiente16KB; análise estática não substitui esse ensaio.
-- [ ] Teste fechado e elegibilidade de produção, se aplicável à conta.
-- [ ] Revisão humana final e envio pelo titular no Console.
+- [ ] Fazer backup portátil da chave com senha própria e guardá-la separadamente.
+- [ ] Conferir identidade/contatos da conta e aceitar termos do Play App Signing.
+- [ ] Criar a ficha, copiar campos e enviar gráficos/respostas preparadas.
+- [ ] Enviar o AAB PRODUCAO à faixa interna e conferir todos os avisos do Console.
+- [ ] Preencher declarações FGS/tela cheia com a demonstração pública.
+- [ ] Receber classificação IARC e validar Segurança dos dados no Console.
+- [ ] Conferir relatório de pré-lançamento e corrigir qualquer bloqueio real.
+- [ ] Ensaiar em aparelho físico: som/vibração, bloqueio, permissões negadas,
+  bateria/OEM, fuso/data, reinício, instalação/atualização e acessibilidade.
+- [ ] Ensaiar em sistema real/emulado 16 KB; a checagem estática não substitui execução.
+- [ ] Cumprir eventual teste fechado/elegibilidade exigido pela conta.
+- [ ] Revisar país Brasil, preço gratuito e público 13+, enviar para revisão.
 
-Não marcar itens não executados. Os questionários não foram submetidos e os
-binários sem assinatura não são arquivos prontos para envio.
+Não marcar atos não executados nem prometer aprovação. A publicação fica com o titular.

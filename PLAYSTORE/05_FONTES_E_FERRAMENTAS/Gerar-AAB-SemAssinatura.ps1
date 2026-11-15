@@ -13,7 +13,7 @@ $init = Join-Path $PSScriptRoot 'unsigned-release.init.gradle'
 $androidRoot = Join-Path $ProjectRoot 'android'
 Push-Location -LiteralPath $androidRoot
 try {
-    $gradleArguments = @('--no-daemon', '-I', $init, ':app:bundleRelease', ':app:assembleRelease', "-Ptarget=$ProjectRoot/lib/main.dart", '-Ptarget-platform=android-arm,android-arm64,android-x64', '-Ptree-shake-icons=true')
+    $gradleArguments = @('--no-daemon', '-Pdaytoday.allowUnsigned=true', '-I', $init, ':app:bundleRelease', ':app:assembleRelease', "-Ptarget=$ProjectRoot/lib/main.dart", '-Ptarget-platform=android-arm,android-arm64,android-x64', '-Ptree-shake-icons=true')
     if (-not $PermitirDownloadDeDependencias) { $gradleArguments = @('--offline') + $gradleArguments }
     & .\gradlew.bat @gradleArguments
     if ($LASTEXITCODE -ne 0) { throw 'O build release sem assinatura falhou. Consulte o log.' }

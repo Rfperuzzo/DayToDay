@@ -1,17 +1,29 @@
-# Roteiro de demonstração — gravação ainda não realizada
+# Demonstração real pronta — versão assinada 1.0.0+1
 
-Vídeo promocional é opcional na ficha. Uma declaração de serviço/permissão pode
-pedir demonstração específica; verificar o formulário da conta.
+**URL para colar no formulário:**
+https://rfperuzzo.github.io/DayToDay/demonstracao-alarme.html
 
-Gravar em aparelho de teste com dados sintéticos e a versão assinada a submeter.
-Não mostrar e-mails, notificações pessoais ou opções internas de fixture.
+**MP4 direto:** https://rfperuzzo.github.io/DayToDay/demonstracao-alarme.mp4
+**Cópia local:** DEMONSTRACAO-ALARME.mp4 nesta pasta.
 
-1. 0–8s: painel e Nova atividade; explicar lembrete sem reserva.
-2. 8–18s: ativar reserva e mostrar duração opcional; voltar ao modo lembrete.
-3. 18–28s: selecionar dias específicos e salvar um horário próximo.
-4. 28–45s: colocar o app em segundo plano e aguardar o aviso real.
-5. 45–60s: parar o aviso, abrir o app e mostrar pendência; só depois concluir.
+Gravação de 6min48s, sem edição, do emulador dedicado DayToDayMonstrux35/Android15.
+Dados fictícios. Pacote e certificado correspondem à entrega de produção. Não é
+fixture nem simulação: o lembrete foi criado pela interface para 15:32 do aparelho,
+o app foi enviado para segundo plano, o AlarmManager disparou e houve notificação
+real/serviço em primeiro plano. A gravação inclui a espera pelo horário.
 
-Para declaração de tela cheia/serviço, incluir permissões e o disparo real na
-condição solicitada. Não usar uma tela de alarme da fixture como prova de entrega.
-Não foi criado link YouTube nem enviado vídeo a qualquer serviço.
+Atalhos aproximados no player: início — configurar/salvar; 3min15s — instantes antes
+do disparo em segundo plano; 5min — tela de alarme; 5min50s — parada no app e retorno
+à rotina, com progresso 0 de 1. A atividade não foi concluída ao silenciar.
+A abertura da notificação também está registrada. Não apresentar essa gravação
+como teste isolado de todos os controles da notificação ou de concessão automática
+de tela cheia: a validação de persistência mostrada usa Parar alarme no app.
+
+A captura screenrecord não contém áudio. O som/vibração real e as diferenças de
+aparelhos físicos/OEM continuam no checklist; o vídeo não prova condições não
+ensaiadas. As permissões foram concedidas previamente no Android. Permitir/negar
+e retornar do acesso exato foram conferidos separadamente, com capturas na validação.
+
+Não foi criado vídeo promocional/YouTube nem feita submissão no Console. O link
+público gratuito serve para a demonstração ao revisor; se o Console exigir outro
+formato de hospedagem, use este mesmo arquivo sem inventar uma nova execução.
