@@ -4,6 +4,18 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val uploadKeyPath = System.getenv("DAYTODAY_UPLOAD_KEY")
+val uploadKeyAlias = System.getenv("DAYTODAY_UPLOAD_ALIAS")
+val uploadKeyPassword = System.getenv("DAYTODAY_UPLOAD_PASSWORD")
+val hasUploadSigning = !uploadKeyPath.isNullOrBlank() && !uploadKeyAlias.isNullOrBlank() && !uploadKeyPassword.isNullOrBlank()
+
+gradle.taskGraph.whenReady {
+    val releaseRequested = allTasks.any { it.project.path == ":app" && it.name.contains("Release") }
+    if (releaseRequested && !hasUploadSigning && !project.hasProperty("daytoday.allowUnsigned")) {
+        throw GradleException("Release exige a chave de upload DayToDay. Use PLAYSTORE/05_FONTES_E_FERRAMENTAS/Gerar-Producao.ps1. Nunca usa chave debug.")
+    }
+}
+
 android {
     namespace = "com.senhoritajhenifer.rotina"
     compileSdk = 36
@@ -25,11 +37,20 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (hasUploadSigning) {
+            create("upload") {
+                storeFile = file(uploadKeyPath!!)
+                storePassword = uploadKeyPassword
+                keyAlias = uploadKeyAlias
+                keyPassword = uploadKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (hasUploadSigning) signingConfigs.getByName("upload") else null
         }
     }
 }

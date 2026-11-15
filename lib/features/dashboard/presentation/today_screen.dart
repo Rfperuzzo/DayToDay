@@ -16,6 +16,7 @@ import '../../activities/presentation/subtasks_sheet.dart';
 import '../../alarms/presentation/alarm_access_sheet.dart';
 import '../../alarms/application/alarm_response_service.dart';
 import '../../home_widget/domain/day_widget_gateway.dart';
+import '../../privacy/presentation/privacy_screen.dart';
 import '../application/day_providers.dart';
 import '../application/daily_task_sequence.dart';
 import 'continuous_month_calendar.dart';
@@ -49,10 +50,7 @@ final class TodayScreen extends ConsumerWidget {
           onVisibleMonthChanged: (month) =>
               _prepareVisibleMonth(ref, activityItems, month),
           onAddRequested: () => _openNewActivity(context, ref, selectedDay),
-          onAlarmAccessRequested: () => showAlarmAccessSheet(
-            context,
-            ref.read(alarmPermissionGatewayProvider),
-          ),
+          onAlarmAccessRequested: () => _reviewAlarmAccess(context, ref),
           onManage: (activity, occurrence) =>
               _openActivityOptions(context, ref, activity, occurrence),
           onComplete: (occurrence) =>
@@ -74,6 +72,28 @@ final class TodayScreen extends ConsumerWidget {
         },
       ),
     );
+  }
+
+  Future<void> _reviewAlarmAccess(BuildContext context, WidgetRef ref) async {
+    await showAlarmAccessSheet(
+      context,
+      ref.read(alarmPermissionGatewayProvider),
+    );
+    if (!context.mounted) return;
+    try {
+      await ref
+          .read(alarmReconcilerProvider)
+          .reconcile(ref.read(userPreferencesProvider));
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'A rotina está salva. Não foi possível preparar todos os alarmes; revise os acessos e tente novamente.',
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _openNewActivity(
@@ -111,10 +131,7 @@ final class TodayScreen extends ConsumerWidget {
             ? null
             : SnackBarAction(
                 label: 'Revisar',
-                onPressed: () => showAlarmAccessSheet(
-                  context,
-                  ref.read(alarmPermissionGatewayProvider),
-                ),
+                onPressed: () => _reviewAlarmAccess(context, ref),
               ),
       ),
     );
@@ -577,6 +594,15 @@ final class _TodayDashboardState extends State<TodayDashboard> {
                         ),
                     ],
                     const SizedBox(height: RotinaSpacing.md),
+                    TextButton.icon(
+                      onPressed: () => Navigator.of(context).push<void>(
+                        MaterialPageRoute(
+                          builder: (_) => const PrivacyScreen(),
+                        ),
+                      ),
+                      icon: const Icon(Icons.privacy_tip_outlined),
+                      label: const Text('Privacidade e suporte'),
+                    ),
                   ],
                 ),
               ),
