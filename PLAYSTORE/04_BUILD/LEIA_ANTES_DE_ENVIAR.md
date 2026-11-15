@@ -1,21 +1,25 @@
-# Binário — pendente de assinatura do responsável
+# Arquivo para envio
 
-O Gradle normal do app ainda usa signingConfigs.debug em release. Não enviar um
-arquivo produzido por esse caminho como se estivesse pronto para a loja.
+Envie **DayToDay-1.0.0-1-PRODUCAO.aab** ao Play Console. Pacote
+com.senhoritajhenifer.rotina, versão 1.0.0, código 1. É a primeira publicação
+informada pelo titular. A assinatura é exclusiva de upload do DayToDay.
 
-O script do kit usa um override temporário, fora das fontes do app, para gerar
-AAB/APK release **sem assinatura** com target lib/main.dart. Os nomes contêm
-SEM-ASSINATURA/NAO-ENVIAR. Não foram criadas chaves nem senhas. Esses arquivos
-servem para inspeção técnica, não para upload ou instalação direta.
+O APK PRODUCAO-TESTE serve apenas para instalação de teste, não para o campo de
+App Bundle do Console. Os antigos binários sem assinatura foram retirados deste
+kit para evitar confusão. Binários continuam fora do Git, mas estão no ZIP local.
 
-Para finalizar: o titular confirma Application ID e versionCode, usa sua chave
-de upload correta fora do repositório e assina uma cópia pelo script Assinar-AAB.ps1.
-O jarsigner solicita a senha no terminal; nunca cole a senha no chat ou na pasta.
-Se esta ficha já existir, usar a chave compatível e um versionCode novo. Para um
-app novo, configurar Play App Signing na conta. Não trocar o pacote sem decisão:
-com.senhoritajhenifer.rotina é o ID atual e torna-se permanente na primeira ficha.
+Confira AAB-SHA256.txt e VERIFICACAO_TECNICA.json. O certificado público não é uma
+chave privada. Nenhum arquivo de senha ou chave privada deve acompanhar o envio.
+Leia ASSINATURA_E_BACKUP.md e faça seu backup antes de perder acesso ao computador.
 
-Depois: verificar certificado, validar o bundle, ensaiar via teste interno,
-concluir permissões/privacidade e revisar o relatório de pré-lançamento.
-Não existe publicação automática neste kit. Nenhum AAB está autorizado para envio
-somente por estar nesta pasta. Ver 00_LEIA_PRIMEIRO.md e as pendências.
+Não foi feita submissão, criação de release ou mudança de ficha no Play Console.
+Aprovação de revisão, pré-lançamento e elegibilidade da conta dependem do Google.
+
+## Instalações anteriores de desenvolvimento
+
+A chave nova de upload/distribuição pode ser diferente de uma instalação debug
+já existente. O Android não atualiza diretamente apps assinados por outra chave.
+Não desinstale nem limpe um aparelho com dados pessoais para forçar o teste.
+Preserve essa instalação e use outro aparelho/perfil limpo na faixa interna.
+O ensaio desta entrega removeu somente a instalação sintética do emulador dedicado;
+nenhum telefone ou banco real do usuário foi apagado.

@@ -13,3 +13,6 @@
 - [Construir/testar bundle](https://developer.android.com/guide/app-bundle/test).
 
 Dados de contato reaproveitados da [ficha pública do Consistência](https://play.google.com/store/apps/details?id=br.com.projetomonstro.app&hl=pt_BR&gl=BR), lida por HTTP público após o leitor web falhar. Nome e e-mail foram verificados; nenhum repositório fitness foi aberto. A URL de privacidade daquele app não será usada como política do DayToDay.
+
+- [Ferramenta oficial bundletool](https://developer.android.com/tools/bundletool): validação local do AAB e geração de APKs. Utilizada a versão1.18.3 do repositório google/bundletool, com digest do release conferido.
+- [Alarmes exatos Android14](https://developer.android.com/about/versions/14/changes/schedule-exact-alarms): SCHEDULE_EXACT_ALARM exige concessão e revalidação do estado.

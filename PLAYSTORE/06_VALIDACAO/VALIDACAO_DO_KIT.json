@@ -1,6 +1,7 @@
 {
   "date": "2026-11-15",
   "packChecksPassed": true,
+  "readyForConsoleUpload": true,
   "readyToPublish": false,
   "textLengths": {
     "titulo.txt": 28,
@@ -82,9 +83,10 @@
     }
   ],
   "publicationPending": [
-    "Upload signing key/certificate",
-    "Public privacy URL and access inside app",
-    "Restricted-permission declarations/eligibility",
-    "Play Console forms and required physical/pre-launch tests"
-  ]
+    "Owner console setup, declarations and Play App Signing",
+    "Account-specific eligibility/testing and pre-launch review",
+    "Final owner submission; physical-device and 16KB runtime checks remain documented"
+  ],
+  "privateKeysOrPasswordsIncluded": false,
+  "signedBinaryAvailable": true
 }

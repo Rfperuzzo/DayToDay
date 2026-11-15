@@ -32,10 +32,12 @@ restrições do Android e do fabricante.
 
 ## Desenvolvimento
 
-O kit de publicação está em [PLAYSTORE](PLAYSTORE/00_LEIA_PRIMEIRO.md), com seis
-imagens, ícone, destaque, textos, política própria e checklist. Materiais prontos
-não significam liberação para upload: assinatura, URL/acesso à privacidade e
-declarações/ensaios da loja permanecem indicados no kit.
+O kit de publicação está em [PLAYSTORE](PLAYSTORE/00_LEIA_PRIMEIRO.md): AAB de
+produção assinado na entrega local/ZIP, seis screenshots, ícone, destaque, textos,
+respostas de Console e demonstração real. A [política pública](https://rfperuzzo.github.io/DayToDay/privacidade.html)
+também pode ser lida offline em Privacidade e suporte no app. Publicação, aceite
+de formulários e ensaios de pré-lançamento ficam com o titular, conforme o checklist.
+As chaves privadas nunca acompanham o kit. Release sem chave é recusado.
 
 O projeto usa Flutter 3.44.2, Dart 3.12.2 e Android 7.0 (API 24) ou superior.
 Configure o Flutter e o Android SDK antes de executar:

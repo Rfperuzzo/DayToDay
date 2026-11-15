@@ -30,12 +30,32 @@ class MainActivity : FlutterActivity() {
             when (call.method) {
                 "canUseFullScreenIntent" -> result.success(canUseFullScreenIntent())
                 "canScheduleExactAlarms" -> result.success(canScheduleExactAlarms())
+                "requestExactAlarms" -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:$packageName")))
+                    }
+                    result.success(null)
+                }
                 "requestFullScreenIntent" -> {
                     requestFullScreenIntent()
                     result.success(null)
                 }
                 else -> result.notImplemented()
             }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            "com.senhoritajhenifer.rotina/privacy",
+        ).setMethodCallHandler { call, result ->
+            if (call.method == "openPublicPolicy") {
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://rfperuzzo.github.io/DayToDay/privacidade.html")).addCategory(Intent.CATEGORY_BROWSABLE))
+                    result.success(null)
+                } catch (_: android.content.ActivityNotFoundException) {
+                    result.error("no_browser", "Nenhum navegador disponível.", null)
+                }
+            } else result.notImplemented()
         }
 
         dayWidgetChannel = MethodChannel(

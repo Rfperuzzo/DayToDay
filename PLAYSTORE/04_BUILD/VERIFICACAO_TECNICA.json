@@ -1,7 +1,8 @@
 {
   "date": "2026-11-15",
-  "app_source_commit": "eb4ce7ac27403187c1d0faba620b1bbc293c73fa",
   "package": "com.senhoritajhenifer.rotina",
+  "versionName": "1.0.0",
+  "versionCode": "1",
   "targetSdk": "36",
   "minSdk": "24",
   "permissions": [
@@ -9,7 +10,7 @@
     "android.permission.RECEIVE_BOOT_COMPLETED",
     "android.permission.WAKE_LOCK",
     "android.permission.VIBRATE",
-    "android.permission.USE_EXACT_ALARM",
+    "android.permission.SCHEDULE_EXACT_ALARM",
     "android.permission.USE_FULL_SCREEN_INTENT",
     "android.permission.ACCESS_NOTIFICATION_POLICY",
     "android.permission.FOREGROUND_SERVICE",
@@ -18,176 +19,97 @@
   ],
   "alarmReceiverExported": "false",
   "internetPermissionInRelease": false,
-  "aabUnsigned": true,
-  "aabSignatureEntries": [],
+  "aabUnsigned": false,
+  "aabSignatureVerified": true,
+  "apkSignatureVerified": true,
+  "uploadCertificateSha256": "9d304d6eb35b3dc3018979f81ef694b3406c4f592607e59347600bf9981a9cdf",
+  "debugCertificate": false,
+  "bundletoolValidationPassed": true,
+  "bundletoolVersion": "1.18.3",
   "zipalign16kbApkPassed": true,
-  "nativeLibraries": [
+  "elf64Static16kbPassed": true,
+  "elf64Libraries": [
     {
       "file": "base/lib/arm64-v8a/libapp.so",
-      "bits": 64,
-      "loadAlignments": [
-        65536,
-        65536,
-        65536
-      ],
-      "static16kb": true
+      "minimumLoadAlignment": 65536
     },
     {
       "file": "base/lib/arm64-v8a/libdartjni.so",
-      "bits": 64,
-      "loadAlignments": [
-        16384,
-        16384,
-        16384
-      ],
-      "static16kb": true
+      "minimumLoadAlignment": 16384
     },
     {
       "file": "base/lib/arm64-v8a/libdatastore_shared_counter.so",
-      "bits": 64,
-      "loadAlignments": [
-        16384,
-        16384,
-        16384
-      ],
-      "static16kb": true
+      "minimumLoadAlignment": 16384
     },
     {
       "file": "base/lib/arm64-v8a/libflutter.so",
-      "bits": 64,
-      "loadAlignments": [
-        65536,
-        65536,
-        65536
-      ],
-      "static16kb": true
+      "minimumLoadAlignment": 65536
     },
     {
       "file": "base/lib/arm64-v8a/libsqlite3.so",
-      "bits": 64,
-      "loadAlignments": [
-        16384,
-        16384,
-        16384
-      ],
-      "static16kb": true
-    },
-    {
-      "file": "base/lib/armeabi-v7a/libapp.so",
-      "bits": 32,
-      "loadAlignments": [
-        16384,
-        16384,
-        16384
-      ],
-      "static16kb": null
-    },
-    {
-      "file": "base/lib/armeabi-v7a/libdartjni.so",
-      "bits": 32,
-      "loadAlignments": [
-        16384,
-        16384,
-        16384
-      ],
-      "static16kb": null
-    },
-    {
-      "file": "base/lib/armeabi-v7a/libdatastore_shared_counter.so",
-      "bits": 32,
-      "loadAlignments": [
-        16384,
-        16384
-      ],
-      "static16kb": null
-    },
-    {
-      "file": "base/lib/armeabi-v7a/libflutter.so",
-      "bits": 32,
-      "loadAlignments": [
-        65536,
-        65536,
-        65536
-      ],
-      "static16kb": null
-    },
-    {
-      "file": "base/lib/armeabi-v7a/libsqlite3.so",
-      "bits": 32,
-      "loadAlignments": [
-        16384,
-        16384,
-        16384
-      ],
-      "static16kb": null
+      "minimumLoadAlignment": 16384
     },
     {
       "file": "base/lib/x86_64/libapp.so",
-      "bits": 64,
-      "loadAlignments": [
-        65536,
-        65536,
-        65536
-      ],
-      "static16kb": true
+      "minimumLoadAlignment": 65536
     },
     {
       "file": "base/lib/x86_64/libdartjni.so",
-      "bits": 64,
-      "loadAlignments": [
-        16384,
-        16384,
-        16384
-      ],
-      "static16kb": true
+      "minimumLoadAlignment": 16384
     },
     {
       "file": "base/lib/x86_64/libdatastore_shared_counter.so",
-      "bits": 64,
-      "loadAlignments": [
-        16384,
-        16384
-      ],
-      "static16kb": true
+      "minimumLoadAlignment": 16384
     },
     {
       "file": "base/lib/x86_64/libflutter.so",
-      "bits": 64,
-      "loadAlignments": [
-        65536,
-        65536,
-        65536
-      ],
-      "static16kb": true
+      "minimumLoadAlignment": 65536
     },
     {
       "file": "base/lib/x86_64/libsqlite3.so",
-      "bits": 64,
-      "loadAlignments": [
-        16384,
-        16384,
-        16384
-      ],
-      "static16kb": true
+      "minimumLoadAlignment": 16384
     }
   ],
-  "elf64Static16kbPassed": true,
   "runtime16kbTested": false,
-  "readyForPlayUpload": false,
-  "artifacts": [
+  "readyForPlayUpload": true,
+  "publishedToPlay": false,
+  "readyForProductionRollout": false,
+  "releaseStartupOnAvdPassed": true,
+  "releaseStartupTestSigning": "Exclusive DayToDay upload key, same certificate as AAB",
+  "avd": "DayToDayMonstrux35 / emulator-5554",
+  "avdMemoryPageBytes": 4096,
+  "remainingConsoleSteps": [
+    "Play App Signing enrollment and account-specific forms",
+    "Host demonstration video and supply URL",
+    "Internal/pre-launch report and any account-required testing",
+    "Final review and submission by owner"
+  ],
+  "binaries": [
     {
-      "file": "DayToDay-1.0.0-1-SEM-ASSINATURA-NAO-ENVIAR.aab",
-      "bytes": 62279815,
-      "sha256": "61e5c479e39fc580eb3486583498a26723f0812305bab2d12a75910b0410649d"
+      "file": "DayToDay-1.0.0-1-PRODUCAO.aab",
+      "bytes": 62976727,
+      "sha256": "57021a4c617b191d6872f042a04beb17568394196f1fc7367107694bf18557c6"
     },
     {
-      "file": "DayToDay-1.0.0-1-SEM-ASSINATURA-NAO-INSTALAR.apk",
-      "bytes": 64127132,
-      "sha256": "ae8b048daef01b53da4f5b6ce95e9d04d84878c18b2ddfbf169006afd6f8c337"
+      "file": "DayToDay-1.0.0-1-PRODUCAO-TESTE.apk",
+      "bytes": 64809198,
+      "sha256": "6fc41b117aeb86dd1608d462de64e2478e3a4a1d109c1064790645267d6c0d20"
     }
   ],
-  "releaseStartupOnAvdPassed": true,
-  "releaseStartupTestSigning": "Temporary existing Android debug key, QA APK outside kit; not an upload key",
-  "avd": "DayToDayMonstrux35 / emulator-5554",
-  "avdMemoryPageBytes": 4096
+  "app_source_commit": "cde6b592593e43eecf9a8a5e2541fb253842a317",
+  "signedReleaseAlarmFromBackgroundObserved": true,
+  "appSilenceKeepsActivityPendingObserved": true,
+  "exactAlarmDeniedAndGrantedReturnObserved": true,
+  "releaseWithoutSigningBlocked": true,
+  "buildSourceSha256": {
+    "android/app/build.gradle.kts": "20d5ac3ebc0030243cb0e28f50b61f393fd06208a2c86d0e1b45cbf4034035bd",
+    "android/app/src/main/AndroidManifest.xml": "4d02ebbb0fcc1a570543ead9c463c3d89d2b911d75537b75c54dec1829a4df12",
+    "android/app/src/main/kotlin/com/senhoritajhenifer/rotina/MainActivity.kt": "944ca9073f5cbdfb357ad648a7d282d85498eef51d93cfedfa7b822fc2ca595b",
+    "pubspec.yaml": "c9e09d48507d366f31961e3a7406cab797061afc756dc7497445ab7174bae8c0",
+    "pubspec.lock": "2ca7542f3825b5db3012d307f5af1a3eeba26d33886fb8a7cbfe89c8abedcedc",
+    "lib/features/privacy/presentation/privacy_screen.dart": "b34959a5434c24a8e6a83b1c85d6af5e264dd762088ba040d95271c3b7201540",
+    "lib/features/alarms/infrastructure/android_alarm_permission_gateway.dart": "f538ac11619a7d410125911170ab842861f0955414667b0a31ce9f2c494d52a9",
+    "lib/features/dashboard/presentation/today_screen.dart": "dc0dd4e6d9afe85b820e6c1169bd4d1d8e279d94bd37ed283e0ff8da4bd9eda9",
+    "assets/legal/privacy_policy.md": "9d1bc905d2df0b216cf0e4f7f4f9bb91f7677b35da939eabef6dfc42b8ca7ff2"
+  }
 }

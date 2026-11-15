@@ -1,23 +1,39 @@
 # Memória viva — DayToDay
 
-## Kit de publicação — 15/11/2026
+## Preparação para envio à loja — 15/11/2026
 
-PLAYSTORE reúne materiais pt-BR, seis imagens reais compostas, ícone e destaque,
-política própria, notas ao revisor, declarações propostas e ferramentas locais.
-Contato reaproveitado da ficha pública do fitness por autorização: Thales Melo
-da Silva / thalesmelodasilva@gmail.com. Nenhum arquivo do repositório fitness foi
-aberto. O MONSTRUX aprovou visual e precisão dos textos.
+Primeira publicação confirmada pelo titular: gratuito, Brasil, público 13+ sem
+direcionamento infantil. O publicador/contato continuam Thales Melo da Silva /
+thalesmelodasilva@gmail.com conforme dados públicos já autorizados. Não abrir fitness.
 
-AAB/APK release sem assinatura foram compilados por override temporário, sem
-alterar o Gradle do app. Manifest release sem INTERNET, API36/mínimo24, ELF64 e
-zipalign16KB verificados estaticamente. Execução16KB não testada. Release de QA
-com assinatura Android Debug, mantido fora do kit, abriu no AVD. 102 testes e
-análise limpa repetidos. Os binários sem assinatura são locais/ZIP, fora do Git.
+Política própria em https://rfperuzzo.github.io/DayToDay/privacidade.html, hospedada
+no GitHub Pages público do DayToDay. Mesma política offline em Privacidade e suporte
+no final do painel; link fixo abre navegador externo sem enviar dados de rotina.
+A página pública de demonstração também usa esse site. Não há deploy de app na loja.
 
-Não publicar ainda: falta chave/certificado do titular, política em URL pública
-e acesso dentro do app, confirmação de permissões restritas, formulários e
-ensaios da loja. Nem este kit nem o merge significam upload ou aprovação Google.
-Nenhum serviço pago, compra, publicação ou chave de produção nesta preparação.
+Manifesto release usa SCHEDULE_EXACT_ALARM mediante concessão do usuário e remove
+USE_EXACT_ALARM. Gateway pede um acesso especial por vez; retorno mostra estado
+real e fechamento da revisão reconcilia alarmes. Sem migração ou exclusão de dados.
+
+Primeira chave de upload exclusiva criada por autorização, RSA3072/10.000 dias,
+fora do repositório. Senha aleatória protegida por DPAPI do Windows/usuário e ACL
+privada. Só certificado público no Git/kit. Gradle release não usa Android Debug e
+recusa falta de chave salvo opção explícita de diagnóstico unsigned. Scripts de
+build e backup portátil em PLAYSTORE; backup exige senha própria do titular.
+
+AAB e APK PRODUCAO assinados e verificados, bundletool1.18.3 validate aprovado,
+manifesto API36/mínimo24 sem INTERNET, ELF64/ZIP16KB PASS. 107 testes e análise limpa.
+APK da mesma fonte/certificado testado no AVD exclusivo; lembrete criado pela UI
+assinada disparou em segundo plano, com serviço foreground e notificação reais.
+Parar no app manteve progresso 0 de 1. Vídeo sem edição/áudio e prints na entrega.
+MONSTRUX aprovou revalidação visual/factual; não teve acesso à chave privada.
+
+O kit anterior sem assinatura foi substituído por instruções e binário assinados.
+Os binários permanecem ignorados no Git e estão na cópia local/ZIP; não confundir
+checkout do repositório com entrega que inclui o AAB. A publicação, conta,
+Play App Signing, IARC, declarações e relatório de pré-lançamento ficam com o titular.
+Execução16KB, aparelhos físicos e eventual teste fechado continuam no checklist;
+checagens estáticas/UX não equivalem à aprovação Google. Sem API paga ou nova taxa.
 
 Atualize este documento no mesmo commit de qualquer mudança que altere regras,
 arquitetura, dependências importantes ou escopo.

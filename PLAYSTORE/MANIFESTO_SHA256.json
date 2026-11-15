@@ -1,7 +1,9 @@
 {
   "date": "2026-11-15",
-  "app_source_commit": "eb4ce7ac27403187c1d0faba620b1bbc293c73fa",
+  "app_source_commit": "cde6b592593e43eecf9a8a5e2541fb253842a317",
+  "ready_for_console_upload": true,
   "ready_to_publish": false,
+  "private_keys_or_passwords_included": false,
   "files": [
     {
       "file": ".gitattributes",
@@ -15,23 +17,23 @@
     },
     {
       "file": "00_ABRIR_AQUI.html",
-      "bytes": 4126,
-      "sha256": "a642864f204f8293dae88c0f08d038d53ab5abb55538d158bdcbe3f483d70a99"
+      "bytes": 6277,
+      "sha256": "e89f4bccec144a48ad5341c2ebad76feff3019d72058ca5c568655bf1d941386"
     },
     {
       "file": "00_LEIA_PRIMEIRO.md",
-      "bytes": 2926,
-      "sha256": "d211f8dd18c9622d357b88705be8ad112b69d802d7f7e4bfb48b7aa53938fa14"
+      "bytes": 2380,
+      "sha256": "9e590921818589a27a1f67093cf973d407f19b21050b7a5dab28d929f2bad55e"
     },
     {
       "file": "01_TEXTOS/COMENTARIOS_PARA_REVISAO.md",
-      "bytes": 1281,
-      "sha256": "76eb15c4e04860e0bc22bbccbebc5720979c1136d4a2abd8c4b8ecf3181f6aa5"
+      "bytes": 1246,
+      "sha256": "4cd2fa485fef59ac67832908fa827246d34307539077083c65e938a1d548c952"
     },
     {
       "file": "01_TEXTOS/DADOS_DA_FICHA.json",
-      "bytes": 966,
-      "sha256": "d2326df5ec6a6fc1a49e42fa6d5f03da98ed5e82a6534843e8ebad786c29b89d"
+      "bytes": 1181,
+      "sha256": "3ba1415d9019b6f003cc0cc3ac0cbe3d76ccd419b86cda4dd031303e79334e79"
     },
     {
       "file": "01_TEXTOS/pt-BR/descricao-completa.txt",
@@ -57,6 +59,11 @@
       "file": "01_TEXTOS/RESPOSTAS_A_AVALIACOES.md",
       "bytes": 1099,
       "sha256": "64b2037f7fa6be38db2b058255df16ecaf858e152fb84b4a8b129cb463570ab7"
+    },
+    {
+      "file": "02_VISUAIS/DEMONSTRACAO-ALARME.mp4",
+      "bytes": 6985905,
+      "sha256": "ef42c21f600bc8190dd2f8a5593dd1d102e47ee419ef6799ec75309b400169e2"
     },
     {
       "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/01-telefone.png",
@@ -135,53 +142,68 @@
     },
     {
       "file": "02_VISUAIS/ROTEIRO_VIDEO.md",
-      "bytes": 1012,
-      "sha256": "80472740af0549c465850f46ab42a73c10550361d1ee782de9137967584ed830"
+      "bytes": 1842,
+      "sha256": "3054d4b0e17b93ada8d2293068cfc1944dd6c48ca3245f3a66b408636c157c1a"
     },
     {
       "file": "03_POLITICAS_E_DECLARACOES/PERMISSOES_E_REVISAO.md",
-      "bytes": 2357,
-      "sha256": "6533b9805243167a6125f948b922c70244b30e2a562e8ac27cb60254f90334d8"
+      "bytes": 3597,
+      "sha256": "9a315a527db68aafcde2a05865e17bdf90b62b520983fd3dfffea83ae30b3770"
     },
     {
       "file": "03_POLITICAS_E_DECLARACOES/privacidade.html",
-      "bytes": 3340,
-      "sha256": "d134115fd84dbee0e0b03d3e8ad82b00d2d2cad6fbbf91749b84d86e039837f9"
+      "bytes": 4270,
+      "sha256": "62fb71c342f4e4011725abc45a3167ae403abb00498e796dc2c13b664c56fe13"
     },
     {
       "file": "03_POLITICAS_E_DECLARACOES/PRIVACIDADE.md",
-      "bytes": 2921,
-      "sha256": "e099ed135bd65f9374247f01cbbf721aee9cd30667660ef8d4d81a68ce4dd991"
+      "bytes": 3412,
+      "sha256": "9d1bc905d2df0b216cf0e4f7f4f9bb91f7677b35da939eabef6dfc42b8ca7ff2"
     },
     {
       "file": "03_POLITICAS_E_DECLARACOES/QUESTIONARIOS_CONSOLE.md",
-      "bytes": 1341,
-      "sha256": "e8af8056dcf4935964b613c373b2400b8f6191dc6781b2b4d0a733f8a96a9510"
+      "bytes": 3146,
+      "sha256": "48092bb0e6bda65d458639d9655570f97ea44e0615205de1037bc0fe410a0bc3"
     },
     {
       "file": "03_POLITICAS_E_DECLARACOES/SEGURANCA_DOS_DADOS.md",
-      "bytes": 1548,
-      "sha256": "fa236a758f6697e761d26d5093e9f071224b160f68195d05a141873101720e61"
+      "bytes": 1719,
+      "sha256": "19c879b84878770c7a988b4a6ef4715fce4b3ea1a33fa4f8bc20238078527016"
     },
     {
-      "file": "04_BUILD/DayToDay-1.0.0-1-SEM-ASSINATURA-NAO-ENVIAR.aab",
-      "bytes": 62279815,
-      "sha256": "61e5c479e39fc580eb3486583498a26723f0812305bab2d12a75910b0410649d"
+      "file": "04_BUILD/AAB-SHA256.txt",
+      "bytes": 96,
+      "sha256": "7de89dfb1a2fd481847f9bacecf44ebaac10f7203a58a458411a02da4b681fc2"
     },
     {
-      "file": "04_BUILD/DayToDay-1.0.0-1-SEM-ASSINATURA-NAO-INSTALAR.apk",
-      "bytes": 64127132,
-      "sha256": "ae8b048daef01b53da4f5b6ce95e9d04d84878c18b2ddfbf169006afd6f8c337"
+      "file": "04_BUILD/ASSINATURA_E_BACKUP.md",
+      "bytes": 2035,
+      "sha256": "0aa05323ccaf74f119c53ab76ab14f996386ee735c2a60b1355e30d77aea08e7"
+    },
+    {
+      "file": "04_BUILD/CERTIFICADO-PUBLICO-UPLOAD.pem",
+      "bytes": 1566,
+      "sha256": "56b92ee50d00ff4bd05936a9d900243bbb32ef552d6385cdc501745d367ac905"
+    },
+    {
+      "file": "04_BUILD/DayToDay-1.0.0-1-PRODUCAO-TESTE.apk",
+      "bytes": 64809198,
+      "sha256": "6fc41b117aeb86dd1608d462de64e2478e3a4a1d109c1064790645267d6c0d20"
+    },
+    {
+      "file": "04_BUILD/DayToDay-1.0.0-1-PRODUCAO.aab",
+      "bytes": 62976727,
+      "sha256": "57021a4c617b191d6872f042a04beb17568394196f1fc7367107694bf18557c6"
     },
     {
       "file": "04_BUILD/LEIA_ANTES_DE_ENVIAR.md",
-      "bytes": 1357,
-      "sha256": "d382691ae5e6d5fd184ddb8767331e12533489426eb246855de7a2bbafb4555a"
+      "bytes": 1459,
+      "sha256": "241fbdf681cd4c1e4b8039619f5bba042e7c7e573c52e4e3c8fd58e04386af81"
     },
     {
       "file": "04_BUILD/VERIFICACAO_TECNICA.json",
-      "bytes": 4562,
-      "sha256": "94559dd54a54520b3a31eb257eb3bfba63ac56bebfa4a99af12e19e659f789bf"
+      "bytes": 4536,
+      "sha256": "c51e76c1b9b6dc03c1971970f257d8dede0a743b494360145c5af11b829f4434"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/arte/destaque.html",
@@ -229,29 +251,39 @@
       "sha256": "70879e92c306be4beb330c9feb008fd0289608c9da13429d61c5ff22489df044"
     },
     {
+      "file": "05_FONTES_E_FERRAMENTAS/Backup-Assinatura.ps1",
+      "bytes": 2994,
+      "sha256": "d2572d3e0c306db0010d1ef2fc4f1e6531be10bdf385e6f1f1a14c44d642b0bb"
+    },
+    {
       "file": "05_FONTES_E_FERRAMENTAS/CAPTURAS_ORIGEM.json",
       "bytes": 9840,
       "sha256": "e42a1216c3e8f3f8ea3750e332453901020e709ce9f061a3289391a037b96168"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/COMO_USAR.md",
-      "bytes": 2603,
-      "sha256": "336b20cc3fb71d5ad0cadfee82c52633bdfd0cb2c4cf46949f8643b5af8a709c"
+      "bytes": 1546,
+      "sha256": "bcfeea105825dbe0cfa3e79f40cd00c8588870c32ad8ecdce705933f4ce2c828"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/FONTES_OFICIAIS.md",
-      "bytes": 2364,
-      "sha256": "efc0de08241e97c882c6f999dae643e5bcc9d3b35a73dfc2b5b74ad70883df10"
+      "bytes": 2765,
+      "sha256": "9443fed7e4ef5cbaf49bf3822c0ae1632691d9aead78f02ae0e633a8219e2ccf"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/Gerar-AAB-SemAssinatura.ps1",
-      "bytes": 1946,
-      "sha256": "a0bba873cdaf1c613221b790367903bcc84821e7dce4fad150a8b379fe96ef41"
+      "bytes": 1979,
+      "sha256": "ecf4dd3c10d785dafbb138c52f49771c23fa97e023946e3306e189a95de0508d"
+    },
+    {
+      "file": "05_FONTES_E_FERRAMENTAS/Gerar-Producao.ps1",
+      "bytes": 5468,
+      "sha256": "3d559be59536dae7d2926c706c17311f15cd940850c5eee8c9a53eb0cc793005"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/preparar_materiais.py",
-      "bytes": 25570,
-      "sha256": "debf24fee593ddd5f4d79d580ad8159be5b04841d0041b8bcf0e7f43d6809860"
+      "bytes": 25826,
+      "sha256": "9f0956bc8660cc3a597838ca67a5381ceb5341f5c72c3f676a029195f3077584"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/unsigned-release.init.gradle",
@@ -260,28 +292,88 @@
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/validar_kit.py",
-      "bytes": 2604,
-      "sha256": "04d0a8a17b230f5fd789af030932b4ca0747e73e739beb1e79ee6a4437f7721b"
+      "bytes": 3821,
+      "sha256": "7d14d4b6992826498a0cd2fefe57cc7056bf673d46741568bba60daad9b80dbf"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS/01-inicio-producao.png",
+      "bytes": 186488,
+      "sha256": "24de5f1f656592bf994cca0925083ea77e3cf20153f89099a17c911dd4c6973a"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS/02-politica-offline.png",
+      "bytes": 294649,
+      "sha256": "69188d4c45a7bb4c1e57c0aa2d1118287247bff4e3d4f229e9875a79c94e0e94"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS/05-pedido-alarme-exato.png",
+      "bytes": 137253,
+      "sha256": "1f0d1d2e77c22b8221c38f1813383285f7ab45a61f9d9d59928de9237ff0dab6"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS/06-retorno-acesso-negado.png",
+      "bytes": 248624,
+      "sha256": "5106992a1894fc72c578fe2028fe913f5e62de89e801dd3348aaddcfb51c18c1"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS/07-exato-autorizado.png",
+      "bytes": 238437,
+      "sha256": "6821b78e3d1b1c42e5232a99a306f532177087231f70b6bcd63c426b8f08a020"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS/11-notificacao-alarme-real.png",
+      "bytes": 144190,
+      "sha256": "0896abe01c873f3351074c7fb2fbc27699062d0a78558eb5a7ffd47b56326c5b"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS/12-parado-no-app.png",
+      "bytes": 88554,
+      "sha256": "12dc1b13c205501d666c44dad8c546f38fb6a2112122f2ff5fedac8d8426b463"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS/12-pendente-apos-silenciar.png",
+      "bytes": 178275,
+      "sha256": "facefb0b376081a4ed51a0f2d6a3f453f3c7c064fd39cd9e2d594805a7353852"
+    },
+    {
+      "file": "06_VALIDACAO/ENTREGA_PRODUCAO.md",
+      "bytes": 3190,
+      "sha256": "32421bfb8e127b6cddaad849058ba4d3ff9404aed8e910b307d2c5ea62064b6a"
+    },
+    {
+      "file": "06_VALIDACAO/POLITICA_PUBLICA.json",
+      "bytes": 571,
+      "sha256": "ddcb8fd3ae6ff643719f4de7d917cf4e7b7dcb6b058501d8c2ca85421e64749c"
     },
     {
       "file": "06_VALIDACAO/RELATORIO_FINAL.md",
-      "bytes": 2161,
-      "sha256": "2f5efe7652f95817bb9756d366c4896224fd3cb6a6449cc011628c78a9c64eea"
+      "bytes": 2363,
+      "sha256": "70a6a4b18513885fb73272e06abf3a29d80546eaee09e4b191d4c9a30784d62b"
     },
     {
       "file": "06_VALIDACAO/REVISAO_MONSTRUX.md",
-      "bytes": 9940,
-      "sha256": "a58cbfcc81baf72f44625717ac63f88739015ec49895e01f93f75a00e865a6b1"
+      "bytes": 10142,
+      "sha256": "bd6510fbd2b45650fb36db4c63abc88c7d24a23a1718139474a0a0f559672516"
+    },
+    {
+      "file": "06_VALIDACAO/REVISAO_MONSTRUX_PRODUCAO.md",
+      "bytes": 1050,
+      "sha256": "2b5d5bc6be4639642cea3f6fbc74d8ca23334147ebf359b06ca11e2437839d63"
     },
     {
       "file": "06_VALIDACAO/VALIDACAO_DO_KIT.json",
-      "bytes": 2696,
-      "sha256": "01f89a8dbcf664e6dc1f4b96e9350a3574302723ac3f8b7b38e831481ac70dc6"
+      "bytes": 2819,
+      "sha256": "2591483eb4630e71aac5c212e91b851450d21adbcec660908686d30b69619f61"
     },
     {
       "file": "CHECKLIST_PUBLICACAO.md",
-      "bytes": 2223,
-      "sha256": "c14efa99fb7e536d3ed3b0c688df314c07a0d30b9611a9ee1a278df6e2ed84da"
+      "bytes": 2231,
+      "sha256": "8b08e4ad86468621e51f86ad2f57b2ef7d80dacf88f3d667ce21e17973e249d1"
+    },
+    {
+      "file": "PASSO_A_PASSO_PLAY_CONSOLE.md",
+      "bytes": 3943,
+      "sha256": "3f3ff0c8fe6561bb3eee85bfbaf95b45bed8a4392a374c91112e31092353fb7b"
     }
   ]
 }

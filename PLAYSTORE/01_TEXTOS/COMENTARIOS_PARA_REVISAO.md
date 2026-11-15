@@ -1,21 +1,21 @@
-# Notas ao revisor da Google Play
+# Instruções de acesso para o revisor — texto para copiar
 
-O DayToDay é um organizador de rotina offline e não exige conta ou login.
-Não há credenciais para fornecer. O usuário pode criar um lembrete pela ação
-Nova atividade, preencher o nome e escolher horário/repetição. Reservar tempo na
-agenda é opcional e cria um bloco com duração.
+O DayToDay organiza rotinas e lembretes no próprio aparelho. Não exige conta,
+login, assinatura, código de convite nem localização. Todas as funcionalidades
+podem ser testadas com atividades fictícias.
 
-O Android pode solicitar notificações e acessos de alarmes. A criação continua
-salva se um acesso for negado. O botão Alarmes permite revisar os estados.
-O som não é controlado pela duração do bloco. Parar alarme mantém a atividade
-pendente; Concluir registra a realização. Lembrar em 10 minutos muda somente o
-lembrete. Apenas blocos seguem o bloqueio sequencial; lembretes são independentes.
+1. Abra Nova atividade, escreva um título e escolha um horário futuro próximo.
+   Lembrete simples é o padrão; Reservar tempo é opcional.
+2. Para testar os avisos, permita notificações e os acessos de alarmes exatos,
+   tela cheia e Não Perturbe conforme as telas Android. Se não permitir, a rotina
+   continua acessível, mas o Android pode limitar o alarme.
+3. Salve, deixe o app em segundo plano e aguarde o horário escolhido.
+4. Parar alarme encerra o som e mantém a atividade pendente. Concluir atividade
+   registra a realização. O lembrete também oferece adiamento opcional.
+5. A tela Alarmes mostra os acessos atuais. A política está disponível em
+   Privacidade e suporte, com leitura offline e link público HTTPS.
 
-Passagem sugerida: criar lembrete; criar bloco em intervalo livre; escolher dias
-específicos; adicionar subtarefas pelo menu da atividade; filtrar Só pendentes;
-testar um aviso no aparelho com os acessos concedidos; verificar parada separada
-da conclusão. O widget é adicionado pelo launcher Android.
-
-As imagens da ficha usam dados de exemplo e interface real. Não apresentam
-integrações, inteligência artificial, sincronização, idiomas ou planos inexistentes.
-Contato do publicador: thalesmelodasilva@gmail.com.
+Política: https://rfperuzzo.github.io/DayToDay/privacidade.html
+Suporte: thalesmelodasilva@gmail.com
+Vídeo real (gravação de tela sem áudio):
+https://rfperuzzo.github.io/DayToDay/demonstracao-alarme.html

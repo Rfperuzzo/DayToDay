@@ -1,40 +1,62 @@
-# Permissões e declarações do Play Console
+# Declarações de permissões — respostas para copiar
 
-Não enviar respostas automáticas como se fossem aprovação do Google.
+Versão 1.0.0+1. O pacote final usa SCHEDULE_EXACT_ALARM, concedida pelo usuário.
+USE_EXACT_ALARM é removida do manifesto mesclado. Não submeter justificativa de
+permissão restrita USE_EXACT_ALARM para este binário. Se o Console ainda a mostrar,
+confira se enviou o AAB PRODUCAO e se não existe outra versão ativa com a permissão.
 
-## Alarmes exatos
+## Serviço em primeiro plano: mediaPlayback
 
-O AAB declara USE_EXACT_ALARM. É uma permissão restrita, avaliada segundo a função
-principal. O DayToDay apresenta organização de rotina com alarmes e calendário;
-essa descrição não prova enquadramento como app dedicado de alarme/calendário.
-Confirmar elegibilidade no Play Console antes da submissão. Se não se enquadrar,
-será necessária uma mudança técnica de permissão/solicitação ou de agendamento;
-o kit não altera o app silenciosamente para contornar a revisão.
+Tipo: reprodução de mídia/áudio. Se a lista pedir um caso mais específico e não
+listar alarme, escolher Outro e descrever fielmente abaixo.
 
-Justificativa factual para adaptar: o usuário escolhe horários de atividades;
-o sistema agenda avisos e o usuário pode parar, concluir, pular ou adiar. Não
-inventar que a função principal é despertador se isso não representar o produto.
+**Funcionalidade:** O DayToDay permite que o usuário agende lembretes de atividades
+para horários escolhidos. Ao disparar um alarme autorizado, um serviço em primeiro
+plano reproduz o aviso sonoro e apresenta uma notificação com controle de parada.
+A reprodução é breve e visível ao usuário; o serviço encerra quando o aviso termina
+ou quando o usuário o interrompe. Parar o som não marca a atividade como concluída.
 
-## Tela cheia e serviço em primeiro plano
+**Como o usuário inicia:** O usuário cria uma atividade, escolhe o horário e salva.
+O disparo futuro decorre desse agendamento explícito e das permissões concedidas.
+Não há reprodução publicitária, monitoramento ou trabalho oculto contínuo.
 
-USE_FULL_SCREEN_INTENT e FOREGROUND_SERVICE_MEDIA_PLAYBACK requerem as declarações
-aplicáveis no Console. Explicar o aviso de alarme iniciado por um horário escolhido
-e a reprodução visível para o usuário. O serviço encerra ao parar/finalizar o som;
-isso não conclui a atividade. A concessão automática de tela cheia tem escopo
-restrito; não prometer elegibilidade automática ou aprovação garantida.
+**Se o início for adiado:** O aviso poderá chegar depois do horário escolhido e
+perder a utilidade como lembrete pontual para aquela atividade.
 
-Preparar demonstração real no aparelho/AAB de produção: criar aviso, conceder os
-acessos necessários, aguardar disparo, mostrar a notificação/tela, parar e mostrar
-que a atividade fica pendente. O arquivo ROTEIRO_VIDEO.md contém a sequência.
-Se o Console exigir link de vídeo, o responsável deve gravar/publicar a demonstração
-adequada e informar a URL. As capturas estáticas não substituem essa prova.
+**Se for interrompido:** O usuário poderá não ouvir o aviso completo. A atividade
+permanece na rotina e pode ser consultada/concluída manualmente.
 
-## Outros acessos
+**URL pública do vídeo para copiar:**
+https://rfperuzzo.github.io/DayToDay/demonstracao-alarme.html
 
-POST_NOTIFICATIONS: exibir avisos; RECEIVE_BOOT_COMPLETED: tratamento de retorno
-após reinício; WAKE_LOCK/VIBRATE: execução do aviso; ACCESS_NOTIFICATION_POLICY:
-integração com Não Perturbe quando autorizada. Manifest do app remove leitura de
-armazenamento e SCHEDULE_EXACT_ALARM e fecha a exportação do AlarmReceiver.
+MP4 direto: https://rfperuzzo.github.io/DayToDay/demonstracao-alarme.mp4
+Cópia local: 02_VISUAIS/DEMONSTRACAO-ALARME.mp4. Gravação real, sem áudio e sem edição;
+veja ROTEIRO_VIDEO.md para limites e atalhos. Não colar caminho local no campo URL.
 
-Fontes: [Permissões](https://support.google.com/googleplay/android-developer/answer/16558241?hl=pt-BR)
-e [serviços/tela cheia](https://support.google.com/googleplay/android-developer/answer/13392821?hl=pt-BR).
+## Intent para tela cheia
+
+Uso: apresentar um aviso de atividade no horário programado pelo usuário, quando
+o acesso estiver autorizado no Android. Sem autorização, o funcionamento fica
+limitado pelos acessos disponíveis. Não é um app de chamadas.
+
+Não solicitar concessão automática sob alegação de app dedicado de despertador.
+O produto é um organizador de rotinas com alarmes: selecionar Outro/sem concessão
+automática, quando essa opção for apresentada, e explicar que o acesso especial
+é solicitado explicitamente ao usuário. O Google decide a elegibilidade final;
+não marcar chamadas nem inventar qualificação para aprovação automática.
+
+Texto descritivo: A tela cheia é usada exclusivamente para alarmes de atividades
+agendadas pelo usuário, com ações para parar o aviso e responder à atividade.
+Não é usada para anúncios, promoções ou interrupções sem agendamento do usuário.
+
+## Demais permissões
+
+POST_NOTIFICATIONS: avisos; RECEIVE_BOOT_COMPLETED: reagendamento após reinício;
+WAKE_LOCK/VIBRATE: execução do aviso; ACCESS_NOTIFICATION_POLICY: integração com
+Não Perturbe mediante autorização. READ_EXTERNAL_STORAGE e USE_EXACT_ALARM removidas.
+AlarmReceiver não exportado. Release sem INTERNET. O navegador externo abre a
+política somente após toque do usuário; não recebe dados de rotina.
+
+Fontes: https://support.google.com/googleplay/android-developer/answer/16558241?hl=pt-BR
+https://support.google.com/googleplay/android-developer/answer/13392821?hl=pt-BR
+https://developer.android.com/about/versions/14/changes/schedule-exact-alarms

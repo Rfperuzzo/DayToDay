@@ -33,8 +33,14 @@ final class AndroidAlarmPermissionGateway implements AlarmPermissionGateway {
     if (!await Permission.notification.isGranted) {
       await Permission.notification.request();
     }
+    if (!(await _channel.invokeMethod<bool>('canScheduleExactAlarms') ??
+        false)) {
+      await _channel.invokeMethod<void>('requestExactAlarms');
+      return check();
+    }
     if (!await Permission.accessNotificationPolicy.isGranted) {
       await Permission.accessNotificationPolicy.request();
+      return check();
     }
     if (!(await _channel.invokeMethod<bool>('canUseFullScreenIntent') ??
         false)) {
