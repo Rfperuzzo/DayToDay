@@ -24,12 +24,16 @@ final class OccurrenceActions {
   final UserPreferences _preferences;
 
   Future<void> complete(ActivityOccurrence occurrence) async {
-    if (occurrence.status == OccurrenceStatus.completed) {
+    final current = await _occurrences.findById(occurrence.id);
+    if (current == null ||
+        current.status == OccurrenceStatus.completed ||
+        current.status == OccurrenceStatus.skipped ||
+        current.status == OccurrenceStatus.cancelled) {
       return;
     }
     final now = _clock.nowUtc();
     await _occurrences.update(
-      occurrence.copyWith(status: OccurrenceStatus.completed),
+      current.copyWith(status: OccurrenceStatus.completed),
     );
     await _alarms.cancel(occurrence.id);
     await _events.append(

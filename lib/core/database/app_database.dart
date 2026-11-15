@@ -9,6 +9,7 @@ class Activities extends Table {
   TextColumn get title => text()();
   TextColumn get notes => text().withDefault(const Constant(''))();
   IntColumn get durationMinutes => integer()();
+  TextColumn get kind => text().withDefault(const Constant('timeBlock'))();
   TextColumn get priority => text()();
   TextColumn get recurrenceType => text()();
   DateTimeColumn get oneOffAtUtc => dateTime().nullable()();
@@ -26,12 +27,14 @@ class Activities extends Table {
 
 @DataClassName('OccurrenceRow')
 class Occurrences extends Table {
+  DateTimeColumn get acknowledgedAtUtc => dateTime().nullable()();
   TextColumn get id => text()();
   IntColumn get nativeAlarmId => integer()();
   TextColumn get activityId => text().references(Activities, #id)();
   DateTimeColumn get originalStartUtc => dateTime()();
   DateTimeColumn get scheduledStartUtc => dateTime()();
   IntColumn get durationMinutes => integer()();
+  TextColumn get kind => text().withDefault(const Constant('timeBlock'))();
   TextColumn get priority => text()();
   TextColumn get status => text()();
   IntColumn get attempt => integer().withDefault(const Constant(0))();
@@ -113,13 +116,18 @@ final class AppDatabase extends _$AppDatabase {
       );
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: (migrator, from, to) async {
       if (from < 2) {
         await migrator.createTable(subtasks);
+      }
+      if (from < 3) {
+        await migrator.addColumn(activities, activities.kind);
+        await migrator.addColumn(occurrences, occurrences.kind);
+        await migrator.addColumn(occurrences, occurrences.acknowledgedAtUtc);
       }
     },
     beforeOpen: (details) async {

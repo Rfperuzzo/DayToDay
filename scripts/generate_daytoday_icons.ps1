@@ -8,8 +8,8 @@ function Export-DayToDayIcon([string]$Path, [int]$Size, [string]$Variant) {
     $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
     $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
     $graphics.ScaleTransform($Size / 108.0, $Size / 108.0)
-    $background = [System.Drawing.SolidBrush]::new([System.Drawing.ColorTranslator]::FromHtml('#343833'))
-    $pen = [System.Drawing.Pen]::new([System.Drawing.ColorTranslator]::FromHtml('#F7F7F5'), 4)
+    $background = [System.Drawing.SolidBrush]::new([System.Drawing.ColorTranslator]::FromHtml('#145A52'))
+    $pen = [System.Drawing.Pen]::new([System.Drawing.ColorTranslator]::FromHtml('#F6F8F5'), 4)
     $pen.StartCap = [System.Drawing.Drawing2D.LineCap]::Round
     $pen.EndCap = [System.Drawing.Drawing2D.LineCap]::Round
     $pen.LineJoin = [System.Drawing.Drawing2D.LineJoin]::Round

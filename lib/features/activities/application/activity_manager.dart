@@ -19,8 +19,12 @@ final class ActivityEditDraft {
     required this.minute,
     required this.recurrence,
     required this.estimatedDuration,
+    this.kind = ActivityKind.timeBlock,
+    this.customWeekdays = const {DateTime.monday},
   });
 
+  final Set<int> customWeekdays;
+  final ActivityKind kind;
   final String title;
   final int hour;
   final int minute;
@@ -97,8 +101,10 @@ final class ActivityManager {
       selectedOccurrence,
       draft.hour,
       draft.minute,
+      draft.customWeekdays,
     );
     final updated = activity.copyWith(
+      kind: draft.kind,
       title: draft.title,
       recurrence: recurrence,
       estimatedDuration: draft.estimatedDuration,
@@ -129,7 +135,8 @@ final class ActivityManager {
     );
 
     await _activities.save(updated);
-    await _occurrences.saveAll([...cancelled, ...generated]);
+    await _occurrences.saveAll(cancelled);
+    final generatedCount = await _occurrences.saveGenerated(generated);
     final nextStart = _nextStartForSelectedDay(selectedOccurrence, generated);
     await _events.append(
       ActivityEvent(
@@ -146,7 +153,7 @@ final class ActivityManager {
     return ActivityMutationResult(
       activity: updated,
       affectedOccurrences: pending.length,
-      generatedOccurrences: generated.length,
+      generatedOccurrences: generatedCount,
       alarmsSynchronized: alarmsSynchronized,
     );
   }
@@ -207,8 +214,14 @@ final class ActivityManager {
     ActivityOccurrence selectedOccurrence,
     int hour,
     int minute,
+    Set<int> customWeekdays,
   ) {
     return switch (preset) {
+      ActivityRecurrencePreset.custom => WeeklyRecurrence(
+        weekdays: customWeekdays,
+        hour: hour,
+        minute: minute,
+      ),
       ActivityRecurrencePreset.once => OneOffRecurrence(
         _timeZone.localComponentsToUtc(
           DateTime(
@@ -278,7 +291,8 @@ final class ActivityManager {
     if (draft.minute < 0 || draft.minute > 59) {
       throw ArgumentError.value(draft.minute, 'minute', 'Minuto inválido.');
     }
-    if (draft.estimatedDuration <= Duration.zero) {
+    if (draft.kind == ActivityKind.timeBlock &&
+        draft.estimatedDuration <= Duration.zero) {
       throw ArgumentError.value(
         draft.estimatedDuration,
         'estimatedDuration',

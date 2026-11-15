@@ -55,6 +55,72 @@ void main() {
     expect(tester.takeException(), isNull);
     semantics.dispose();
   });
+
+  testWidgets('folha real permite adicionar com teclado e texto 2x em 320dp', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(320, 720));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final repository = _MemorySubtasks();
+    addTearDown(repository.close);
+    final activity = Activity(
+      id: 'ux',
+      title: 'Uma atividade com nome extenso para verificar a composição',
+      estimatedDuration: const Duration(minutes: 30),
+      priority: ActivityPriority.normal,
+      recurrence: OneOffRecurrence(DateTime.utc(2026, 11, 14, 20)),
+      createdAtUtc: DateTime.utc(2026),
+      updatedAtUtc: DateTime.utc(2026),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [subtaskRepositoryProvider.overrideWithValue(repository)],
+        child: MaterialApp(
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: const TextScaler.linear(2),
+              viewInsets: const EdgeInsets.only(bottom: 280),
+            ),
+            child: child!,
+          ),
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => TextButton(
+                onPressed: () => showModalBottomSheet<void>(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  isDismissible: false,
+                  enableDrag: false,
+                  builder: (_) => SubtasksSheet(activity: activity),
+                ),
+                child: const Text('Abrir etapas'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Abrir etapas'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byType(TextField),
+      150,
+      scrollable: find
+          .descendant(
+            of: find.byKey(const ValueKey('subtasks-scroll')),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    await tester.enterText(find.byType(TextField), 'Revisar o material');
+    await tester.ensureVisible(find.byTooltip('Adicionar subtarefa'));
+    await tester.tap(find.byTooltip('Adicionar subtarefa'));
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(repository.values.single.title, 'Revisar o material');
+    expect(tester.takeException(), isNull);
+  });
 }
 
 final class _MemorySubtasks implements SubtaskRepository {

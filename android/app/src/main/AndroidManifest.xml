@@ -20,6 +20,10 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
+        <receiver
+            android:name="com.gdelataillade.alarm.alarm.AlarmReceiver"
+            android:exported="false"
+            tools:replace="android:exported" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

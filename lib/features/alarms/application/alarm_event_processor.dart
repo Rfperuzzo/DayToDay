@@ -43,6 +43,17 @@ final class AlarmEventProcessor {
       await _alarms.acknowledge(platformEvent);
       return;
     }
+    if (occurrence.status == OccurrenceStatus.completed ||
+        occurrence.status == OccurrenceStatus.skipped ||
+        occurrence.status == OccurrenceStatus.cancelled) {
+      await _alarms.acknowledge(platformEvent);
+      return;
+    }
+    if (occurrence.acknowledgedAtUtc != null) {
+      await _alarms.cancel(occurrence.id);
+      await _alarms.acknowledge(platformEvent);
+      return;
+    }
     if (platformEvent.type == AlarmPlatformEventType.dropped &&
         platformEvent.cause == AlarmPlatformEventCause.staleAtBoot) {
       await _missedTaskRecovery.recover(
@@ -58,9 +69,10 @@ final class AlarmEventProcessor {
         scheduledStartUtc: platformEvent.alarmTimeUtc,
         status: OccurrenceStatus.scheduled,
       ),
-      AlarmPlatformEventType.dropped => occurrence.copyWith(
-        status: OccurrenceStatus.cancelled,
-      ),
+      AlarmPlatformEventType.dropped =>
+        occurrence.isReminder
+            ? occurrence
+            : occurrence.copyWith(status: OccurrenceStatus.cancelled),
     };
     await _occurrences.update(updated);
     await _events.append(

@@ -135,7 +135,7 @@ final class _AlarmRingingScreenState extends State<AlarmRingingScreen> {
                             borderRadius: BorderRadius.circular(32),
                             boxShadow: const [
                               BoxShadow(
-                                color: Color(0x4D242723),
+                                color: RotinaColors.alarmShadow,
                                 blurRadius: 38,
                                 offset: Offset(0, 18),
                               ),
@@ -194,6 +194,21 @@ final class _AlarmRingingScreenState extends State<AlarmRingingScreen> {
                                 onPressed: widget.isResponding
                                     ? null
                                     : () => widget.onRespond(
+                                        AlarmResponse.silence,
+                                      ),
+                                icon: const Icon(
+                                  Icons.notifications_off_outlined,
+                                ),
+                                label: const Text('Parar alarme'),
+                                style: FilledButton.styleFrom(
+                                  minimumSize: const Size(double.infinity, 56),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              OutlinedButton.icon(
+                                onPressed: widget.isResponding
+                                    ? null
+                                    : () => widget.onRespond(
                                         AlarmResponse.complete,
                                       ),
                                 icon: const Icon(Icons.check_circle_rounded),
@@ -210,7 +225,7 @@ final class _AlarmRingingScreenState extends State<AlarmRingingScreen> {
                                         AlarmResponse.nowNot,
                                       ),
                                 icon: const Icon(Icons.auto_fix_high_rounded),
-                                label: const Text('Agora não — reorganizar'),
+                                label: const Text('Adiar atividade'),
                                 style: OutlinedButton.styleFrom(
                                   minimumSize: const Size(double.infinity, 56),
                                   foregroundColor: RotinaColors.primary,
@@ -250,7 +265,7 @@ final class _AlarmRingingScreenState extends State<AlarmRingingScreen> {
                         ),
                         const SizedBox(height: 22),
                         Text(
-                          'O toque para quando você escolhe. Sem resposta até o fim da duração, reorganizo a fila por importância.',
+                          'O aviso toca uma vez. Parar alarme mantém a atividade pendente; Concluir registra que você terminou.',
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
@@ -276,6 +291,7 @@ final class AlarmResolvedScreen extends StatelessWidget {
     required this.result,
     required this.timeZone,
     required this.onDone,
+    this.onReviewAccess,
     super.key,
   });
 
@@ -283,6 +299,7 @@ final class AlarmResolvedScreen extends StatelessWidget {
   final AlarmResponseResult result;
   final TimeZoneService timeZone;
   final VoidCallback onDone;
+  final VoidCallback? onReviewAccess;
 
   @override
   Widget build(BuildContext context) {
@@ -383,6 +400,12 @@ final class AlarmResolvedScreen extends StatelessWidget {
                         ),
                       ),
                     ],
+                    if (!result.alarmsSynchronized && onReviewAccess != null)
+                      TextButton.icon(
+                        onPressed: onReviewAccess,
+                        icon: const Icon(Icons.notifications_none_rounded),
+                        label: const Text('Revisar acessos dos alarmes'),
+                      ),
                     const SizedBox(height: 34),
                     FilledButton.icon(
                       onPressed: onDone,
@@ -407,6 +430,12 @@ final class AlarmResolvedScreen extends StatelessWidget {
   AlarmResponseResult result,
   String title,
 ) => switch (result.response) {
+  AlarmResponse.silence => (
+    icon: Icons.notifications_off_outlined,
+    heading: 'Aviso silenciado',
+    message:
+        'A atividade continua pendente. Marque como concluída quando terminar.',
+  ),
   AlarmResponse.complete => (
     icon: Icons.check_rounded,
     heading: 'Feito!',
@@ -420,9 +449,12 @@ final class AlarmResolvedScreen extends StatelessWidget {
   ),
   AlarmResponse.nowNot => (
     icon: Icons.auto_fix_high_rounded,
-    heading: 'Rotina resgatada',
-    message:
-        '“$title” encontrou o próximo espaço livre sem apagar sua recorrência original.',
+    heading: result.occurrence.isReminder
+        ? 'Lembrete adiado'
+        : 'Rotina resgatada',
+    message: result.occurrence.isReminder
+        ? 'O aviso voltará no horário abaixo, sem alterar suas outras atividades.'
+        : '“$title” encontrou o próximo espaço livre sem apagar sua recorrência original.',
   ),
 };
 
@@ -455,5 +487,5 @@ String _dateAndTime(TimeZoneService timeZone, DateTime utc) {
   ];
   final time =
       '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
-  return '${weekdays[local.weekday - 1]}, $time';
+  return '${weekdays[local.weekday - 1]}, ${local.day.toString().padLeft(2, "0")}/${local.month.toString().padLeft(2, "0")}/${local.year} às $time';
 }

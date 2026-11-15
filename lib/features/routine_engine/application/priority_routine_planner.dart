@@ -15,6 +15,14 @@ final class PriorityRoutinePlanner implements RoutinePlanner {
     required DateTime nowUtc,
     required UserPreferences preferences,
   }) {
+    if (occurrence.isReminder) {
+      final next = occurrence.copyWith(
+        scheduledStartUtc: nowUtc.toUtc().add(const Duration(minutes: 10)),
+        status: OccurrenceStatus.scheduled,
+        attempt: occurrence.attempt + 1,
+      );
+      return RoutinePlan(rescheduled: next, adjustedOccurrences: [next]);
+    }
     final normalizedNow = nowUtc.toUtc();
     final nextAttempt = occurrence.attempt + 1;
     final localNow = _timeZone.toLocal(normalizedNow);
@@ -38,7 +46,8 @@ final class PriorityRoutinePlanner implements RoutinePlanner {
     final candidates = <_Candidate>[
       _Candidate(replanned, firstAllowedUtc, isTarget: true),
       for (final existing in existingOccurrences)
-        if (existing.id != occurrence.id &&
+        if (!existing.isReminder &&
+            existing.id != occurrence.id &&
             _blocksTime(existing) &&
             existing.scheduledEndUtc.isAfter(normalizedNow))
           _Candidate(existing, existing.scheduledStartUtc.toUtc()),
@@ -84,11 +93,20 @@ final class PriorityRoutinePlanner implements RoutinePlanner {
     required Iterable<ActivityOccurrence> followingOccurrences,
     required DateTime nowUtc,
   }) {
+    if (occurrence.isReminder) {
+      final next = occurrence.copyWith(
+        scheduledStartUtc: nowUtc.toUtc().add(const Duration(minutes: 10)),
+        status: OccurrenceStatus.scheduled,
+        attempt: occurrence.attempt + 1,
+      );
+      return RoutinePlan(rescheduled: next, adjustedOccurrences: [next]);
+    }
     final normalizedNow = nowUtc.toUtc();
     final following =
         followingOccurrences
             .where(
               (item) =>
+                  !item.isReminder &&
                   item.id != occurrence.id &&
                   _blocksTime(item) &&
                   item.scheduledStartUtc.isAfter(occurrence.scheduledStartUtc),

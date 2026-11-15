@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'app/app_dependencies.dart';
+import 'app/startup_gate.dart';
 import 'core/presentation/rotina_theme.dart';
 import 'features/dashboard/presentation/today_screen.dart';
 import 'features/alarms/presentation/alarm_router.dart';
 import 'features/home_widget/presentation/day_widget_bridge.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final dependencies = await AppDependencies.create();
-  runApp(dependencies.provideTo(const DayToDayApp()));
+  runApp(
+    StartupGate(
+      load: () async {
+        final dependencies = await AppDependencies.create();
+        return dependencies.provideTo(const DayToDayApp());
+      },
+      shell: (child) => DayToDayApp(home: child),
+    ),
+  );
 }
 
 class DayToDayApp extends StatelessWidget {
@@ -22,6 +32,13 @@ class DayToDayApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'DayToDay',
       theme: RotinaTheme.light,
+      builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: child ?? const SizedBox.shrink(),
+      ),
+      locale: const Locale("pt", "BR"),
+      supportedLocales: const [Locale("pt", "BR")],
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
       home:
           home ??
           const DayWidgetBridge(child: AlarmRouter(child: TodayScreen())),

@@ -10,17 +10,38 @@ abstract final class DailyTaskSequence {
             left.scheduledStartUtc.compareTo(right.scheduledStartUtc),
       );
     for (final occurrence in sorted) {
-      if (_isPending(occurrence.status)) {
+      if (!occurrence.isReminder && _isPending(occurrence.status)) {
         return occurrence;
       }
     }
     return null;
   }
 
+  static ActivityOccurrence? nextAction(
+    Iterable<ActivityOccurrence> occurrences,
+  ) {
+    final block = firstAvailable(occurrences);
+    final candidates =
+        occurrences
+            .where(
+              (o) =>
+                  _isPending(o.status) &&
+                  (o.isReminder
+                      ? o.acknowledgedAtUtc == null
+                      : o.id == block?.id),
+            )
+            .toList()
+          ..sort((a, b) => a.scheduledStartUtc.compareTo(b.scheduledStartUtc));
+    return candidates.firstOrNull;
+  }
+
   static bool isLocked({
     required ActivityOccurrence occurrence,
     required ActivityOccurrence? available,
-  }) => _isPending(occurrence.status) && occurrence.id != available?.id;
+  }) =>
+      !occurrence.isReminder &&
+      _isPending(occurrence.status) &&
+      occurrence.id != available?.id;
 
   static bool _isPending(OccurrenceStatus status) => switch (status) {
     OccurrenceStatus.scheduled ||

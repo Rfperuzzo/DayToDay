@@ -14,19 +14,23 @@ abstract final class RotinaDimensions {
 }
 
 abstract final class RotinaColors {
-  static const background = Color(0xFFF7F7F5);
+  static const background = Color(0xFFF6F8F5);
   static const surface = Color(0xFFFFFFFF);
-  static const surfaceSoft = Color(0xFFF0F0ED);
-  static const surfaceStrong = Color(0xFFE5E5E0);
-  static const primary = Color(0xFF343833);
-  static const primaryBright = Color(0xFF5C625A);
-  static const primarySoft = Color(0xFFE8EAE5);
-  static const text = Color(0xFF242723);
-  static const textMuted = Color(0xFF646860);
-  static const outline = Color(0xFFD8DBD3);
+  static const surfaceSoft = Color(0xFFEEF5F1);
+  static const surfaceStrong = Color(0xFFDCECE4);
+  static const primary = Color(0xFF145A52);
+  static const primaryBright = Color(0xFF176B64);
+  static const primarySoft = Color(0xFFDCEFE6);
+  static const text = Color(0xFF172F2B);
+  static const textMuted = Color(0xFF4F6862);
+  static const outline = Color(0xFFCADBD3);
   static const onPrimary = Color(0xFFFFFFFF);
-  static const alarmBackground = Color(0xFF242723);
+  static const alarmBackground = Color(0xFF113C37);
+  static const accent = Color(0xFFA74F32);
+  static const accentSoft = Color(0xFFFFE7D6);
   static const danger = Color(0xFFB3261E);
+  static const softShadow = Color(0x20145A52);
+  static const alarmShadow = Color(0x4D113C37);
 }
 
 abstract final class RotinaTheme {
@@ -42,10 +46,10 @@ abstract final class RotinaTheme {
       onSecondary: RotinaColors.onPrimary,
       secondaryContainer: RotinaColors.surfaceStrong,
       onSecondaryContainer: RotinaColors.text,
-      tertiary: RotinaColors.textMuted,
+      tertiary: RotinaColors.accent,
       onTertiary: RotinaColors.onPrimary,
-      tertiaryContainer: RotinaColors.surfaceStrong,
-      onTertiaryContainer: RotinaColors.text,
+      tertiaryContainer: RotinaColors.accentSoft,
+      onTertiaryContainer: RotinaColors.accent,
       surface: RotinaColors.surface,
       onSurface: RotinaColors.text,
       onSurfaceVariant: RotinaColors.textMuted,

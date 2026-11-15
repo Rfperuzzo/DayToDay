@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rotina_jhenifer/app/app_dependencies.dart';
@@ -14,6 +15,79 @@ import 'package:rotina_jhenifer/features/alarms/presentation/alarm_router.dart';
 import 'package:rotina_jhenifer/main.dart';
 
 void main() {
+  testWidgets('barra Android recupera contraste após sair do alarme', (
+    tester,
+  ) async {
+    tester.view.padding = const FakeViewPadding(top: 24, bottom: 24);
+    addTearDown(tester.view.resetPadding);
+    final at = DateTime.utc(2026, 11, 14, 18);
+    final occurrence = ActivityOccurrence(
+      id: 'overlay',
+      activityId: 'overlay',
+      originalStartUtc: at,
+      scheduledStartUtc: at,
+      estimatedDuration: const Duration(minutes: 30),
+      priority: ActivityPriority.normal,
+      status: OccurrenceStatus.completed,
+    );
+    await tester.pumpWidget(
+      DayToDayApp(
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: TextButton(
+              onPressed: () => Navigator.push<void>(
+                context,
+                MaterialPageRoute(
+                  builder: (ringContext) => AlarmRingingScreen(
+                    alarm: RingingAlarmBinding(
+                      occurrenceId: 'overlay',
+                      nativeAlarmId: 1,
+                      scheduledAtUtc: at,
+                      title: 'Rotina',
+                      body: '',
+                    ),
+                    onRespond: (_) => Navigator.pushReplacement<void, void>(
+                      ringContext,
+                      MaterialPageRoute(
+                        builder: (resultContext) => AlarmResolvedScreen(
+                          title: 'Rotina',
+                          result: AlarmResponseResult(
+                            response: AlarmResponse.complete,
+                            occurrence: occurrence,
+                            adjustedOccurrences: [occurrence],
+                            alarmsSynchronized: true,
+                          ),
+                          timeZone: const DeviceTimeZoneService(),
+                          onDone: () => Navigator.pop(resultContext),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              child: const Text('Simular alarme'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(SystemChrome.latestStyle?.statusBarIconBrightness, Brightness.dark);
+    await tester.tap(find.text('Simular alarme'));
+    await tester.pumpAndSettle();
+    expect(SystemChrome.latestStyle?.statusBarIconBrightness, Brightness.light);
+    await tester.ensureVisible(find.text('Concluir'));
+    await tester.tap(find.text('Concluir'));
+    await tester.pumpAndSettle();
+    expect(find.text('Feito!'), findsOneWidget);
+    expect(SystemChrome.latestStyle?.statusBarIconBrightness, Brightness.dark);
+    await tester.ensureVisible(find.text('Voltar para minha rotina'));
+    await tester.tap(find.text('Voltar para minha rotina'));
+    await tester.pumpAndSettle();
+    expect(find.text('Simular alarme'), findsOneWidget);
+    expect(SystemChrome.latestStyle?.statusBarIconBrightness, Brightness.dark);
+  });
+
   testWidgets('aplica identidade visual ao aplicativo', (tester) async {
     await tester.pumpWidget(
       const DayToDayApp(
@@ -69,10 +143,10 @@ void main() {
       ),
     );
 
-    expect(find.text('0 de 1 concluídas'), findsOneWidget);
+    expect(find.text('Progresso · 0 de 1 concluídas'), findsOneWidget);
     expect(find.text('Treino de pernas'), findsNWidgets(2));
     expect(
-      tester.getBottomLeft(find.byType(CustomScrollView)).dy,
+      tester.getBottomLeft(find.byKey(const ValueKey('daily-scroll'))).dy,
       lessThanOrEqualTo(
         tester.getTopLeft(find.byTooltip('Adicionar atividade')).dy,
       ),
@@ -92,7 +166,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('tela de alarme exige uma das três respostas', (tester) async {
+  testWidgets('tela de alarme separa silêncio, conclusão e adiamento', (
+    tester,
+  ) async {
     AlarmResponse? response;
     final scheduledAt = DateTime.now().toUtc();
 
@@ -113,9 +189,17 @@ void main() {
 
     expect(find.text('Treino de pernas'), findsOneWidget);
     expect(find.text('Concluir'), findsOneWidget);
-    expect(find.text('Agora não — reorganizar'), findsOneWidget);
+    expect(find.text('Parar alarme'), findsOneWidget);
+    expect(find.text('Adiar atividade'), findsOneWidget);
     expect(find.text('Pular somente hoje'), findsOneWidget);
-    await tester.tap(find.text('Agora não — reorganizar'));
+    await tester.ensureVisible(find.text('Parar alarme'));
+    await tester.tap(find.text('Parar alarme'));
+    expect(response, AlarmResponse.silence);
+    await tester.ensureVisible(find.text('Concluir'));
+    await tester.tap(find.text('Concluir'));
+    expect(response, AlarmResponse.complete);
+    await tester.ensureVisible(find.text('Adiar atividade'));
+    await tester.tap(find.text('Adiar atividade'));
     expect(response, AlarmResponse.nowNot);
     expect(tester.takeException(), isNull);
   });
@@ -152,13 +236,13 @@ void main() {
         ),
       ),
     );
-    await tester.drag(find.byType(CustomScrollView), const Offset(0, -430));
+    await tester.drag(
+      find.byKey(const ValueKey('daily-scroll')),
+      const Offset(0, -430),
+    );
     await tester.pumpAndSettle();
 
-    expect(
-      find.text('Disponível após concluir a tarefa anterior'),
-      findsOneWidget,
-    );
+    expect(find.text('Após concluir a anterior · Normal'), findsOneWidget);
     await tester.tap(find.byKey(ValueKey('complete-${second.id}')));
     expect(completed, isNull);
     final completionTarget = find.byKey(ValueKey('complete-${first.id}'));
@@ -200,7 +284,7 @@ void main() {
       ),
     );
 
-    expect(find.text('sábado, 16:05'), findsOneWidget);
+    expect(find.text('sábado, 29/08/2026 às 16:05'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

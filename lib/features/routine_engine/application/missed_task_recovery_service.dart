@@ -66,7 +66,10 @@ final class MissedTaskRecoveryService {
     DateTime? detectedAtUtc,
   }) async {
     final occurrence = await _occurrences.findById(occurrenceId);
-    if (occurrence == null || !_isPending(occurrence.status)) {
+    if (occurrence == null ||
+        occurrence.isReminder ||
+        occurrence.acknowledgedAtUtc != null ||
+        !_isPending(occurrence.status)) {
       return null;
     }
     final detectedAt = (detectedAtUtc ?? _clock.nowUtc()).toUtc();

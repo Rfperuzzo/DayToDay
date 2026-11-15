@@ -19,8 +19,13 @@ final class ActivityOccurrence {
     required this.priority,
     required this.status,
     this.attempt = 0,
+    this.kind = ActivityKind.timeBlock,
+    this.acknowledgedAtUtc,
   });
 
+  final ActivityKind kind;
+  final DateTime? acknowledgedAtUtc;
+  bool get isReminder => kind == ActivityKind.reminder;
   final String id;
   final String activityId;
   final DateTime originalStartUtc;
@@ -36,8 +41,15 @@ final class ActivityOccurrence {
     DateTime? scheduledStartUtc,
     OccurrenceStatus? status,
     int? attempt,
+    DateTime? acknowledgedAtUtc,
   }) {
     return ActivityOccurrence(
+      kind: kind,
+      acknowledgedAtUtc:
+          scheduledStartUtc != null &&
+              scheduledStartUtc != this.scheduledStartUtc
+          ? null
+          : acknowledgedAtUtc ?? this.acknowledgedAtUtc,
       id: id,
       activityId: activityId,
       originalStartUtc: originalStartUtc,

@@ -14,10 +14,12 @@ final class ActivityDraft {
     required this.estimatedDuration,
     required this.priority,
     required this.recurrence,
+    this.kind = ActivityKind.timeBlock,
     this.notes = '',
     this.preparationLead,
   });
 
+  final ActivityKind kind;
   final String title;
   final String notes;
   final Duration estimatedDuration;
@@ -59,6 +61,7 @@ final class ActivityCreator {
     final now = _clock.nowUtc();
     final activity = Activity(
       id: 'activity-${now.microsecondsSinceEpoch}',
+      kind: draft.kind,
       title: draft.title,
       notes: draft.notes,
       estimatedDuration: draft.estimatedDuration,

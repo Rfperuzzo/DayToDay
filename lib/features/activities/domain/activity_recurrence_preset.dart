@@ -1,1 +1,1 @@
-enum ActivityRecurrencePreset { once, daily, weekdays }
+enum ActivityRecurrencePreset { once, daily, weekdays, custom }
