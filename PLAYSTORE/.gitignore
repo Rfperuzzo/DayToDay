@@ -1,0 +1,9 @@
+04_BUILD/*.aab
+04_BUILD/*.apk
+04_BUILD/*.apks
+**/*.jks
+**/*.keystore
+**/*.p12
+**/key.properties
+**/*password*
+**/__pycache__/

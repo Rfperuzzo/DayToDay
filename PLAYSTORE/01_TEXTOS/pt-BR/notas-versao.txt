@@ -1,0 +1,8 @@
+<pt-BR>
+Bem-vindo ao DayToDay!
+• Lembretes simples e reserva de tempo opcional.
+• Parar o alarme separado de concluir a atividade.
+• Repetição em dias específicos e subtarefas.
+• Atalho para lembrar em 10 minutos e filtro de pendências.
+• Painel diário, calendário e widget Android.
+</pt-BR>

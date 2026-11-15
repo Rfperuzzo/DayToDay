@@ -1,5 +1,24 @@
 # Memória viva — DayToDay
 
+## Kit de publicação — 15/11/2026
+
+PLAYSTORE reúne materiais pt-BR, seis imagens reais compostas, ícone e destaque,
+política própria, notas ao revisor, declarações propostas e ferramentas locais.
+Contato reaproveitado da ficha pública do fitness por autorização: Thales Melo
+da Silva / thalesmelodasilva@gmail.com. Nenhum arquivo do repositório fitness foi
+aberto. O MONSTRUX aprovou visual e precisão dos textos.
+
+AAB/APK release sem assinatura foram compilados por override temporário, sem
+alterar o Gradle do app. Manifest release sem INTERNET, API36/mínimo24, ELF64 e
+zipalign16KB verificados estaticamente. Execução16KB não testada. Release de QA
+com assinatura Android Debug, mantido fora do kit, abriu no AVD. 102 testes e
+análise limpa repetidos. Os binários sem assinatura são locais/ZIP, fora do Git.
+
+Não publicar ainda: falta chave/certificado do titular, política em URL pública
+e acesso dentro do app, confirmação de permissões restritas, formulários e
+ensaios da loja. Nem este kit nem o merge significam upload ou aprovação Google.
+Nenhum serviço pago, compra, publicação ou chave de produção nesta preparação.
+
 Atualize este documento no mesmo commit de qualquer mudança que altere regras,
 arquitetura, dependências importantes ou escopo.
 

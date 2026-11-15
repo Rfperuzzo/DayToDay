@@ -1,0 +1,90 @@
+{
+  "date": "2026-11-15",
+  "packChecksPassed": true,
+  "readyToPublish": false,
+  "textLengths": {
+    "titulo.txt": 28,
+    "descricao-curta.txt": 78,
+    "descricao-completa.txt": 1827
+  },
+  "images": [
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/01-telefone.png",
+      "width": 1080,
+      "height": 1920,
+      "bitDepth": 8,
+      "pngColorType": 2,
+      "bytes": 183201,
+      "sha256": "e68a79f8c21a326e9f443375517d85d8dc4e65a57c0b467b49f4a5e1ee83f73a"
+    },
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/02-telefone.png",
+      "width": 1080,
+      "height": 1920,
+      "bitDepth": 8,
+      "pngColorType": 2,
+      "bytes": 193878,
+      "sha256": "65c25409b442b62844cc12667fd0be51552b6f0ecb3363f4db1c616fdb9483ee"
+    },
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/03-telefone.png",
+      "width": 1080,
+      "height": 1920,
+      "bitDepth": 8,
+      "pngColorType": 2,
+      "bytes": 187284,
+      "sha256": "76bae2cf3cf2f664bf689dcc4df7b0b0def710047d9bc3feb658790cbc479231"
+    },
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/04-telefone.png",
+      "width": 1080,
+      "height": 1920,
+      "bitDepth": 8,
+      "pngColorType": 2,
+      "bytes": 186347,
+      "sha256": "e1458122200f6d82248ae9e23a35af3d3a6c831f2f2b214605d525c406fc0363"
+    },
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/05-telefone.png",
+      "width": 1080,
+      "height": 1920,
+      "bitDepth": 8,
+      "pngColorType": 2,
+      "bytes": 189943,
+      "sha256": "911f799e79379e937ae2d77ee6035a393bc561f0a35615397c61451ede323e15"
+    },
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/06-telefone.png",
+      "width": 1080,
+      "height": 1920,
+      "bitDepth": 8,
+      "pngColorType": 2,
+      "bytes": 177746,
+      "sha256": "d0820e8143f60d82da08bc5912dbcbee292881505888a0f8b976de169f5e5bb8"
+    },
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/destaque-1024x500.png",
+      "width": 1024,
+      "height": 500,
+      "bitDepth": 8,
+      "pngColorType": 2,
+      "bytes": 24882,
+      "sha256": "db706ba943caa4cf9875a59744974ced8d35e41f8b91465e8777a26ee0fc33fa"
+    },
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/icone-512.png",
+      "width": 512,
+      "height": 512,
+      "bitDepth": 8,
+      "pngColorType": 6,
+      "bytes": 14077,
+      "sha256": "853e9fa9b7466b3327363d9bd588208dc2b0360371b4cdf46fb14f07d75549c7"
+    }
+  ],
+  "publicationPending": [
+    "Upload signing key/certificate",
+    "Public privacy URL and access inside app",
+    "Restricted-permission declarations/eligibility",
+    "Play Console forms and required physical/pre-launch tests"
+  ]
+}

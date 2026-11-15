@@ -1,0 +1,8 @@
+[
+  {"arquivo":"01-telefone.png","ordem":1,"alt":"Painel diário do DayToDay com calendário, próxima atividade e progresso da rotina."},
+  {"arquivo":"02-telefone.png","ordem":2,"alt":"Cadastro de lembrete com horário e repetição, sem reserva de tempo ativada."},
+  {"arquivo":"03-telefone.png","ordem":3,"alt":"Reserva de tempo ativada, com opções de duração para um bloco da agenda."},
+  {"arquivo":"04-telefone.png","ordem":4,"alt":"Seleção de dias específicos da semana para repetir uma atividade."},
+  {"arquivo":"05-telefone.png","ordem":5,"alt":"Menu de lembrete com a ação Lembrar em 10 minutos, edição e subtarefas."},
+  {"arquivo":"06-telefone.png","ordem":6,"alt":"Lista com aviso silenciado ainda pendente e progresso separado da confirmação do alarme."}
+]
