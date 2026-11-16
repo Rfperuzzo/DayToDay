@@ -8,7 +8,7 @@
 - Suporte: thalesmelodasilva@gmail.com.
 - Site: https://rfperuzzo.github.io/DayToDay/
 - Política: https://rfperuzzo.github.io/DayToDay/privacidade.html
-- Pacote permanente: com.senhoritajhenifer.rotina. Versão 1.0.0, código 1.
+- Pacote permanente: com.senhoritajhenifer.rotina. Versão 1.1.0, código 2.
 - Distribuição confirmada pelo titular: gratuito; Brasil; faixas 13–15, 16–17 e 18+.
   Não direcionado a menores de 13 anos; não aderir ao Families por padrão.
   São escolhas de lançamento confirmadas, não uma classificação indicativa já obtida.

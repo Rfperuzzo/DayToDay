@@ -1,7 +1,7 @@
 param(
     [Parameter(Mandatory=$true)][string]$KeyStore,
     [Parameter(Mandatory=$true)][string]$Alias,
-    [string]$UnsignedBundle = (Join-Path (Split-Path $PSScriptRoot -Parent) '04_BUILD/DayToDay-1.0.0-1-SEM-ASSINATURA-NAO-ENVIAR.aab')
+    [string]$UnsignedBundle = (Join-Path (Split-Path $PSScriptRoot -Parent) '04_BUILD/DayToDay-1.1.0-2-SEM-ASSINATURA-NAO-ENVIAR.aab')
 )
 $ErrorActionPreference = 'Stop'
 $KeyStore = (Resolve-Path -LiteralPath $KeyStore).Path
@@ -11,7 +11,7 @@ if ($KeyStore.StartsWith($packageRoot, [StringComparison]::OrdinalIgnoreCase)) {
 $projectRoot = Split-Path $packageRoot -Parent
 if ((Test-Path -LiteralPath (Join-Path $projectRoot 'pubspec.yaml')) -and $KeyStore.StartsWith(($projectRoot + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase)) { throw 'A chave nao pode ficar dentro do repositorio do app.' }
 if ($Alias -match 'debug') { throw 'Nao use uma chave de depuracao para publicar.' }
-$destination = Join-Path (Split-Path $UnsignedBundle -Parent) 'DayToDay-1.0.0-1-ASSINADO-REVISAR.aab'
+$destination = Join-Path (Split-Path $UnsignedBundle -Parent) 'DayToDay-1.1.0-2-ASSINADO-REVISAR.aab'
 if (Test-Path -LiteralPath $destination) { throw 'O destino ja existe. Preserve a versao anterior antes de continuar.' }
 # jarsigner solicita a senha no terminal. Nenhuma senha e recebida como argumento ou salva.
 $bundled = Join-Path $env:ProgramFiles 'Android/Android Studio/jbr/bin/jarsigner.exe'

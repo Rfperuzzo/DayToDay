@@ -17,5 +17,7 @@ podem ser testadas com atividades fictícias.
 
 Política: https://rfperuzzo.github.io/DayToDay/privacidade.html
 Suporte: thalesmelodasilva@gmail.com
-Vídeo real (gravação de tela sem áudio):
+Vídeo histórico da versão 1.0.0 (gravação de tela sem áudio; não comprova os novos avisos da versão 1.1.0):
 https://rfperuzzo.github.io/DayToDay/demonstracao-alarme.html
+
+Para testar a versão 1.1.0, crie dois blocos consecutivos com avisos de início e final ativados. O encontro do final do primeiro com o início do segundo gera um aviso de troca. Parar o aviso mantém as atividades pendentes; a conclusão é feita na rotina. Um bloco também pode ter somente aviso inicial, somente final ou ambos desativados. A jornada visual completa ainda deve ser repetida em aparelho estável antes de publicar.

@@ -16,7 +16,7 @@ for path in sorted(images.glob('*.png')):
   assert (w,h,depth,color)==(1080,1920,8,2),path
   assert 320<=min(w,h) and max(w,h)<=3840 and max(w,h)<=2*min(w,h),path
  results.append({'file':path.relative_to(root).as_posix(),'width':w,'height':h,'bitDepth':depth,'pngColorType':color,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
-assert len(results)==8
+assert len(results)==10
 lengths={}
 for name,maximum in [('titulo.txt',30),('descricao-curta.txt',80),('descricao-completa.txt',4000)]:
  text=(root/'01_TEXTOS/pt-BR'/name).read_text(encoding='utf-8').strip();lengths[name]=len(text)
@@ -24,7 +24,7 @@ for name,maximum in [('titulo.txt',30),('descricao-curta.txt',80),('descricao-co
 notes=(root/'01_TEXTOS/pt-BR/notas-versao.txt').read_text(encoding='utf-8').strip()
 assert notes.startswith('<pt-BR>') and notes.endswith('</pt-BR>') and len(notes)<500
 alt=json.loads((root/'02_VISUAIS/ORDEM_E_TEXTOS_ALTERNATIVOS.json').read_text(encoding='utf-8'))
-assert len(alt)==6 and all(len(x['alt'])<=140 and (images/x['arquivo']).exists() for x in alt)
+assert len(alt)==8 and all(len(x['alt'])<=140 and (images/x['arquivo']).exists() for x in alt)
 contact=json.loads((root/'01_TEXTOS/DADOS_DA_FICHA.json').read_text(encoding='utf-8'))
 assert contact['support_email']=='thalesmelodasilva@gmail.com'
 for ext in ['*.jks','*.keystore','*.p12','key.properties']:
@@ -39,14 +39,14 @@ assert 'android.permission.USE_EXACT_ALARM' not in technical['permissions']
 assert 'android.permission.SCHEDULE_EXACT_ALARM' in technical['permissions']
 assert (root/'02_VISUAIS/DEMONSTRACAO-ALARME.mp4').stat().st_size>100000
 assert (root/'04_BUILD/CERTIFICADO-PUBLICO-UPLOAD.pem').read_text().startswith('-----BEGIN CERTIFICATE-----')
-for name in ['DayToDay-1.0.0-1-PRODUCAO.aab','DayToDay-1.0.0-1-PRODUCAO-TESTE.apk']:
+for name in [b['file'] for b in technical['binaries']]:
  path=root/'04_BUILD'/name
  if path.exists():
   recorded=next(x for x in technical['binaries'] if x['file']==name)
   assert hashlib.sha256(path.read_bytes()).hexdigest()==recorded['sha256'],name
-binary_available=(root/'04_BUILD/DayToDay-1.0.0-1-PRODUCAO.aab').exists()
-report={'date':'2026-11-15','packChecksPassed':True,'readyForConsoleUpload':binary_available,'readyToPublish':False,'textLengths':lengths,'images':results,
- 'publicationPending':['Owner console setup, declarations and Play App Signing','Account-specific eligibility/testing and pre-launch review','Final owner submission; physical-device and 16KB runtime checks remain documented'],
+binary_available=(root/'04_BUILD'/technical['binaries'][0]['file']).exists()
+report={'date':'2026-11-16','packChecksPassed':True,'readyForConsoleUpload':binary_available,'readyToPublish':False,'textLengths':lengths,'images':results,
+ 'publicationPending':['Owner console setup, declarations and Play App Signing','Account-specific eligibility/testing and pre-launch review','Full production UI start/transition/end journey on a stable device remains pending','Final owner submission; physical-device and 16KB runtime checks remain documented'],
  'privateKeysOrPasswordsIncluded':False,'signedBinaryAvailable':binary_available}
 (root/'06_VALIDACAO').mkdir(exist_ok=True)
 (root/'06_VALIDACAO/VALIDACAO_DO_KIT.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

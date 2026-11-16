@@ -1,4 +1,4 @@
-# Segurança dos dados — preenchimento da versão 1.0.0+1
+# Segurança dos dados — preenchimento da versão 1.1.0+2
 
 URL da política: https://rfperuzzo.github.io/DayToDay/privacidade.html
 O app oferece a mesma política offline em Privacidade e suporte.

@@ -1,8 +1,9 @@
 {
-  "date": "2026-11-15",
-  "app_source_commit": "cde6b592593e43eecf9a8a5e2541fb253842a317",
+  "date": "2026-11-16",
+  "app_source_commit": "d97b9331dd88051e1533f8992ab60cce78b37e26",
   "ready_for_console_upload": true,
   "ready_to_publish": false,
+  "production_ui_full_journey_verified": false,
   "private_keys_or_passwords_included": false,
   "files": [
     {
@@ -17,28 +18,28 @@
     },
     {
       "file": "00_ABRIR_AQUI.html",
-      "bytes": 6277,
-      "sha256": "e89f4bccec144a48ad5341c2ebad76feff3019d72058ca5c568655bf1d941386"
+      "bytes": 7353,
+      "sha256": "b69fd9288d8fee89e3480739fe5e70b31f1ffec1b9c476e2d447eb392eb548d0"
     },
     {
       "file": "00_LEIA_PRIMEIRO.md",
-      "bytes": 2380,
-      "sha256": "9e590921818589a27a1f67093cf973d407f19b21050b7a5dab28d929f2bad55e"
+      "bytes": 2920,
+      "sha256": "7fda41be61f5c2089b9fd9121f612bc6305aa976d68036653d4152bfd60a13b2"
     },
     {
       "file": "01_TEXTOS/COMENTARIOS_PARA_REVISAO.md",
-      "bytes": 1246,
-      "sha256": "4cd2fa485fef59ac67832908fa827246d34307539077083c65e938a1d548c952"
+      "bytes": 1755,
+      "sha256": "3b180d5957151bdb71a513c8bcaf5a7edfc4f1d637c4e0589b662c6717be608e"
     },
     {
       "file": "01_TEXTOS/DADOS_DA_FICHA.json",
       "bytes": 1181,
-      "sha256": "3ba1415d9019b6f003cc0cc3ac0cbe3d76ccd419b86cda4dd031303e79334e79"
+      "sha256": "753479b7bfe78eeb4462831b563060ecf91a9931b747dfa8836224d3a4b9cb71"
     },
     {
       "file": "01_TEXTOS/pt-BR/descricao-completa.txt",
-      "bytes": 1903,
-      "sha256": "5d34724c57d87810a00f57784367451937f19fd56548deb7d32827448801cd14"
+      "bytes": 2227,
+      "sha256": "631fae35829add4dcda4194fa8f61a502fc941d5edd723ba349fea2a5a06cb80"
     },
     {
       "file": "01_TEXTOS/pt-BR/descricao-curta.txt",
@@ -47,8 +48,8 @@
     },
     {
       "file": "01_TEXTOS/pt-BR/notas-versao.txt",
-      "bytes": 316,
-      "sha256": "982250641a6a3e066c2f1154a1be73b8f26e64dc0f358f7ef5d0c8229f9274b8"
+      "bytes": 393,
+      "sha256": "133e6888f8760e4451987204347aa89a2aacacd3b09057fd5d2e049eab0c6766"
     },
     {
       "file": "01_TEXTOS/pt-BR/titulo.txt",
@@ -77,8 +78,8 @@
     },
     {
       "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/03-telefone.png",
-      "bytes": 187284,
-      "sha256": "76bae2cf3cf2f664bf689dcc4df7b0b0def710047d9bc3feb658790cbc479231"
+      "bytes": 222110,
+      "sha256": "cf21579a88377385765e2baef4f337e5bf7f223d1f98181ff13e533fe923e9e1"
     },
     {
       "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/04-telefone.png",
@@ -96,6 +97,16 @@
       "sha256": "d0820e8143f60d82da08bc5912dbcbee292881505888a0f8b976de169f5e5bb8"
     },
     {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/07-telefone.png",
+      "bytes": 307570,
+      "sha256": "fc890694926b58c2e62b71051487da505c1b8f77835516037c9fabc15574e0d2"
+    },
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/08-telefone.png",
+      "bytes": 317449,
+      "sha256": "2f8edc5b2c836a5d712ea9db7cea12970e66e7c1f907190d729d90a3869f73fb"
+    },
+    {
       "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/destaque-1024x500.png",
       "bytes": 24882,
       "sha256": "db706ba943caa4cf9875a59744974ced8d35e41f8b91465e8777a26ee0fc33fa"
@@ -107,13 +118,23 @@
     },
     {
       "file": "02_VISUAIS/ORDEM_E_TEXTOS_ALTERNATIVOS.json",
-      "bytes": 787,
-      "sha256": "bb298c85e5549f95148409d2a2f94b33f53c691cadce5cdedd7afe2a8fa92f82"
+      "bytes": 1257,
+      "sha256": "26a1efc166891ac293b34b7687ec3013e9c932baee1e7b38b850db2334c5f16a"
     },
     {
       "file": "02_VISUAIS/originais/dias-especificos.png",
       "bytes": 158874,
       "sha256": "21498ac788b8ed9d1eb09f2a0237914ea8cd22334b25565004c96d2d8af1d368"
+    },
+    {
+      "file": "02_VISUAIS/originais/final-bloco.png",
+      "bytes": 412468,
+      "sha256": "66454f3a0470e11feec2eacc8136a7677eca2fb21a98b29bc50dc3ddb53de651"
+    },
+    {
+      "file": "02_VISUAIS/originais/inicio-final.png",
+      "bytes": 159207,
+      "sha256": "d2c910a8d8cbd0d0a4d9b8063b74bb4e84d89ea53ee48448dcbac8c842cf5685"
     },
     {
       "file": "02_VISUAIS/originais/lembrete.png",
@@ -141,14 +162,19 @@
       "sha256": "8c68533fbb4a6940965dd71476c4567f4e6e6e4e567fdc28fe46167d3628ad05"
     },
     {
+      "file": "02_VISUAIS/originais/troca-atividades.png",
+      "bytes": 398865,
+      "sha256": "daa4c1206861c4ddb0e710273b26608c3162066135ca5564b3dfccf411da1f5f"
+    },
+    {
       "file": "02_VISUAIS/ROTEIRO_VIDEO.md",
-      "bytes": 1842,
-      "sha256": "3054d4b0e17b93ada8d2293068cfc1944dd6c48ca3245f3a66b408636c157c1a"
+      "bytes": 2219,
+      "sha256": "963f5a5bfce93d20a5ec664662fc0c3fe6a1d73d952872d39559422e05254fa6"
     },
     {
       "file": "03_POLITICAS_E_DECLARACOES/PERMISSOES_E_REVISAO.md",
-      "bytes": 3597,
-      "sha256": "9a315a527db68aafcde2a05865e17bdf90b62b520983fd3dfffea83ae30b3770"
+      "bytes": 3798,
+      "sha256": "8cf272eb58de7925515d85b78b2a80c90c7e3bc16f826101879f96f4828b5a77"
     },
     {
       "file": "03_POLITICAS_E_DECLARACOES/privacidade.html",
@@ -163,17 +189,17 @@
     {
       "file": "03_POLITICAS_E_DECLARACOES/QUESTIONARIOS_CONSOLE.md",
       "bytes": 3146,
-      "sha256": "48092bb0e6bda65d458639d9655570f97ea44e0615205de1037bc0fe410a0bc3"
+      "sha256": "129b4173f31b90fe7c62c2ad365969002c09b7eef7e7880d60d4cda5c4bb87cb"
     },
     {
       "file": "03_POLITICAS_E_DECLARACOES/SEGURANCA_DOS_DADOS.md",
       "bytes": 1719,
-      "sha256": "19c879b84878770c7a988b4a6ef4715fce4b3ea1a33fa4f8bc20238078527016"
+      "sha256": "b6e1fc8d59d572e02eb1a77d86be6e3706515477a931d740703f76a8b5302804"
     },
     {
       "file": "04_BUILD/AAB-SHA256.txt",
       "bytes": 96,
-      "sha256": "7de89dfb1a2fd481847f9bacecf44ebaac10f7203a58a458411a02da4b681fc2"
+      "sha256": "dceb5942fc38a6b34211c8d8f51d0c5054a04bc46aa3a43566a5e136bd4345d1"
     },
     {
       "file": "04_BUILD/ASSINATURA_E_BACKUP.md",
@@ -186,24 +212,24 @@
       "sha256": "56b92ee50d00ff4bd05936a9d900243bbb32ef552d6385cdc501745d367ac905"
     },
     {
-      "file": "04_BUILD/DayToDay-1.0.0-1-PRODUCAO-TESTE.apk",
-      "bytes": 64809198,
-      "sha256": "6fc41b117aeb86dd1608d462de64e2478e3a4a1d109c1064790645267d6c0d20"
+      "file": "04_BUILD/DayToDay-1.1.0-2-PRODUCAO-TESTE.apk",
+      "bytes": 64858354,
+      "sha256": "9689e065431559735f9fd81aebb0d209e550ee1487c945331ef32bec1f1806c5"
     },
     {
-      "file": "04_BUILD/DayToDay-1.0.0-1-PRODUCAO.aab",
-      "bytes": 62976727,
-      "sha256": "57021a4c617b191d6872f042a04beb17568394196f1fc7367107694bf18557c6"
+      "file": "04_BUILD/DayToDay-1.1.0-2-PRODUCAO.aab",
+      "bytes": 63087728,
+      "sha256": "2b4afb5051f0c934e948b3b738849dd7e847658280fcddc45fe7ad828877d6b3"
     },
     {
       "file": "04_BUILD/LEIA_ANTES_DE_ENVIAR.md",
       "bytes": 1459,
-      "sha256": "241fbdf681cd4c1e4b8039619f5bba042e7c7e573c52e4e3c8fd58e04386af81"
+      "sha256": "72925acf3edb8620c4ef6b08486c06ee10f2b9939660fbfe3c0d38b910a9e047"
     },
     {
       "file": "04_BUILD/VERIFICACAO_TECNICA.json",
-      "bytes": 4536,
-      "sha256": "c51e76c1b9b6dc03c1971970f257d8dede0a743b494360145c5af11b829f4434"
+      "bytes": 6478,
+      "sha256": "91096f0b4a62a14e15a4eaad475485950fff1494b1846c65ead08c4e156f1ed0"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/arte/destaque.html",
@@ -227,8 +253,8 @@
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/arte/telefone-03.html",
-      "bytes": 1335,
-      "sha256": "0242286c297a3c698c1f595fd5801dd1cfd97deb92eadeb3a2be59e6165ba14c"
+      "bytes": 1331,
+      "sha256": "a11831a12bd84b9eb74e7c0bea6365d98499484944f2781e2a8e95cf727589ba"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/arte/telefone-04.html",
@@ -246,14 +272,29 @@
       "sha256": "b27bc42fef296b437fe86d87a522e26114834e100b2ea20127329b9d42c3d474"
     },
     {
+      "file": "05_FONTES_E_FERRAMENTAS/arte/telefone-07.html",
+      "bytes": 1338,
+      "sha256": "e391525886b9ae5f13fdd24db5c6d47519a6082d9e1e9d3985d5abe43fbc2de5"
+    },
+    {
+      "file": "05_FONTES_E_FERRAMENTAS/arte/telefone-08.html",
+      "bytes": 1334,
+      "sha256": "f0a2de90bea30721b251483d6dd1bc179b630b6277241c7400443945f1a10e00"
+    },
+    {
       "file": "05_FONTES_E_FERRAMENTAS/Assinar-AAB.ps1",
       "bytes": 2392,
-      "sha256": "70879e92c306be4beb330c9feb008fd0289608c9da13429d61c5ff22489df044"
+      "sha256": "3bca03f23ac1f1e092fb31b802ce6cf7a1e3d18c1923274784b3090dbbbeace7"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/Backup-Assinatura.ps1",
       "bytes": 2994,
       "sha256": "d2572d3e0c306db0010d1ef2fc4f1e6531be10bdf385e6f1f1a14c44d642b0bb"
+    },
+    {
+      "file": "05_FONTES_E_FERRAMENTAS/CAPTURAS_INICIO_FIM.json",
+      "bytes": 3369,
+      "sha256": "c7e2825f9bfff110b05a192d1c427d33c61532df3f29317e29782ca6c8b1dcb0"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/CAPTURAS_ORIGEM.json",
@@ -266,19 +307,29 @@
       "sha256": "bcfeea105825dbe0cfa3e79f40cd00c8588870c32ad8ecdce705933f4ce2c828"
     },
     {
+      "file": "05_FONTES_E_FERRAMENTAS/FONTE_RENDER_WIDGETS.dart.txt",
+      "bytes": 10585,
+      "sha256": "7ea049eb6af4198ab8bf62ea1ee3274beae884054f874b2c4302d0798247202d"
+    },
+    {
       "file": "05_FONTES_E_FERRAMENTAS/FONTES_OFICIAIS.md",
       "bytes": 2765,
       "sha256": "9443fed7e4ef5cbaf49bf3822c0ae1632691d9aead78f02ae0e633a8219e2ccf"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/Gerar-AAB-SemAssinatura.ps1",
-      "bytes": 1979,
-      "sha256": "ecf4dd3c10d785dafbb138c52f49771c23fa97e023946e3306e189a95de0508d"
+      "bytes": 2401,
+      "sha256": "cfaa2c935cadac5ef7ce4ecdcc2276da330d47f161ef506628f40a39fadac6f0"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/Gerar-Producao.ps1",
-      "bytes": 5468,
-      "sha256": "3d559be59536dae7d2926c706c17311f15cd940850c5eee8c9a53eb0cc793005"
+      "bytes": 5972,
+      "sha256": "366b1f4e9b9806d6e9ff2b9842878b8104d43ea6e083440d9f403f7c0b40e076"
+    },
+    {
+      "file": "05_FONTES_E_FERRAMENTAS/ORIGEM_RENDER_WIDGETS.md",
+      "bytes": 2126,
+      "sha256": "160ea86580c6674d9efa431a754ed8c4b03d6cd016123baa4b2c4a8faaf1be89"
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/preparar_materiais.py",
@@ -292,8 +343,8 @@
     },
     {
       "file": "05_FONTES_E_FERRAMENTAS/validar_kit.py",
-      "bytes": 3821,
-      "sha256": "7d14d4b6992826498a0cd2fefe57cc7056bf673d46741568bba60daad9b80dbf"
+      "bytes": 3881,
+      "sha256": "29821f171f5e8e611158e5fe951be1b8ccfb54909a9179420b0289e2767e4c9a"
     },
     {
       "file": "06_VALIDACAO/CAPTURAS/01-inicio-producao.png",
@@ -336,9 +387,49 @@
       "sha256": "facefb0b376081a4ed51a0f2d6a3f453f3c7c064fd39cd9e2d594805a7353852"
     },
     {
-      "file": "06_VALIDACAO/ENTREGA_PRODUCAO.md",
+      "file": "06_VALIDACAO/CAPTURAS_INICIO_FIM/00-dados-legados-preservados.png",
+      "bytes": 170611,
+      "sha256": "f354daca2ebc28d93c6ee241cbeb9493043c982f14faac051f8da6e5a13c51f1"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS_INICIO_FIM/04-inicio-real-silenciado.png",
+      "bytes": 92479,
+      "sha256": "40db1a6c229c3d801de5425615e8be80e3346e274e6468ed03766ba8829e693f"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS_INICIO_FIM/04-inicio-real.png",
+      "bytes": 180434,
+      "sha256": "28b0b1843ba891dc9fa3a5d35d3bc36a4885dcbc86904a0e401b0c60e0f53ae0"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS_INICIO_FIM/06-final-real-silenciado.png",
+      "bytes": 89421,
+      "sha256": "f7690c71f23b85f20e2576273b30dd4d215f45a32adb0b97159995a659aea076"
+    },
+    {
+      "file": "06_VALIDACAO/CAPTURAS_INICIO_FIM/06-final-real.png",
+      "bytes": 228242,
+      "sha256": "0d653968120bc9d838260109d541ccfad9d88eec3b75d504ae2c55dec638f6ca"
+    },
+    {
+      "file": "06_VALIDACAO/ENSAIO_NATIVO_INICIO_FIM.json",
+      "bytes": 394,
+      "sha256": "548243f9b23d7c60856523b9de3911e3bf90b4be1c6481530088a06c6d7790a6"
+    },
+    {
+      "file": "06_VALIDACAO/ENTREGA_1.0.0_HISTORICA.md",
       "bytes": 3190,
       "sha256": "32421bfb8e127b6cddaad849058ba4d3ff9404aed8e910b307d2c5ea62064b6a"
+    },
+    {
+      "file": "06_VALIDACAO/ENTREGA_PRODUCAO.md",
+      "bytes": 2387,
+      "sha256": "21a783694f0742bccfd6bec094efb07d5d8da7bfd62c0736591b05353609e8db"
+    },
+    {
+      "file": "06_VALIDACAO/JORNADA_PRODUCAO_INICIO_FIM.json",
+      "bytes": 922,
+      "sha256": "abe4a1d063a7c487a24479d8dfdf2dd5932f84144f4f99401f9a6b79e720dff8"
     },
     {
       "file": "06_VALIDACAO/POLITICA_PUBLICA.json",
@@ -356,24 +447,29 @@
       "sha256": "bd6510fbd2b45650fb36db4c63abc88c7d24a23a1718139474a0a0f559672516"
     },
     {
+      "file": "06_VALIDACAO/REVISAO_MONSTRUX_INICIO_FIM.md",
+      "bytes": 1323,
+      "sha256": "73affec78c8da485ac0a36077f9e18c3f87cf3596a50c0768d5872564b3cd888"
+    },
+    {
       "file": "06_VALIDACAO/REVISAO_MONSTRUX_PRODUCAO.md",
       "bytes": 1050,
       "sha256": "2b5d5bc6be4639642cea3f6fbc74d8ca23334147ebf359b06ca11e2437839d63"
     },
     {
       "file": "06_VALIDACAO/VALIDACAO_DO_KIT.json",
-      "bytes": 2819,
-      "sha256": "2591483eb4630e71aac5c212e91b851450d21adbcec660908686d30b69619f61"
+      "bytes": 3468,
+      "sha256": "80bd5c2fd9bbd860eeb357d488efe8bd3fcaf71e6b33088101e2e3cffbf3580a"
     },
     {
       "file": "CHECKLIST_PUBLICACAO.md",
-      "bytes": 2231,
-      "sha256": "8b08e4ad86468621e51f86ad2f57b2ef7d80dacf88f3d667ce21e17973e249d1"
+      "bytes": 2743,
+      "sha256": "0d2ed4a7a07cc7a28e19da164fb7cff093b18c32e50d689a2462c39c28679e17"
     },
     {
       "file": "PASSO_A_PASSO_PLAY_CONSOLE.md",
       "bytes": 3943,
-      "sha256": "3f3ff0c8fe6561bb3eee85bfbaf95b45bed8a4392a374c91112e31092353fb7b"
+      "sha256": "2f0a0b246e0e140a88908200bff9affc11958efbac72dc8b4aa329b558eaf6b1"
     }
   ]
 }

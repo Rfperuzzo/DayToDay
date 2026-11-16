@@ -1,0 +1,74 @@
+{
+  "kind": "real_widget_render_for_presentation",
+  "native_delivery_evidence": false,
+  "origin": "Flutter WidgetTester + production widgets + RepaintBoundary.toImage(pixelRatio:3)",
+  "rendered_at_utc": "2026-11-16T15:32:26.766228Z",
+  "logical_size": [
+    360,
+    800
+  ],
+  "pixel_size": [
+    1080,
+    2400
+  ],
+  "pixel_ratio": 3,
+  "locale": "pt-BR",
+  "text_scale": 1,
+  "theme": "current DayToDay light",
+  "fonts": [
+    "Roboto regular/medium/bold/black from installed Flutter SDK cache",
+    "MaterialIcons from installed Flutter SDK cache"
+  ],
+  "font_root": "C:/src/flutter/bin/cache/artifacts/material_fonts",
+  "presentation_font_normalization": "Real SDK Roboto assigned explicitly to FilledButton text style; text theme adds Windows Segoe UI Symbol fallback for arrow glyph. No widget content/layout/behavior changed.",
+  "data": "Synthetic blocks Estudar09:30-10:00 and Praticar leitura10:00-10:30; no production DB or platform alarm calls",
+  "clock": "Form clock fixed2026-11-16T09:00Z. Alarm widget wall clock uses real TimeOfDay.now; not frozen.",
+  "os_chrome": "None. These are widget renders, not Android OS screenshots.",
+  "limits": [
+    "No proof of scheduling, sound, vibration, permission, notification or full-screen delivery",
+    "Not a physical device or AVD execution",
+    "No secret/key/fitness access; no paid or external service"
+  ],
+  "images": [
+    {
+      "file": "05-troca-widget.png",
+      "scenario": "transition",
+      "sha256": "daa4c1206861c4ddb0e710273b26608c3162066135ca5564b3dfccf411da1f5f"
+    },
+    {
+      "file": "06-final-widget.png",
+      "scenario": "end",
+      "sha256": "66454f3a0470e11feec2eacc8136a7677eca2fb21a98b29bc50dc3ddb53de651"
+    },
+    {
+      "file": "03-configurar-widget.png",
+      "scenario": "Real NewActivitySheet, start09:30/end10:00,30min,both alertsON; scrolled to block timing",
+      "sha256": "d2c910a8d8cbd0d0a4d9b8063b74bb4e84d89ea53ee48448dcbac8c842cf5685"
+    }
+  ],
+  "source_sha256": {
+    "lib/main.dart": "840f1744ea54234705c1a2fad324f37138096d1e963d1bfff143f188f4924a87",
+    "lib/core/presentation/rotina_theme.dart": "de9178565785e31e2140573c8f5cdf5635d29c025d96baa6cc871141fcfb431a",
+    "lib/features/alarms/presentation/alarm_screen.dart": "e0a3a05a3eeb3d313b2a4066c011b9b546a7b9029ed01a7c81ff43ff3ba934c9",
+    "lib/features/activities/presentation/new_activity_sheet.dart": "03f1e6e8ca67a093ac99e5b7989d0ecc1bd92a37ed83b8a65dc3bf1d1e42bdee",
+    ".dart_tool/boundary-alarms/presentation_render_test.dart": "7ea049eb6af4198ab8bf62ea1ee3274beae884054f874b2c4302d0798247202d"
+  },
+  "store_version": "1.1.0+2",
+  "store_files": [
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/03-telefone.png",
+      "raw": "02_VISUAIS/originais/inicio-final.png",
+      "rawSha256": "d2c910a8d8cbd0d0a4d9b8063b74bb4e84d89ea53ee48448dcbac8c842cf5685"
+    },
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/07-telefone.png",
+      "raw": "02_VISUAIS/originais/troca-atividades.png",
+      "rawSha256": "daa4c1206861c4ddb0e710273b26608c3162066135ca5564b3dfccf411da1f5f"
+    },
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/08-telefone.png",
+      "raw": "02_VISUAIS/originais/final-bloco.png",
+      "rawSha256": "66454f3a0470e11feec2eacc8136a7677eca2fb21a98b29bc50dc3ddb53de651"
+    }
+  ]
+}

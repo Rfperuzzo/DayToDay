@@ -6,6 +6,12 @@ param(
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = (Resolve-Path -LiteralPath $ProjectRoot).Path
 if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot 'pubspec.yaml'))) { throw 'Informe a pasta do projeto DayToDay.' }
+$manifestText = Get-Content -LiteralPath (Join-Path $ProjectRoot 'pubspec.yaml') -Raw
+$versionMatch = [regex]::Match($manifestText, '(?m)^version:\s*([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+)\s*$')
+if (-not $versionMatch.Success) { throw 'Versao do pubspec deve ter o formato X.Y.Z+codigo.' }
+$versionName = $versionMatch.Groups[1].Value
+$versionCode = $versionMatch.Groups[2].Value
+$artifactPrefix = "DayToDay-$versionName-$versionCode"
 $SigningDirectory = [IO.Path]::GetFullPath($SigningDirectory)
 if ($SigningDirectory.StartsWith($ProjectRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'A chave deve ficar fora do repositorio.' }
 $jdk = Join-Path $env:ProgramFiles 'Android/Android Studio/jbr'
@@ -48,15 +54,15 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Falha ao exportar certificado publico.' }
     Push-Location -LiteralPath (Join-Path $ProjectRoot 'android')
     try {
-        & .\gradlew.bat '--offline' '--no-daemon' ':app:bundleRelease' ':app:assembleRelease' "-Ptarget=$ProjectRoot/lib/main.dart" '-Ptarget-platform=android-arm,android-arm64,android-x64' '-Ptree-shake-icons=true'
+        & .\gradlew.bat '--offline' '--no-daemon' ':app:bundleRelease' ':app:assembleRelease' "-Ptarget=$ProjectRoot/lib/main.dart" '-Ptarget-platform=android-arm,android-arm64,android-x64' "-Pdaytoday.versionName=$versionName" "-Pdaytoday.versionCode=$versionCode" '-Ptree-shake-icons=true'
         if ($LASTEXITCODE -ne 0) { throw 'Build de producao falhou.' }
     } finally { Pop-Location }
-    $bundle = Join-Path $destination 'DayToDay-1.0.0-1-PRODUCAO.aab'
+    $bundle = Join-Path $destination "$artifactPrefix-PRODUCAO.aab"
     # Re-sign using the same upload key so JAR metadata comes first for both
     # JarFile and JarInputStream readers. No remote timestamp or paid service.
     & (Join-Path $jdk 'bin/jarsigner.exe') '-keystore' $key '-storepass:env' 'DAYTODAY_UPLOAD_PASSWORD' '-keypass:env' 'DAYTODAY_UPLOAD_PASSWORD' '-signedjar' $bundle (Join-Path $ProjectRoot 'build/app/outputs/bundle/release/app-release.aab') $aliasName
     if ($LASTEXITCODE -ne 0) { throw 'Assinatura final do AAB falhou.' }
-    Copy-Item -LiteralPath (Join-Path $ProjectRoot 'build/app/outputs/apk/release/app-release.apk') -Destination (Join-Path $destination 'DayToDay-1.0.0-1-PRODUCAO-TESTE.apk')
+    Copy-Item -LiteralPath (Join-Path $ProjectRoot 'build/app/outputs/apk/release/app-release.apk') -Destination (Join-Path $destination "$artifactPrefix-PRODUCAO-TESTE.apk")
     & (Join-Path $jdk 'bin/jarsigner.exe') '-verify' $bundle
     if ($LASTEXITCODE -ne 0) { throw 'Verificacao da assinatura falhou.' }
     (Get-FileHash -LiteralPath $bundle -Algorithm SHA256).Hash.ToLowerInvariant() | Set-Content (Join-Path $destination 'AAB-SHA256.txt')

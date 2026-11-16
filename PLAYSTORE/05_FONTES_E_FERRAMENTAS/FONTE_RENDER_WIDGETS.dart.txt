@@ -1,0 +1,291 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:rotina_jhenifer/main.dart';
+import 'package:rotina_jhenifer/core/time/clock.dart';
+import 'package:rotina_jhenifer/core/time/time_zone_service.dart';
+import 'package:rotina_jhenifer/features/activities/presentation/new_activity_sheet.dart';
+import 'package:rotina_jhenifer/features/alarms/domain/alarm_gateway.dart';
+import 'package:rotina_jhenifer/features/alarms/domain/alarm_permission_gateway.dart';
+import 'package:rotina_jhenifer/features/alarms/presentation/alarm_screen.dart';
+
+const root = 'C:/Users/ramon/DayToDay-MONSTRUX-Pilot';
+const output = '$root/.dart_tool/boundary-alarms/widget-presentation';
+const fontRoot = 'C:/src/flutter/bin/cache/artifacts/material_fonts';
+final seed = DateTime.utc(2026, 11, 16, 9);
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async {
+    final roboto = FontLoader('Roboto');
+    for (final name in [
+      'roboto-regular.ttf',
+      'roboto-medium.ttf',
+      'roboto-bold.ttf',
+      'roboto-black.ttf',
+    ]) {
+      roboto.addFont(
+        Future.value(
+          ByteData.sublistView(await File('$fontRoot/$name').readAsBytes()),
+        ),
+      );
+    }
+    await roboto.load();
+    final symbols = FontLoader('Segoe UI Symbol');
+    symbols.addFont(
+      Future.value(
+        ByteData.sublistView(
+          await File('C:/Windows/Fonts/seguisym.ttf').readAsBytes(),
+        ),
+      ),
+    );
+    await symbols.load();
+    final icons = FontLoader('MaterialIcons');
+    icons.addFont(
+      Future.value(
+        ByteData.sublistView(
+          await File('$fontRoot/materialicons-regular.otf').readAsBytes(),
+        ),
+      ),
+    );
+    await icons.load();
+  });
+  testWidgets('renders real widgets for presentation; not native delivery evidence', (
+    tester,
+  ) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    await tester.binding.setSurfaceSize(const Size(360, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    tester.platformDispatcher.alwaysUse24HourFormatTestValue = true;
+    addTearDown(tester.platformDispatcher.clearAlwaysUse24HourTestValue);
+    final boundaryKey = GlobalKey();
+    Directory(output).createSync(recursive: true);
+    final metadata = <String, Object?>{
+      'kind': 'real_widget_render_for_presentation',
+      'native_delivery_evidence': false,
+      'origin':
+          'Flutter WidgetTester + production widgets + RepaintBoundary.toImage(pixelRatio:3)',
+      'rendered_at_utc': DateTime.now().toUtc().toIso8601String(),
+      'logical_size': [360, 800],
+      'pixel_size': [1080, 2400],
+      'pixel_ratio': 3,
+      'locale': 'pt-BR',
+      'text_scale': 1,
+      'theme': 'current DayToDay light',
+      'fonts': [
+        'Roboto regular/medium/bold/black from installed Flutter SDK cache',
+        'MaterialIcons from installed Flutter SDK cache',
+      ],
+      'font_root': fontRoot,
+      'presentation_font_normalization':
+          'Real SDK Roboto assigned explicitly to FilledButton text style; text theme adds Windows Segoe UI Symbol fallback for arrow glyph. No widget content/layout/behavior changed.',
+      'data':
+          'Synthetic blocks Estudar09:30-10:00 and Praticar leitura10:00-10:30; no production DB or platform alarm calls',
+      'clock':
+          'Form clock fixed2026-11-16T09:00Z. Alarm widget wall clock uses real TimeOfDay.now; not frozen.',
+      'os_chrome':
+          'None. These are widget renders, not Android OS screenshots.',
+      'limits': [
+        'No proof of scheduling, sound, vibration, permission, notification or full-screen delivery',
+        'Not a physical device or AVD execution',
+        'No secret/key/fitness access; no paid or external service',
+      ],
+      'images': <Object?>[],
+    };
+    Future<void> mount(Widget child) async {
+      await tester.pumpWidget(
+        RepaintBoundary(
+          key: boundaryKey,
+          child: DayToDayApp(home: _PresentationFonts(child: child)),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> capture(String filename, String scenario) async {
+      expect(tester.takeException(), isNull);
+      await tester.pump();
+      final boundary =
+          boundaryKey.currentContext!.findRenderObject()!
+              as RenderRepaintBoundary;
+      final bytes = await tester.runAsync(() async {
+        final image = await boundary.toImage(pixelRatio: 3);
+        final data = await image.toByteData(format: ui.ImageByteFormat.png);
+        image.dispose();
+        return data!.buffer.asUint8List();
+      });
+      await tester.runAsync(
+        () => File('$output/$filename').writeAsBytes(bytes!, flush: true),
+      );
+      (metadata['images']! as List<Object?>).add({
+        'file': filename,
+        'scenario': scenario,
+        'sha256': sha256.convert(bytes!).toString(),
+      });
+    }
+
+    for (final phase in [AlarmPhase.transition, AlarmPhase.end]) {
+      await mount(
+        AlarmRingingScreen(
+          key: ValueKey(phase),
+          alarm: RingingAlarmBinding(
+            occurrenceId: 'presentation-reading',
+            previousOccurrenceId: phase == AlarmPhase.transition
+                ? 'presentation-study'
+                : null,
+            phase: phase,
+            nativeAlarmId: phase == AlarmPhase.transition ? 920001 : 920002,
+            scheduledAtUtc: seed.add(
+              Duration(minutes: phase == AlarmPhase.transition ? 60 : 90),
+            ),
+            title: phase == AlarmPhase.transition
+                ? 'Estudar → Praticar leitura'
+                : 'Praticar leitura',
+            body: phase == AlarmPhase.transition
+                ? 'Hora de trocar. Termina: Estudar. Começa: Praticar leitura.'
+                : 'Seu período reservado terminou. A conclusão é feita por você.',
+            estimatedDuration: const Duration(minutes: 30),
+          ),
+          onRespond: (_) {},
+        ),
+      );
+      await capture(
+        phase == AlarmPhase.transition
+            ? '05-troca-widget.png'
+            : '06-final-widget.png',
+        phase.name,
+      );
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    }
+    await mount(
+      Scaffold(
+        body: NewActivitySheet(
+          initialDay: seed,
+          timeZone: const _Utc(),
+          clock: const _FixedClock(),
+          permissions: _NeverPermissions(),
+          onCreate: (_) async =>
+              throw StateError('Presentation harness must never save.'),
+        ),
+      ),
+    );
+    await tester.enterText(find.byType(TextFormField).first, 'Estudar');
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tester.ensureVisible(find.text('Reservar tempo na agenda'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Reservar tempo na agenda'));
+    await tester.pumpAndSettle();
+    final endToggle = find.byKey(const ValueKey('block-notify-end'));
+    await tester.ensureVisible(endToggle);
+    await tester.pumpAndSettle();
+    await tester.tap(endToggle);
+    await tester.pumpAndSettle();
+    await Scrollable.ensureVisible(
+      tester.element(find.text('Início')),
+      alignment: 0,
+      duration: Duration.zero,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Duração: 30 min'), findsOneWidget);
+    expect(
+      tester
+          .widget<SwitchListTile>(
+            find.byKey(const ValueKey('block-notify-start')),
+          )
+          .value,
+      isTrue,
+    );
+    expect(tester.widget<SwitchListTile>(endToggle).value, isTrue);
+    await capture(
+      '03-configurar-widget.png',
+      'Real NewActivitySheet, start09:30/end10:00,30min,both alertsON; scrolled to block timing',
+    );
+    final sources = <String, String>{};
+    for (final relative in [
+      'lib/main.dart',
+      'lib/core/presentation/rotina_theme.dart',
+      'lib/features/alarms/presentation/alarm_screen.dart',
+      'lib/features/activities/presentation/new_activity_sheet.dart',
+      '.dart_tool/boundary-alarms/presentation_render_test.dart',
+    ]) {
+      sources[relative] = sha256
+          .convert(File('$root/$relative').readAsBytesSync())
+          .toString();
+    }
+    metadata['source_sha256'] = sources;
+    await tester.runAsync(
+      () => File('$output/origin.json').writeAsString(
+        const JsonEncoder.withIndent('  ').convert(metadata),
+        flush: true,
+      ),
+    );
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    debugDefaultTargetPlatformOverride = null;
+  });
+}
+
+class _FixedClock implements Clock {
+  const _FixedClock();
+  @override
+  DateTime nowUtc() => seed;
+}
+
+class _Utc implements TimeZoneService {
+  const _Utc();
+  @override
+  DateTime toLocal(DateTime value) => value.toUtc();
+  @override
+  DateTime localComponentsToUtc(DateTime d) =>
+      DateTime.utc(d.year, d.month, d.day, d.hour, d.minute);
+}
+
+class _NeverPermissions implements AlarmPermissionGateway {
+  @override
+  Future<AlarmCapabilities> check() async =>
+      throw StateError('No permissions in presentation render');
+  @override
+  Future<AlarmCapabilities> requestRequiredAccess() async =>
+      throw StateError('No permission requests in presentation render');
+}
+
+class _PresentationFonts extends StatelessWidget {
+  const _PresentationFonts({required this.child});
+  final Widget child;
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final button = theme.filledButtonTheme.style;
+    return Theme(
+      data: theme.copyWith(
+        textTheme: theme.textTheme.apply(
+          fontFamily: 'Roboto',
+          fontFamilyFallback: const ['Segoe UI Symbol'],
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: (button ?? const ButtonStyle()).copyWith(
+            textStyle: WidgetStateProperty.resolveWith(
+              (states) =>
+                  (button?.textStyle?.resolve(states) ??
+                          theme.textTheme.labelLarge!)
+                      .copyWith(
+                        fontFamily: 'Roboto',
+                        fontFamilyFallback: const ['Segoe UI Symbol'],
+                      ),
+            ),
+          ),
+        ),
+      ),
+      child: child,
+    );
+  }
+}

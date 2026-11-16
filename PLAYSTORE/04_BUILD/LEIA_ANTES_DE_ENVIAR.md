@@ -1,7 +1,7 @@
 # Arquivo para envio
 
-Envie **DayToDay-1.0.0-1-PRODUCAO.aab** ao Play Console. Pacote
-com.senhoritajhenifer.rotina, versão 1.0.0, código 1. É a primeira publicação
+Envie **DayToDay-1.1.0-2-PRODUCAO.aab** ao Play Console. Pacote
+com.senhoritajhenifer.rotina, versão 1.1.0, código 2. É a primeira publicação
 informada pelo titular. A assinatura é exclusiva de upload do DayToDay.
 
 O APK PRODUCAO-TESTE serve apenas para instalação de teste, não para o campo de

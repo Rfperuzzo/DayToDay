@@ -17,8 +17,8 @@ publicador: **Thales Melo da Silva**, conforme sua conta. Site:
 https://rfperuzzo.github.io/DayToDay/
 Política de privacidade: **https://rfperuzzo.github.io/DayToDay/privacidade.html**.
 
-Envie o ícone e destaque de 02_VISUAIS/ENVIAR_NO_CONSOLE e os seis arquivos
-01-telefone.png até 06-telefone.png, nessa ordem. Textos alternativos estão no
+Envie o ícone e destaque de 02_VISUAIS/ENVIAR_NO_CONSOLE e os oito arquivos
+01-telefone.png até 08-telefone.png, nessa ordem. Textos alternativos estão no
 JSON ao lado. Não enviar originais 1080x2400, arquivos HTML, mockups de tablet ou
 capturas de validação como se fossem as imagens comerciais da ficha.
 
@@ -41,7 +41,7 @@ Alguns campos só aparecem depois do processamento do AAB.
 Crie primeiro uma versão em **Teste interno**, com os testadores que você escolher.
 Ative/aceite Play App Signing; permita ao Google gerenciar a chave de distribuição
 se essa opção for apresentada. Faça upload de
-**04_BUILD/DayToDay-1.0.0-1-PRODUCAO.aab**. É a versão 1.0.0, código 1.
+**04_BUILD/DayToDay-1.1.0-2-PRODUCAO.aab**. É a versão 1.1.0, código 2.
 Não enviar o APK no campo de AAB. Não enviar chave privada, senha ou backup.
 O certificado público de upload acompanha a entrega caso o Console o solicite.
 Leia ASSINATURA_E_BACKUP.md e faça backup seguro da chave antes de perder a máquina.

@@ -6,8 +6,8 @@
   "support_source": "https://play.google.com/store/apps/details?id=br.com.projetomonstro.app&hl=pt_BR&gl=BR",
   "reuse_authorized_by_user": true,
   "package_name": "com.senhoritajhenifer.rotina",
-  "version_name": "1.0.0",
-  "version_code": 1,
+  "version_name": "1.1.0",
+  "version_code": 2,
   "category_suggestion": "Produtividade",
   "app_or_game": "App",
   "ads": false,
@@ -18,7 +18,7 @@
   "content_rating": "Atribuida pelo IARC apos questionario",
   "target_audience": "13–15, 16–17 e 18+; sem direcionamento a menores de 13 anos — confirmado pelo titular",
   "privacy_contact": "thalesmelodasilva@gmail.com",
-  "last_verified": "2026-11-15",
+  "last_verified": "2026-11-16",
   "launch_countries": [
     "Brasil"
   ],

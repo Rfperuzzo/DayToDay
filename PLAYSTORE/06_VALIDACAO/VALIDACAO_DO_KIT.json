@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-15",
+  "date": "2026-11-16",
   "packChecksPassed": true,
   "readyForConsoleUpload": true,
   "readyToPublish": false,
   "textLengths": {
     "titulo.txt": 28,
     "descricao-curta.txt": 78,
-    "descricao-completa.txt": 1827
+    "descricao-completa.txt": 2144
   },
   "images": [
     {
@@ -33,8 +33,8 @@
       "height": 1920,
       "bitDepth": 8,
       "pngColorType": 2,
-      "bytes": 187284,
-      "sha256": "76bae2cf3cf2f664bf689dcc4df7b0b0def710047d9bc3feb658790cbc479231"
+      "bytes": 222110,
+      "sha256": "cf21579a88377385765e2baef4f337e5bf7f223d1f98181ff13e533fe923e9e1"
     },
     {
       "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/04-telefone.png",
@@ -64,6 +64,24 @@
       "sha256": "d0820e8143f60d82da08bc5912dbcbee292881505888a0f8b976de169f5e5bb8"
     },
     {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/07-telefone.png",
+      "width": 1080,
+      "height": 1920,
+      "bitDepth": 8,
+      "pngColorType": 2,
+      "bytes": 307570,
+      "sha256": "fc890694926b58c2e62b71051487da505c1b8f77835516037c9fabc15574e0d2"
+    },
+    {
+      "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/08-telefone.png",
+      "width": 1080,
+      "height": 1920,
+      "bitDepth": 8,
+      "pngColorType": 2,
+      "bytes": 317449,
+      "sha256": "2f8edc5b2c836a5d712ea9db7cea12970e66e7c1f907190d729d90a3869f73fb"
+    },
+    {
       "file": "02_VISUAIS/ENVIAR_NO_CONSOLE/destaque-1024x500.png",
       "width": 1024,
       "height": 500,
@@ -85,6 +103,7 @@
   "publicationPending": [
     "Owner console setup, declarations and Play App Signing",
     "Account-specific eligibility/testing and pre-launch review",
+    "Full production UI start/transition/end journey on a stable device remains pending",
     "Final owner submission; physical-device and 16KB runtime checks remain documented"
   ],
   "privateKeysOrPasswordsIncluded": false,

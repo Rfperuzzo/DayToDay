@@ -1,6 +1,6 @@
 # Declarações de permissões — respostas para copiar
 
-Versão 1.0.0+1. O pacote final usa SCHEDULE_EXACT_ALARM, concedida pelo usuário.
+Versão 1.1.0+2. O pacote final usa SCHEDULE_EXACT_ALARM, concedida pelo usuário.
 USE_EXACT_ALARM é removida do manifesto mesclado. Não submeter justificativa de
 permissão restrita USE_EXACT_ALARM para este binário. Se o Console ainda a mostrar,
 confira se enviou o AAB PRODUCAO e se não existe outra versão ativa com a permissão.
@@ -26,7 +26,7 @@ perder a utilidade como lembrete pontual para aquela atividade.
 **Se for interrompido:** O usuário poderá não ouvir o aviso completo. A atividade
 permanece na rotina e pode ser consultada/concluída manualmente.
 
-**URL pública do vídeo para copiar:**
+**Vídeo histórico1.0.0 — não é prova das novas opções1.1.0:**
 https://rfperuzzo.github.io/DayToDay/demonstracao-alarme.html
 
 MP4 direto: https://rfperuzzo.github.io/DayToDay/demonstracao-alarme.mp4
@@ -60,3 +60,6 @@ política somente após toque do usuário; não recebe dados de rotina.
 Fontes: https://support.google.com/googleplay/android-developer/answer/16558241?hl=pt-BR
 https://support.google.com/googleplay/android-developer/answer/13392821?hl=pt-BR
 https://developer.android.com/about/versions/14/changes/schedule-exact-alarms
+
+Antes de submeter1.1.0, conferir as exigências do Console e registrar vídeo da
+versão atual em ambiente estável. Não apresentar a sessão inconclusiva como PASS.

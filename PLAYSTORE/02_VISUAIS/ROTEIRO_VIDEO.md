@@ -1,3 +1,10 @@
+# Vídeo histórico1.0.0 e orientação para1.1.0
+
+O vídeo e URL abaixo pertencem à versão1.0.0. Não comprovam início/fim/troca da
+versão1.1.0. A nova gravação completa ficou inconclusiva no AVD e não é entregue
+como aprovada. Para envio1.1.0, repetir a demonstração na versão assinada atual
+em ambiente estável se o Console exigir vídeo correspondente.
+
 # Demonstração real pronta — versão assinada 1.0.0+1
 
 **URL para colar no formulário:**

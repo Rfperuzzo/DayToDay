@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-16",
+  "version": "1.1.0+2",
+  "productionEntrypoint": "lib/main.dart",
+  "fullEndToEndPass": false,
+  "productionUiObservedBeforePause": {
+    "start": true,
+    "final": true,
+    "transition": false
+  },
+  "resumeLimitation": "System UI ANR and black AVD captures prevented reliable repeat of the complete production UI journey. This is not a passing E2E result.",
+  "nativeHarness": {
+    "passed": true,
+    "realAndroidGateway": true,
+    "realRepositoriesMemoryDatabase": true,
+    "phases": [
+      "start",
+      "transition",
+      "end",
+      "end"
+    ],
+    "allActivitiesPending": true
+  },
+  "automatedSuiteTestsPassed": 137,
+  "storePresentationRendersAreNativeDeliveryProof": false,
+  "requiredBeforeStoreProduction": "Repeat the full production UI start/transition/end journey on a stable device/AVD and retain physical/16KB checks from the checklist."
+}

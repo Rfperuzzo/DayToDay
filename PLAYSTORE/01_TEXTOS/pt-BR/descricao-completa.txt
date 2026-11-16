@@ -24,3 +24,5 @@ IMPORTANTE SOBRE OS AVISOS
 Notificações, som, vibração e tela cheia dependem das permissões concedidas e das restrições do Android e do fabricante. A execução do som é independente da duração reservada. Revise os acessos de alarmes no app e teste os avisos no seu aparelho.
 
 Suporte: thalesmelodasilva@gmail.com
+
+Nos blocos de tempo, escolha os horários de início e final. Ative o aviso inicial, o final, os dois ou nenhum. Quando o final de um bloco coincidir com o início de outro e ambos tiverem avisos ativos, receba um único aviso de troca. Silenciar mantém as atividades pendentes; concluir continua sendo uma escolha sua.
