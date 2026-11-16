@@ -48,6 +48,50 @@ class $ActivitiesTable extends Activities
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _notifyAtStartMeta = const VerificationMeta(
+    'notifyAtStart',
+  );
+  @override
+  late final GeneratedColumn<bool> notifyAtStart = GeneratedColumn<bool>(
+    'notify_at_start',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("notify_at_start" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _notifyAtEndMeta = const VerificationMeta(
+    'notifyAtEnd',
+  );
+  @override
+  late final GeneratedColumn<bool> notifyAtEnd = GeneratedColumn<bool>(
+    'notify_at_end',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("notify_at_end" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _usesBoundaryAlarmsMeta =
+      const VerificationMeta('usesBoundaryAlarms');
+  @override
+  late final GeneratedColumn<bool> usesBoundaryAlarms = GeneratedColumn<bool>(
+    'uses_boundary_alarms',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("uses_boundary_alarms" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _kindMeta = const VerificationMeta('kind');
   @override
   late final GeneratedColumn<String> kind = GeneratedColumn<String>(
@@ -177,6 +221,9 @@ class $ActivitiesTable extends Activities
     title,
     notes,
     durationMinutes,
+    notifyAtStart,
+    notifyAtEnd,
+    usesBoundaryAlarms,
     kind,
     priority,
     recurrenceType,
@@ -230,6 +277,33 @@ class $ActivitiesTable extends Activities
       );
     } else if (isInserting) {
       context.missing(_durationMinutesMeta);
+    }
+    if (data.containsKey('notify_at_start')) {
+      context.handle(
+        _notifyAtStartMeta,
+        notifyAtStart.isAcceptableOrUnknown(
+          data['notify_at_start']!,
+          _notifyAtStartMeta,
+        ),
+      );
+    }
+    if (data.containsKey('notify_at_end')) {
+      context.handle(
+        _notifyAtEndMeta,
+        notifyAtEnd.isAcceptableOrUnknown(
+          data['notify_at_end']!,
+          _notifyAtEndMeta,
+        ),
+      );
+    }
+    if (data.containsKey('uses_boundary_alarms')) {
+      context.handle(
+        _usesBoundaryAlarmsMeta,
+        usesBoundaryAlarms.isAcceptableOrUnknown(
+          data['uses_boundary_alarms']!,
+          _usesBoundaryAlarmsMeta,
+        ),
+      );
     }
     if (data.containsKey('kind')) {
       context.handle(
@@ -351,6 +425,18 @@ class $ActivitiesTable extends Activities
         DriftSqlType.int,
         data['${effectivePrefix}duration_minutes'],
       )!,
+      notifyAtStart: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}notify_at_start'],
+      )!,
+      notifyAtEnd: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}notify_at_end'],
+      )!,
+      usesBoundaryAlarms: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}uses_boundary_alarms'],
+      )!,
       kind: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}kind'],
@@ -409,6 +495,9 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
   final String title;
   final String notes;
   final int durationMinutes;
+  final bool notifyAtStart;
+  final bool notifyAtEnd;
+  final bool usesBoundaryAlarms;
   final String kind;
   final String priority;
   final String recurrenceType;
@@ -425,6 +514,9 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
     required this.title,
     required this.notes,
     required this.durationMinutes,
+    required this.notifyAtStart,
+    required this.notifyAtEnd,
+    required this.usesBoundaryAlarms,
     required this.kind,
     required this.priority,
     required this.recurrenceType,
@@ -444,6 +536,9 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
     map['title'] = Variable<String>(title);
     map['notes'] = Variable<String>(notes);
     map['duration_minutes'] = Variable<int>(durationMinutes);
+    map['notify_at_start'] = Variable<bool>(notifyAtStart);
+    map['notify_at_end'] = Variable<bool>(notifyAtEnd);
+    map['uses_boundary_alarms'] = Variable<bool>(usesBoundaryAlarms);
     map['kind'] = Variable<String>(kind);
     map['priority'] = Variable<String>(priority);
     map['recurrence_type'] = Variable<String>(recurrenceType);
@@ -474,6 +569,9 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
       title: Value(title),
       notes: Value(notes),
       durationMinutes: Value(durationMinutes),
+      notifyAtStart: Value(notifyAtStart),
+      notifyAtEnd: Value(notifyAtEnd),
+      usesBoundaryAlarms: Value(usesBoundaryAlarms),
       kind: Value(kind),
       priority: Value(priority),
       recurrenceType: Value(recurrenceType),
@@ -508,6 +606,9 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
       title: serializer.fromJson<String>(json['title']),
       notes: serializer.fromJson<String>(json['notes']),
       durationMinutes: serializer.fromJson<int>(json['durationMinutes']),
+      notifyAtStart: serializer.fromJson<bool>(json['notifyAtStart']),
+      notifyAtEnd: serializer.fromJson<bool>(json['notifyAtEnd']),
+      usesBoundaryAlarms: serializer.fromJson<bool>(json['usesBoundaryAlarms']),
       kind: serializer.fromJson<String>(json['kind']),
       priority: serializer.fromJson<String>(json['priority']),
       recurrenceType: serializer.fromJson<String>(json['recurrenceType']),
@@ -531,6 +632,9 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
       'title': serializer.toJson<String>(title),
       'notes': serializer.toJson<String>(notes),
       'durationMinutes': serializer.toJson<int>(durationMinutes),
+      'notifyAtStart': serializer.toJson<bool>(notifyAtStart),
+      'notifyAtEnd': serializer.toJson<bool>(notifyAtEnd),
+      'usesBoundaryAlarms': serializer.toJson<bool>(usesBoundaryAlarms),
       'kind': serializer.toJson<String>(kind),
       'priority': serializer.toJson<String>(priority),
       'recurrenceType': serializer.toJson<String>(recurrenceType),
@@ -550,6 +654,9 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
     String? title,
     String? notes,
     int? durationMinutes,
+    bool? notifyAtStart,
+    bool? notifyAtEnd,
+    bool? usesBoundaryAlarms,
     String? kind,
     String? priority,
     String? recurrenceType,
@@ -566,6 +673,9 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
     title: title ?? this.title,
     notes: notes ?? this.notes,
     durationMinutes: durationMinutes ?? this.durationMinutes,
+    notifyAtStart: notifyAtStart ?? this.notifyAtStart,
+    notifyAtEnd: notifyAtEnd ?? this.notifyAtEnd,
+    usesBoundaryAlarms: usesBoundaryAlarms ?? this.usesBoundaryAlarms,
     kind: kind ?? this.kind,
     priority: priority ?? this.priority,
     recurrenceType: recurrenceType ?? this.recurrenceType,
@@ -588,6 +698,15 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
       durationMinutes: data.durationMinutes.present
           ? data.durationMinutes.value
           : this.durationMinutes,
+      notifyAtStart: data.notifyAtStart.present
+          ? data.notifyAtStart.value
+          : this.notifyAtStart,
+      notifyAtEnd: data.notifyAtEnd.present
+          ? data.notifyAtEnd.value
+          : this.notifyAtEnd,
+      usesBoundaryAlarms: data.usesBoundaryAlarms.present
+          ? data.usesBoundaryAlarms.value
+          : this.usesBoundaryAlarms,
       kind: data.kind.present ? data.kind.value : this.kind,
       priority: data.priority.present ? data.priority.value : this.priority,
       recurrenceType: data.recurrenceType.present
@@ -623,6 +742,9 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
           ..write('title: $title, ')
           ..write('notes: $notes, ')
           ..write('durationMinutes: $durationMinutes, ')
+          ..write('notifyAtStart: $notifyAtStart, ')
+          ..write('notifyAtEnd: $notifyAtEnd, ')
+          ..write('usesBoundaryAlarms: $usesBoundaryAlarms, ')
           ..write('kind: $kind, ')
           ..write('priority: $priority, ')
           ..write('recurrenceType: $recurrenceType, ')
@@ -644,6 +766,9 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
     title,
     notes,
     durationMinutes,
+    notifyAtStart,
+    notifyAtEnd,
+    usesBoundaryAlarms,
     kind,
     priority,
     recurrenceType,
@@ -664,6 +789,9 @@ class ActivityRow extends DataClass implements Insertable<ActivityRow> {
           other.title == this.title &&
           other.notes == this.notes &&
           other.durationMinutes == this.durationMinutes &&
+          other.notifyAtStart == this.notifyAtStart &&
+          other.notifyAtEnd == this.notifyAtEnd &&
+          other.usesBoundaryAlarms == this.usesBoundaryAlarms &&
           other.kind == this.kind &&
           other.priority == this.priority &&
           other.recurrenceType == this.recurrenceType &&
@@ -682,6 +810,9 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
   final Value<String> title;
   final Value<String> notes;
   final Value<int> durationMinutes;
+  final Value<bool> notifyAtStart;
+  final Value<bool> notifyAtEnd;
+  final Value<bool> usesBoundaryAlarms;
   final Value<String> kind;
   final Value<String> priority;
   final Value<String> recurrenceType;
@@ -699,6 +830,9 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
     this.title = const Value.absent(),
     this.notes = const Value.absent(),
     this.durationMinutes = const Value.absent(),
+    this.notifyAtStart = const Value.absent(),
+    this.notifyAtEnd = const Value.absent(),
+    this.usesBoundaryAlarms = const Value.absent(),
     this.kind = const Value.absent(),
     this.priority = const Value.absent(),
     this.recurrenceType = const Value.absent(),
@@ -717,6 +851,9 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
     required String title,
     this.notes = const Value.absent(),
     required int durationMinutes,
+    this.notifyAtStart = const Value.absent(),
+    this.notifyAtEnd = const Value.absent(),
+    this.usesBoundaryAlarms = const Value.absent(),
     this.kind = const Value.absent(),
     required String priority,
     required String recurrenceType,
@@ -741,6 +878,9 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
     Expression<String>? title,
     Expression<String>? notes,
     Expression<int>? durationMinutes,
+    Expression<bool>? notifyAtStart,
+    Expression<bool>? notifyAtEnd,
+    Expression<bool>? usesBoundaryAlarms,
     Expression<String>? kind,
     Expression<String>? priority,
     Expression<String>? recurrenceType,
@@ -759,6 +899,10 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
       if (title != null) 'title': title,
       if (notes != null) 'notes': notes,
       if (durationMinutes != null) 'duration_minutes': durationMinutes,
+      if (notifyAtStart != null) 'notify_at_start': notifyAtStart,
+      if (notifyAtEnd != null) 'notify_at_end': notifyAtEnd,
+      if (usesBoundaryAlarms != null)
+        'uses_boundary_alarms': usesBoundaryAlarms,
       if (kind != null) 'kind': kind,
       if (priority != null) 'priority': priority,
       if (recurrenceType != null) 'recurrence_type': recurrenceType,
@@ -780,6 +924,9 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
     Value<String>? title,
     Value<String>? notes,
     Value<int>? durationMinutes,
+    Value<bool>? notifyAtStart,
+    Value<bool>? notifyAtEnd,
+    Value<bool>? usesBoundaryAlarms,
     Value<String>? kind,
     Value<String>? priority,
     Value<String>? recurrenceType,
@@ -798,6 +945,9 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
       title: title ?? this.title,
       notes: notes ?? this.notes,
       durationMinutes: durationMinutes ?? this.durationMinutes,
+      notifyAtStart: notifyAtStart ?? this.notifyAtStart,
+      notifyAtEnd: notifyAtEnd ?? this.notifyAtEnd,
+      usesBoundaryAlarms: usesBoundaryAlarms ?? this.usesBoundaryAlarms,
       kind: kind ?? this.kind,
       priority: priority ?? this.priority,
       recurrenceType: recurrenceType ?? this.recurrenceType,
@@ -828,6 +978,15 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
     }
     if (durationMinutes.present) {
       map['duration_minutes'] = Variable<int>(durationMinutes.value);
+    }
+    if (notifyAtStart.present) {
+      map['notify_at_start'] = Variable<bool>(notifyAtStart.value);
+    }
+    if (notifyAtEnd.present) {
+      map['notify_at_end'] = Variable<bool>(notifyAtEnd.value);
+    }
+    if (usesBoundaryAlarms.present) {
+      map['uses_boundary_alarms'] = Variable<bool>(usesBoundaryAlarms.value);
     }
     if (kind.present) {
       map['kind'] = Variable<String>(kind.value);
@@ -877,6 +1036,9 @@ class ActivitiesCompanion extends UpdateCompanion<ActivityRow> {
           ..write('title: $title, ')
           ..write('notes: $notes, ')
           ..write('durationMinutes: $durationMinutes, ')
+          ..write('notifyAtStart: $notifyAtStart, ')
+          ..write('notifyAtEnd: $notifyAtEnd, ')
+          ..write('usesBoundaryAlarms: $usesBoundaryAlarms, ')
           ..write('kind: $kind, ')
           ..write('priority: $priority, ')
           ..write('recurrenceType: $recurrenceType, ')
@@ -900,6 +1062,17 @@ class $OccurrencesTable extends Occurrences
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $OccurrencesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _endAcknowledgedAtUtcMeta =
+      const VerificationMeta('endAcknowledgedAtUtc');
+  @override
+  late final GeneratedColumn<DateTime> endAcknowledgedAtUtc =
+      GeneratedColumn<DateTime>(
+        'end_acknowledged_at_utc',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _acknowledgedAtUtcMeta = const VerificationMeta(
     'acknowledgedAtUtc',
   );
@@ -981,6 +1154,50 @@ class $OccurrencesTable extends Occurrences
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _notifyAtStartMeta = const VerificationMeta(
+    'notifyAtStart',
+  );
+  @override
+  late final GeneratedColumn<bool> notifyAtStart = GeneratedColumn<bool>(
+    'notify_at_start',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("notify_at_start" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _notifyAtEndMeta = const VerificationMeta(
+    'notifyAtEnd',
+  );
+  @override
+  late final GeneratedColumn<bool> notifyAtEnd = GeneratedColumn<bool>(
+    'notify_at_end',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("notify_at_end" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _usesBoundaryAlarmsMeta =
+      const VerificationMeta('usesBoundaryAlarms');
+  @override
+  late final GeneratedColumn<bool> usesBoundaryAlarms = GeneratedColumn<bool>(
+    'uses_boundary_alarms',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("uses_boundary_alarms" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _kindMeta = const VerificationMeta('kind');
   @override
   late final GeneratedColumn<String> kind = GeneratedColumn<String>(
@@ -1025,6 +1242,7 @@ class $OccurrencesTable extends Occurrences
   );
   @override
   List<GeneratedColumn> get $columns => [
+    endAcknowledgedAtUtc,
     acknowledgedAtUtc,
     id,
     nativeAlarmId,
@@ -1032,6 +1250,9 @@ class $OccurrencesTable extends Occurrences
     originalStartUtc,
     scheduledStartUtc,
     durationMinutes,
+    notifyAtStart,
+    notifyAtEnd,
+    usesBoundaryAlarms,
     kind,
     priority,
     status,
@@ -1049,6 +1270,15 @@ class $OccurrencesTable extends Occurrences
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('end_acknowledged_at_utc')) {
+      context.handle(
+        _endAcknowledgedAtUtcMeta,
+        endAcknowledgedAtUtc.isAcceptableOrUnknown(
+          data['end_acknowledged_at_utc']!,
+          _endAcknowledgedAtUtcMeta,
+        ),
+      );
+    }
     if (data.containsKey('acknowledged_at_utc')) {
       context.handle(
         _acknowledgedAtUtcMeta,
@@ -1115,6 +1345,33 @@ class $OccurrencesTable extends Occurrences
     } else if (isInserting) {
       context.missing(_durationMinutesMeta);
     }
+    if (data.containsKey('notify_at_start')) {
+      context.handle(
+        _notifyAtStartMeta,
+        notifyAtStart.isAcceptableOrUnknown(
+          data['notify_at_start']!,
+          _notifyAtStartMeta,
+        ),
+      );
+    }
+    if (data.containsKey('notify_at_end')) {
+      context.handle(
+        _notifyAtEndMeta,
+        notifyAtEnd.isAcceptableOrUnknown(
+          data['notify_at_end']!,
+          _notifyAtEndMeta,
+        ),
+      );
+    }
+    if (data.containsKey('uses_boundary_alarms')) {
+      context.handle(
+        _usesBoundaryAlarmsMeta,
+        usesBoundaryAlarms.isAcceptableOrUnknown(
+          data['uses_boundary_alarms']!,
+          _usesBoundaryAlarmsMeta,
+        ),
+      );
+    }
     if (data.containsKey('kind')) {
       context.handle(
         _kindMeta,
@@ -1152,6 +1409,10 @@ class $OccurrencesTable extends Occurrences
   OccurrenceRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return OccurrenceRow(
+      endAcknowledgedAtUtc: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_acknowledged_at_utc'],
+      ),
       acknowledgedAtUtc: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}acknowledged_at_utc'],
@@ -1180,6 +1441,18 @@ class $OccurrencesTable extends Occurrences
         DriftSqlType.int,
         data['${effectivePrefix}duration_minutes'],
       )!,
+      notifyAtStart: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}notify_at_start'],
+      )!,
+      notifyAtEnd: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}notify_at_end'],
+      )!,
+      usesBoundaryAlarms: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}uses_boundary_alarms'],
+      )!,
       kind: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}kind'],
@@ -1206,6 +1479,7 @@ class $OccurrencesTable extends Occurrences
 }
 
 class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
+  final DateTime? endAcknowledgedAtUtc;
   final DateTime? acknowledgedAtUtc;
   final String id;
   final int nativeAlarmId;
@@ -1213,11 +1487,15 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   final DateTime originalStartUtc;
   final DateTime scheduledStartUtc;
   final int durationMinutes;
+  final bool notifyAtStart;
+  final bool notifyAtEnd;
+  final bool usesBoundaryAlarms;
   final String kind;
   final String priority;
   final String status;
   final int attempt;
   const OccurrenceRow({
+    this.endAcknowledgedAtUtc,
     this.acknowledgedAtUtc,
     required this.id,
     required this.nativeAlarmId,
@@ -1225,6 +1503,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     required this.originalStartUtc,
     required this.scheduledStartUtc,
     required this.durationMinutes,
+    required this.notifyAtStart,
+    required this.notifyAtEnd,
+    required this.usesBoundaryAlarms,
     required this.kind,
     required this.priority,
     required this.status,
@@ -1233,6 +1514,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (!nullToAbsent || endAcknowledgedAtUtc != null) {
+      map['end_acknowledged_at_utc'] = Variable<DateTime>(endAcknowledgedAtUtc);
+    }
     if (!nullToAbsent || acknowledgedAtUtc != null) {
       map['acknowledged_at_utc'] = Variable<DateTime>(acknowledgedAtUtc);
     }
@@ -1242,6 +1526,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     map['original_start_utc'] = Variable<DateTime>(originalStartUtc);
     map['scheduled_start_utc'] = Variable<DateTime>(scheduledStartUtc);
     map['duration_minutes'] = Variable<int>(durationMinutes);
+    map['notify_at_start'] = Variable<bool>(notifyAtStart);
+    map['notify_at_end'] = Variable<bool>(notifyAtEnd);
+    map['uses_boundary_alarms'] = Variable<bool>(usesBoundaryAlarms);
     map['kind'] = Variable<String>(kind);
     map['priority'] = Variable<String>(priority);
     map['status'] = Variable<String>(status);
@@ -1251,6 +1538,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
 
   OccurrencesCompanion toCompanion(bool nullToAbsent) {
     return OccurrencesCompanion(
+      endAcknowledgedAtUtc: endAcknowledgedAtUtc == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endAcknowledgedAtUtc),
       acknowledgedAtUtc: acknowledgedAtUtc == null && nullToAbsent
           ? const Value.absent()
           : Value(acknowledgedAtUtc),
@@ -1260,6 +1550,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       originalStartUtc: Value(originalStartUtc),
       scheduledStartUtc: Value(scheduledStartUtc),
       durationMinutes: Value(durationMinutes),
+      notifyAtStart: Value(notifyAtStart),
+      notifyAtEnd: Value(notifyAtEnd),
+      usesBoundaryAlarms: Value(usesBoundaryAlarms),
       kind: Value(kind),
       priority: Value(priority),
       status: Value(status),
@@ -1273,6 +1566,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return OccurrenceRow(
+      endAcknowledgedAtUtc: serializer.fromJson<DateTime?>(
+        json['endAcknowledgedAtUtc'],
+      ),
       acknowledgedAtUtc: serializer.fromJson<DateTime?>(
         json['acknowledgedAtUtc'],
       ),
@@ -1284,6 +1580,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
         json['scheduledStartUtc'],
       ),
       durationMinutes: serializer.fromJson<int>(json['durationMinutes']),
+      notifyAtStart: serializer.fromJson<bool>(json['notifyAtStart']),
+      notifyAtEnd: serializer.fromJson<bool>(json['notifyAtEnd']),
+      usesBoundaryAlarms: serializer.fromJson<bool>(json['usesBoundaryAlarms']),
       kind: serializer.fromJson<String>(json['kind']),
       priority: serializer.fromJson<String>(json['priority']),
       status: serializer.fromJson<String>(json['status']),
@@ -1294,6 +1593,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'endAcknowledgedAtUtc': serializer.toJson<DateTime?>(
+        endAcknowledgedAtUtc,
+      ),
       'acknowledgedAtUtc': serializer.toJson<DateTime?>(acknowledgedAtUtc),
       'id': serializer.toJson<String>(id),
       'nativeAlarmId': serializer.toJson<int>(nativeAlarmId),
@@ -1301,6 +1603,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       'originalStartUtc': serializer.toJson<DateTime>(originalStartUtc),
       'scheduledStartUtc': serializer.toJson<DateTime>(scheduledStartUtc),
       'durationMinutes': serializer.toJson<int>(durationMinutes),
+      'notifyAtStart': serializer.toJson<bool>(notifyAtStart),
+      'notifyAtEnd': serializer.toJson<bool>(notifyAtEnd),
+      'usesBoundaryAlarms': serializer.toJson<bool>(usesBoundaryAlarms),
       'kind': serializer.toJson<String>(kind),
       'priority': serializer.toJson<String>(priority),
       'status': serializer.toJson<String>(status),
@@ -1309,6 +1614,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   }
 
   OccurrenceRow copyWith({
+    Value<DateTime?> endAcknowledgedAtUtc = const Value.absent(),
     Value<DateTime?> acknowledgedAtUtc = const Value.absent(),
     String? id,
     int? nativeAlarmId,
@@ -1316,11 +1622,17 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     DateTime? originalStartUtc,
     DateTime? scheduledStartUtc,
     int? durationMinutes,
+    bool? notifyAtStart,
+    bool? notifyAtEnd,
+    bool? usesBoundaryAlarms,
     String? kind,
     String? priority,
     String? status,
     int? attempt,
   }) => OccurrenceRow(
+    endAcknowledgedAtUtc: endAcknowledgedAtUtc.present
+        ? endAcknowledgedAtUtc.value
+        : this.endAcknowledgedAtUtc,
     acknowledgedAtUtc: acknowledgedAtUtc.present
         ? acknowledgedAtUtc.value
         : this.acknowledgedAtUtc,
@@ -1330,6 +1642,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     originalStartUtc: originalStartUtc ?? this.originalStartUtc,
     scheduledStartUtc: scheduledStartUtc ?? this.scheduledStartUtc,
     durationMinutes: durationMinutes ?? this.durationMinutes,
+    notifyAtStart: notifyAtStart ?? this.notifyAtStart,
+    notifyAtEnd: notifyAtEnd ?? this.notifyAtEnd,
+    usesBoundaryAlarms: usesBoundaryAlarms ?? this.usesBoundaryAlarms,
     kind: kind ?? this.kind,
     priority: priority ?? this.priority,
     status: status ?? this.status,
@@ -1337,6 +1652,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   );
   OccurrenceRow copyWithCompanion(OccurrencesCompanion data) {
     return OccurrenceRow(
+      endAcknowledgedAtUtc: data.endAcknowledgedAtUtc.present
+          ? data.endAcknowledgedAtUtc.value
+          : this.endAcknowledgedAtUtc,
       acknowledgedAtUtc: data.acknowledgedAtUtc.present
           ? data.acknowledgedAtUtc.value
           : this.acknowledgedAtUtc,
@@ -1356,6 +1674,15 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
       durationMinutes: data.durationMinutes.present
           ? data.durationMinutes.value
           : this.durationMinutes,
+      notifyAtStart: data.notifyAtStart.present
+          ? data.notifyAtStart.value
+          : this.notifyAtStart,
+      notifyAtEnd: data.notifyAtEnd.present
+          ? data.notifyAtEnd.value
+          : this.notifyAtEnd,
+      usesBoundaryAlarms: data.usesBoundaryAlarms.present
+          ? data.usesBoundaryAlarms.value
+          : this.usesBoundaryAlarms,
       kind: data.kind.present ? data.kind.value : this.kind,
       priority: data.priority.present ? data.priority.value : this.priority,
       status: data.status.present ? data.status.value : this.status,
@@ -1366,6 +1693,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   @override
   String toString() {
     return (StringBuffer('OccurrenceRow(')
+          ..write('endAcknowledgedAtUtc: $endAcknowledgedAtUtc, ')
           ..write('acknowledgedAtUtc: $acknowledgedAtUtc, ')
           ..write('id: $id, ')
           ..write('nativeAlarmId: $nativeAlarmId, ')
@@ -1373,6 +1701,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           ..write('originalStartUtc: $originalStartUtc, ')
           ..write('scheduledStartUtc: $scheduledStartUtc, ')
           ..write('durationMinutes: $durationMinutes, ')
+          ..write('notifyAtStart: $notifyAtStart, ')
+          ..write('notifyAtEnd: $notifyAtEnd, ')
+          ..write('usesBoundaryAlarms: $usesBoundaryAlarms, ')
           ..write('kind: $kind, ')
           ..write('priority: $priority, ')
           ..write('status: $status, ')
@@ -1383,6 +1714,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
 
   @override
   int get hashCode => Object.hash(
+    endAcknowledgedAtUtc,
     acknowledgedAtUtc,
     id,
     nativeAlarmId,
@@ -1390,6 +1722,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
     originalStartUtc,
     scheduledStartUtc,
     durationMinutes,
+    notifyAtStart,
+    notifyAtEnd,
+    usesBoundaryAlarms,
     kind,
     priority,
     status,
@@ -1399,6 +1734,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is OccurrenceRow &&
+          other.endAcknowledgedAtUtc == this.endAcknowledgedAtUtc &&
           other.acknowledgedAtUtc == this.acknowledgedAtUtc &&
           other.id == this.id &&
           other.nativeAlarmId == this.nativeAlarmId &&
@@ -1406,6 +1742,9 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
           other.originalStartUtc == this.originalStartUtc &&
           other.scheduledStartUtc == this.scheduledStartUtc &&
           other.durationMinutes == this.durationMinutes &&
+          other.notifyAtStart == this.notifyAtStart &&
+          other.notifyAtEnd == this.notifyAtEnd &&
+          other.usesBoundaryAlarms == this.usesBoundaryAlarms &&
           other.kind == this.kind &&
           other.priority == this.priority &&
           other.status == this.status &&
@@ -1413,6 +1752,7 @@ class OccurrenceRow extends DataClass implements Insertable<OccurrenceRow> {
 }
 
 class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
+  final Value<DateTime?> endAcknowledgedAtUtc;
   final Value<DateTime?> acknowledgedAtUtc;
   final Value<String> id;
   final Value<int> nativeAlarmId;
@@ -1420,12 +1760,16 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   final Value<DateTime> originalStartUtc;
   final Value<DateTime> scheduledStartUtc;
   final Value<int> durationMinutes;
+  final Value<bool> notifyAtStart;
+  final Value<bool> notifyAtEnd;
+  final Value<bool> usesBoundaryAlarms;
   final Value<String> kind;
   final Value<String> priority;
   final Value<String> status;
   final Value<int> attempt;
   final Value<int> rowid;
   const OccurrencesCompanion({
+    this.endAcknowledgedAtUtc = const Value.absent(),
     this.acknowledgedAtUtc = const Value.absent(),
     this.id = const Value.absent(),
     this.nativeAlarmId = const Value.absent(),
@@ -1433,6 +1777,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     this.originalStartUtc = const Value.absent(),
     this.scheduledStartUtc = const Value.absent(),
     this.durationMinutes = const Value.absent(),
+    this.notifyAtStart = const Value.absent(),
+    this.notifyAtEnd = const Value.absent(),
+    this.usesBoundaryAlarms = const Value.absent(),
     this.kind = const Value.absent(),
     this.priority = const Value.absent(),
     this.status = const Value.absent(),
@@ -1440,6 +1787,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     this.rowid = const Value.absent(),
   });
   OccurrencesCompanion.insert({
+    this.endAcknowledgedAtUtc = const Value.absent(),
     this.acknowledgedAtUtc = const Value.absent(),
     required String id,
     required int nativeAlarmId,
@@ -1447,6 +1795,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     required DateTime originalStartUtc,
     required DateTime scheduledStartUtc,
     required int durationMinutes,
+    this.notifyAtStart = const Value.absent(),
+    this.notifyAtEnd = const Value.absent(),
+    this.usesBoundaryAlarms = const Value.absent(),
     this.kind = const Value.absent(),
     required String priority,
     required String status,
@@ -1461,6 +1812,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
        priority = Value(priority),
        status = Value(status);
   static Insertable<OccurrenceRow> custom({
+    Expression<DateTime>? endAcknowledgedAtUtc,
     Expression<DateTime>? acknowledgedAtUtc,
     Expression<String>? id,
     Expression<int>? nativeAlarmId,
@@ -1468,6 +1820,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Expression<DateTime>? originalStartUtc,
     Expression<DateTime>? scheduledStartUtc,
     Expression<int>? durationMinutes,
+    Expression<bool>? notifyAtStart,
+    Expression<bool>? notifyAtEnd,
+    Expression<bool>? usesBoundaryAlarms,
     Expression<String>? kind,
     Expression<String>? priority,
     Expression<String>? status,
@@ -1475,6 +1830,8 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (endAcknowledgedAtUtc != null)
+        'end_acknowledged_at_utc': endAcknowledgedAtUtc,
       if (acknowledgedAtUtc != null) 'acknowledged_at_utc': acknowledgedAtUtc,
       if (id != null) 'id': id,
       if (nativeAlarmId != null) 'native_alarm_id': nativeAlarmId,
@@ -1482,6 +1839,10 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
       if (originalStartUtc != null) 'original_start_utc': originalStartUtc,
       if (scheduledStartUtc != null) 'scheduled_start_utc': scheduledStartUtc,
       if (durationMinutes != null) 'duration_minutes': durationMinutes,
+      if (notifyAtStart != null) 'notify_at_start': notifyAtStart,
+      if (notifyAtEnd != null) 'notify_at_end': notifyAtEnd,
+      if (usesBoundaryAlarms != null)
+        'uses_boundary_alarms': usesBoundaryAlarms,
       if (kind != null) 'kind': kind,
       if (priority != null) 'priority': priority,
       if (status != null) 'status': status,
@@ -1491,6 +1852,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   }
 
   OccurrencesCompanion copyWith({
+    Value<DateTime?>? endAcknowledgedAtUtc,
     Value<DateTime?>? acknowledgedAtUtc,
     Value<String>? id,
     Value<int>? nativeAlarmId,
@@ -1498,6 +1860,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Value<DateTime>? originalStartUtc,
     Value<DateTime>? scheduledStartUtc,
     Value<int>? durationMinutes,
+    Value<bool>? notifyAtStart,
+    Value<bool>? notifyAtEnd,
+    Value<bool>? usesBoundaryAlarms,
     Value<String>? kind,
     Value<String>? priority,
     Value<String>? status,
@@ -1505,6 +1870,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     Value<int>? rowid,
   }) {
     return OccurrencesCompanion(
+      endAcknowledgedAtUtc: endAcknowledgedAtUtc ?? this.endAcknowledgedAtUtc,
       acknowledgedAtUtc: acknowledgedAtUtc ?? this.acknowledgedAtUtc,
       id: id ?? this.id,
       nativeAlarmId: nativeAlarmId ?? this.nativeAlarmId,
@@ -1512,6 +1878,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
       originalStartUtc: originalStartUtc ?? this.originalStartUtc,
       scheduledStartUtc: scheduledStartUtc ?? this.scheduledStartUtc,
       durationMinutes: durationMinutes ?? this.durationMinutes,
+      notifyAtStart: notifyAtStart ?? this.notifyAtStart,
+      notifyAtEnd: notifyAtEnd ?? this.notifyAtEnd,
+      usesBoundaryAlarms: usesBoundaryAlarms ?? this.usesBoundaryAlarms,
       kind: kind ?? this.kind,
       priority: priority ?? this.priority,
       status: status ?? this.status,
@@ -1523,6 +1892,11 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (endAcknowledgedAtUtc.present) {
+      map['end_acknowledged_at_utc'] = Variable<DateTime>(
+        endAcknowledgedAtUtc.value,
+      );
+    }
     if (acknowledgedAtUtc.present) {
       map['acknowledged_at_utc'] = Variable<DateTime>(acknowledgedAtUtc.value);
     }
@@ -1543,6 +1917,15 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
     }
     if (durationMinutes.present) {
       map['duration_minutes'] = Variable<int>(durationMinutes.value);
+    }
+    if (notifyAtStart.present) {
+      map['notify_at_start'] = Variable<bool>(notifyAtStart.value);
+    }
+    if (notifyAtEnd.present) {
+      map['notify_at_end'] = Variable<bool>(notifyAtEnd.value);
+    }
+    if (usesBoundaryAlarms.present) {
+      map['uses_boundary_alarms'] = Variable<bool>(usesBoundaryAlarms.value);
     }
     if (kind.present) {
       map['kind'] = Variable<String>(kind.value);
@@ -1565,6 +1948,7 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
   @override
   String toString() {
     return (StringBuffer('OccurrencesCompanion(')
+          ..write('endAcknowledgedAtUtc: $endAcknowledgedAtUtc, ')
           ..write('acknowledgedAtUtc: $acknowledgedAtUtc, ')
           ..write('id: $id, ')
           ..write('nativeAlarmId: $nativeAlarmId, ')
@@ -1572,6 +1956,9 @@ class OccurrencesCompanion extends UpdateCompanion<OccurrenceRow> {
           ..write('originalStartUtc: $originalStartUtc, ')
           ..write('scheduledStartUtc: $scheduledStartUtc, ')
           ..write('durationMinutes: $durationMinutes, ')
+          ..write('notifyAtStart: $notifyAtStart, ')
+          ..write('notifyAtEnd: $notifyAtEnd, ')
+          ..write('usesBoundaryAlarms: $usesBoundaryAlarms, ')
           ..write('kind: $kind, ')
           ..write('priority: $priority, ')
           ..write('status: $status, ')
@@ -3177,6 +3564,9 @@ typedef $$ActivitiesTableCreateCompanionBuilder =
       required String title,
       Value<String> notes,
       required int durationMinutes,
+      Value<bool> notifyAtStart,
+      Value<bool> notifyAtEnd,
+      Value<bool> usesBoundaryAlarms,
       Value<String> kind,
       required String priority,
       required String recurrenceType,
@@ -3196,6 +3586,9 @@ typedef $$ActivitiesTableUpdateCompanionBuilder =
       Value<String> title,
       Value<String> notes,
       Value<int> durationMinutes,
+      Value<bool> notifyAtStart,
+      Value<bool> notifyAtEnd,
+      Value<bool> usesBoundaryAlarms,
       Value<String> kind,
       Value<String> priority,
       Value<String> recurrenceType,
@@ -3277,6 +3670,21 @@ class $$ActivitiesTableFilterComposer
 
   ColumnFilters<int> get durationMinutes => $composableBuilder(
     column: $table.durationMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get notifyAtStart => $composableBuilder(
+    column: $table.notifyAtStart,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get notifyAtEnd => $composableBuilder(
+    column: $table.notifyAtEnd,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get usesBoundaryAlarms => $composableBuilder(
+    column: $table.usesBoundaryAlarms,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3415,6 +3823,21 @@ class $$ActivitiesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get notifyAtStart => $composableBuilder(
+    column: $table.notifyAtStart,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get notifyAtEnd => $composableBuilder(
+    column: $table.notifyAtEnd,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get usesBoundaryAlarms => $composableBuilder(
+    column: $table.usesBoundaryAlarms,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get kind => $composableBuilder(
     column: $table.kind,
     builder: (column) => ColumnOrderings(column),
@@ -3491,6 +3914,21 @@ class $$ActivitiesTableAnnotationComposer
 
   GeneratedColumn<int> get durationMinutes => $composableBuilder(
     column: $table.durationMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get notifyAtStart => $composableBuilder(
+    column: $table.notifyAtStart,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get notifyAtEnd => $composableBuilder(
+    column: $table.notifyAtEnd,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get usesBoundaryAlarms => $composableBuilder(
+    column: $table.usesBoundaryAlarms,
     builder: (column) => column,
   );
 
@@ -3624,6 +4062,9 @@ class $$ActivitiesTableTableManager
                 Value<String> title = const Value.absent(),
                 Value<String> notes = const Value.absent(),
                 Value<int> durationMinutes = const Value.absent(),
+                Value<bool> notifyAtStart = const Value.absent(),
+                Value<bool> notifyAtEnd = const Value.absent(),
+                Value<bool> usesBoundaryAlarms = const Value.absent(),
                 Value<String> kind = const Value.absent(),
                 Value<String> priority = const Value.absent(),
                 Value<String> recurrenceType = const Value.absent(),
@@ -3641,6 +4082,9 @@ class $$ActivitiesTableTableManager
                 title: title,
                 notes: notes,
                 durationMinutes: durationMinutes,
+                notifyAtStart: notifyAtStart,
+                notifyAtEnd: notifyAtEnd,
+                usesBoundaryAlarms: usesBoundaryAlarms,
                 kind: kind,
                 priority: priority,
                 recurrenceType: recurrenceType,
@@ -3660,6 +4104,9 @@ class $$ActivitiesTableTableManager
                 required String title,
                 Value<String> notes = const Value.absent(),
                 required int durationMinutes,
+                Value<bool> notifyAtStart = const Value.absent(),
+                Value<bool> notifyAtEnd = const Value.absent(),
+                Value<bool> usesBoundaryAlarms = const Value.absent(),
                 Value<String> kind = const Value.absent(),
                 required String priority,
                 required String recurrenceType,
@@ -3677,6 +4124,9 @@ class $$ActivitiesTableTableManager
                 title: title,
                 notes: notes,
                 durationMinutes: durationMinutes,
+                notifyAtStart: notifyAtStart,
+                notifyAtEnd: notifyAtEnd,
+                usesBoundaryAlarms: usesBoundaryAlarms,
                 kind: kind,
                 priority: priority,
                 recurrenceType: recurrenceType,
@@ -3775,6 +4225,7 @@ typedef $$ActivitiesTableProcessedTableManager =
     >;
 typedef $$OccurrencesTableCreateCompanionBuilder =
     OccurrencesCompanion Function({
+      Value<DateTime?> endAcknowledgedAtUtc,
       Value<DateTime?> acknowledgedAtUtc,
       required String id,
       required int nativeAlarmId,
@@ -3782,6 +4233,9 @@ typedef $$OccurrencesTableCreateCompanionBuilder =
       required DateTime originalStartUtc,
       required DateTime scheduledStartUtc,
       required int durationMinutes,
+      Value<bool> notifyAtStart,
+      Value<bool> notifyAtEnd,
+      Value<bool> usesBoundaryAlarms,
       Value<String> kind,
       required String priority,
       required String status,
@@ -3790,6 +4244,7 @@ typedef $$OccurrencesTableCreateCompanionBuilder =
     });
 typedef $$OccurrencesTableUpdateCompanionBuilder =
     OccurrencesCompanion Function({
+      Value<DateTime?> endAcknowledgedAtUtc,
       Value<DateTime?> acknowledgedAtUtc,
       Value<String> id,
       Value<int> nativeAlarmId,
@@ -3797,6 +4252,9 @@ typedef $$OccurrencesTableUpdateCompanionBuilder =
       Value<DateTime> originalStartUtc,
       Value<DateTime> scheduledStartUtc,
       Value<int> durationMinutes,
+      Value<bool> notifyAtStart,
+      Value<bool> notifyAtEnd,
+      Value<bool> usesBoundaryAlarms,
       Value<String> kind,
       Value<String> priority,
       Value<String> status,
@@ -3853,6 +4311,11 @@ class $$OccurrencesTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<DateTime> get endAcknowledgedAtUtc => $composableBuilder(
+    column: $table.endAcknowledgedAtUtc,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get acknowledgedAtUtc => $composableBuilder(
     column: $table.acknowledgedAtUtc,
     builder: (column) => ColumnFilters(column),
@@ -3880,6 +4343,21 @@ class $$OccurrencesTableFilterComposer
 
   ColumnFilters<int> get durationMinutes => $composableBuilder(
     column: $table.durationMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get notifyAtStart => $composableBuilder(
+    column: $table.notifyAtStart,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get notifyAtEnd => $composableBuilder(
+    column: $table.notifyAtEnd,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get usesBoundaryAlarms => $composableBuilder(
+    column: $table.usesBoundaryAlarms,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3961,6 +4439,11 @@ class $$OccurrencesTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<DateTime> get endAcknowledgedAtUtc => $composableBuilder(
+    column: $table.endAcknowledgedAtUtc,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get acknowledgedAtUtc => $composableBuilder(
     column: $table.acknowledgedAtUtc,
     builder: (column) => ColumnOrderings(column),
@@ -3988,6 +4471,21 @@ class $$OccurrencesTableOrderingComposer
 
   ColumnOrderings<int> get durationMinutes => $composableBuilder(
     column: $table.durationMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get notifyAtStart => $composableBuilder(
+    column: $table.notifyAtStart,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get notifyAtEnd => $composableBuilder(
+    column: $table.notifyAtEnd,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get usesBoundaryAlarms => $composableBuilder(
+    column: $table.usesBoundaryAlarms,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -4044,6 +4542,11 @@ class $$OccurrencesTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<DateTime> get endAcknowledgedAtUtc => $composableBuilder(
+    column: $table.endAcknowledgedAtUtc,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get acknowledgedAtUtc => $composableBuilder(
     column: $table.acknowledgedAtUtc,
     builder: (column) => column,
@@ -4069,6 +4572,21 @@ class $$OccurrencesTableAnnotationComposer
 
   GeneratedColumn<int> get durationMinutes => $composableBuilder(
     column: $table.durationMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get notifyAtStart => $composableBuilder(
+    column: $table.notifyAtStart,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get notifyAtEnd => $composableBuilder(
+    column: $table.notifyAtEnd,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get usesBoundaryAlarms => $composableBuilder(
+    column: $table.usesBoundaryAlarms,
     builder: (column) => column,
   );
 
@@ -4161,6 +4679,7 @@ class $$OccurrencesTableTableManager
               $$OccurrencesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<DateTime?> endAcknowledgedAtUtc = const Value.absent(),
                 Value<DateTime?> acknowledgedAtUtc = const Value.absent(),
                 Value<String> id = const Value.absent(),
                 Value<int> nativeAlarmId = const Value.absent(),
@@ -4168,12 +4687,16 @@ class $$OccurrencesTableTableManager
                 Value<DateTime> originalStartUtc = const Value.absent(),
                 Value<DateTime> scheduledStartUtc = const Value.absent(),
                 Value<int> durationMinutes = const Value.absent(),
+                Value<bool> notifyAtStart = const Value.absent(),
+                Value<bool> notifyAtEnd = const Value.absent(),
+                Value<bool> usesBoundaryAlarms = const Value.absent(),
                 Value<String> kind = const Value.absent(),
                 Value<String> priority = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<int> attempt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion(
+                endAcknowledgedAtUtc: endAcknowledgedAtUtc,
                 acknowledgedAtUtc: acknowledgedAtUtc,
                 id: id,
                 nativeAlarmId: nativeAlarmId,
@@ -4181,6 +4704,9 @@ class $$OccurrencesTableTableManager
                 originalStartUtc: originalStartUtc,
                 scheduledStartUtc: scheduledStartUtc,
                 durationMinutes: durationMinutes,
+                notifyAtStart: notifyAtStart,
+                notifyAtEnd: notifyAtEnd,
+                usesBoundaryAlarms: usesBoundaryAlarms,
                 kind: kind,
                 priority: priority,
                 status: status,
@@ -4189,6 +4715,7 @@ class $$OccurrencesTableTableManager
               ),
           createCompanionCallback:
               ({
+                Value<DateTime?> endAcknowledgedAtUtc = const Value.absent(),
                 Value<DateTime?> acknowledgedAtUtc = const Value.absent(),
                 required String id,
                 required int nativeAlarmId,
@@ -4196,12 +4723,16 @@ class $$OccurrencesTableTableManager
                 required DateTime originalStartUtc,
                 required DateTime scheduledStartUtc,
                 required int durationMinutes,
+                Value<bool> notifyAtStart = const Value.absent(),
+                Value<bool> notifyAtEnd = const Value.absent(),
+                Value<bool> usesBoundaryAlarms = const Value.absent(),
                 Value<String> kind = const Value.absent(),
                 required String priority,
                 required String status,
                 Value<int> attempt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => OccurrencesCompanion.insert(
+                endAcknowledgedAtUtc: endAcknowledgedAtUtc,
                 acknowledgedAtUtc: acknowledgedAtUtc,
                 id: id,
                 nativeAlarmId: nativeAlarmId,
@@ -4209,6 +4740,9 @@ class $$OccurrencesTableTableManager
                 originalStartUtc: originalStartUtc,
                 scheduledStartUtc: scheduledStartUtc,
                 durationMinutes: durationMinutes,
+                notifyAtStart: notifyAtStart,
+                notifyAtEnd: notifyAtEnd,
+                usesBoundaryAlarms: usesBoundaryAlarms,
                 kind: kind,
                 priority: priority,
                 status: status,

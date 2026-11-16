@@ -17,6 +17,9 @@ final class Activity {
     String notes = '',
     Duration? preparationLead,
     bool isActive = true,
+    bool notifyAtStart = true,
+    bool notifyAtEnd = false,
+    bool usesBoundaryAlarms = false,
   }) {
     final normalizedId = id.trim();
     final normalizedTitle = title.trim();
@@ -52,6 +55,9 @@ final class Activity {
       recurrence: recurrence,
       preparationLead: preparationLead,
       isActive: isActive,
+      notifyAtStart: kind == ActivityKind.reminder ? true : notifyAtStart,
+      notifyAtEnd: kind == ActivityKind.reminder ? false : notifyAtEnd,
+      usesBoundaryAlarms: kind == ActivityKind.timeBlock && usesBoundaryAlarms,
       createdAtUtc: createdAtUtc.toUtc(),
       updatedAtUtc: updatedAtUtc.toUtc(),
     );
@@ -67,6 +73,9 @@ final class Activity {
     required this.recurrence,
     required this.preparationLead,
     required this.isActive,
+    required this.notifyAtStart,
+    required this.notifyAtEnd,
+    required this.usesBoundaryAlarms,
     required this.createdAtUtc,
     required this.updatedAtUtc,
   });
@@ -81,6 +90,9 @@ final class Activity {
   final RecurrenceRule recurrence;
   final Duration? preparationLead;
   final bool isActive;
+  final bool notifyAtStart;
+  final bool notifyAtEnd;
+  final bool usesBoundaryAlarms;
   final DateTime createdAtUtc;
   final DateTime updatedAtUtc;
 
@@ -93,6 +105,9 @@ final class Activity {
     RecurrenceRule? recurrence,
     Duration? preparationLead,
     bool? isActive,
+    bool? notifyAtStart,
+    bool? notifyAtEnd,
+    bool? usesBoundaryAlarms,
     DateTime? updatedAtUtc,
   }) {
     return Activity(
@@ -105,6 +120,9 @@ final class Activity {
       recurrence: recurrence ?? this.recurrence,
       preparationLead: preparationLead ?? this.preparationLead,
       isActive: isActive ?? this.isActive,
+      notifyAtStart: notifyAtStart ?? this.notifyAtStart,
+      notifyAtEnd: notifyAtEnd ?? this.notifyAtEnd,
+      usesBoundaryAlarms: usesBoundaryAlarms ?? this.usesBoundaryAlarms,
       createdAtUtc: createdAtUtc,
       updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
     );

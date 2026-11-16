@@ -9,6 +9,10 @@ class Activities extends Table {
   TextColumn get title => text()();
   TextColumn get notes => text().withDefault(const Constant(''))();
   IntColumn get durationMinutes => integer()();
+  BoolColumn get notifyAtStart => boolean().withDefault(const Constant(true))();
+  BoolColumn get notifyAtEnd => boolean().withDefault(const Constant(false))();
+  BoolColumn get usesBoundaryAlarms =>
+      boolean().withDefault(const Constant(false))();
   TextColumn get kind => text().withDefault(const Constant('timeBlock'))();
   TextColumn get priority => text()();
   TextColumn get recurrenceType => text()();
@@ -27,6 +31,7 @@ class Activities extends Table {
 
 @DataClassName('OccurrenceRow')
 class Occurrences extends Table {
+  DateTimeColumn get endAcknowledgedAtUtc => dateTime().nullable()();
   DateTimeColumn get acknowledgedAtUtc => dateTime().nullable()();
   TextColumn get id => text()();
   IntColumn get nativeAlarmId => integer()();
@@ -34,6 +39,10 @@ class Occurrences extends Table {
   DateTimeColumn get originalStartUtc => dateTime()();
   DateTimeColumn get scheduledStartUtc => dateTime()();
   IntColumn get durationMinutes => integer()();
+  BoolColumn get notifyAtStart => boolean().withDefault(const Constant(true))();
+  BoolColumn get notifyAtEnd => boolean().withDefault(const Constant(false))();
+  BoolColumn get usesBoundaryAlarms =>
+      boolean().withDefault(const Constant(false))();
   TextColumn get kind => text().withDefault(const Constant('timeBlock'))();
   TextColumn get priority => text()();
   TextColumn get status => text()();
@@ -116,7 +125,7 @@ final class AppDatabase extends _$AppDatabase {
       );
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -128,6 +137,15 @@ final class AppDatabase extends _$AppDatabase {
         await migrator.addColumn(activities, activities.kind);
         await migrator.addColumn(occurrences, occurrences.kind);
         await migrator.addColumn(occurrences, occurrences.acknowledgedAtUtc);
+      }
+      if (from < 4) {
+        await migrator.addColumn(activities, activities.notifyAtStart);
+        await migrator.addColumn(activities, activities.notifyAtEnd);
+        await migrator.addColumn(activities, activities.usesBoundaryAlarms);
+        await migrator.addColumn(occurrences, occurrences.notifyAtStart);
+        await migrator.addColumn(occurrences, occurrences.notifyAtEnd);
+        await migrator.addColumn(occurrences, occurrences.usesBoundaryAlarms);
+        await migrator.addColumn(occurrences, occurrences.endAcknowledgedAtUtc);
       }
     },
     beforeOpen: (details) async {

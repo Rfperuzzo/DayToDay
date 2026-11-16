@@ -1,5 +1,33 @@
 # Memória viva — DayToDay
 
+## Avisos de início, final e troca — 16/11/2026
+
+Versão1.1.0+2, schema4 aditivo: notifyAtStart/notifyAtEnd/usesBoundaryAlarms nas
+atividades e ocorrências; endAcknowledgedAtUtc separado. Migrações1/2/3 preservam
+IDs, duração, horário, progresso, ciência antiga, subtarefas, preferências e histórico.
+Legado mantém usesBoundaryAlarms=false, inícioON/finalOFF e sequência anterior.
+Blocos novos ou explicitamente salvos na UI usam avisos independentes por horário.
+
+Cadastro/edição mostram início/final, dia seguinte e duração calculada. AmbosOFF
+salva bloco silencioso sem pedir permissões. Lembretes continuam simples, sem fim.
+Os seletores forçam24h para corrigir a incompatibilidade do SDK entre localeptBR
+e relógioAndroid12h (rejeição de13/15). Durações antigas não são truncadas ao editar.
+
+IDs de início preservados; final usa chave #end:occurrenceId com hash nativo
+estável/validação de colisão. Fusão somente entre duas pontas habilitadas no mesmo
+instante: o aviso de troca usa a identidade do próximo início e referencia o final
+anterior. Silenciar início preserva final; troca confirma duas pontas e não conclui
+nenhuma atividade. End/troca orientam conclusão separada na rotina; novos blocos
+não ficam bloqueados pela sequência legada. Eventos nativos de falha não movem
+intervalos explícitos nem concluem/cancelam atividades automaticamente.
+
+137 testes aprovados e análise limpa. Ensaio nativo com repositórios reais/banco
+em memória e gatewayAndroid em segundo plano disparou início/troca/final/endonly;
+nenhuma atividade concluída automaticamente. Ver docs/UX_INICIO_FIM_20261116.md.
+AAB/APK de produção usam lib/main.dart, mesma chave exclusiva já protegida e
+backupjáconferido; entrypoint diagnóstico sob tool/ não é enviado à loja.
+Nenhum serviço pago nem acesso ao fitness. Abrir PR para revisão; não publicar na loja.
+
 ## Preparação para envio à loja — 15/11/2026
 
 Primeira publicação confirmada pelo titular: gratuito, Brasil, público 13+ sem

@@ -25,6 +25,8 @@ final class AndroidAlarmGateway implements AlarmGateway {
             if (_occurrenceIdFromPayload(item.payload) case final occurrenceId?)
               RingingAlarmBinding(
                 occurrenceId: occurrenceId,
+                phase: _phaseFromPayload(item.payload),
+                previousOccurrenceId: _previousFromPayload(item.payload),
                 nativeAlarmId: item.id,
                 scheduledAtUtc: item.dateTime.toUtc(),
                 title: item.notificationSettings.title,
@@ -34,7 +36,21 @@ final class AndroidAlarmGateway implements AlarmGateway {
         ]..sort(
           (left, right) => left.scheduledAtUtc.compareTo(right.scheduledAtUtc),
         );
-    return List.unmodifiable(bindings);
+    return List.unmodifiable(
+      bindings.where(
+        (candidate) =>
+            candidate.phase != AlarmPhase.start ||
+            !bindings.any(
+              (newer) =>
+                  newer.scheduledAtUtc.isAfter(candidate.scheduledAtUtc) &&
+                  ((newer.phase == AlarmPhase.end &&
+                          newer.occurrenceId == candidate.occurrenceId) ||
+                      (newer.phase == AlarmPhase.transition &&
+                          newer.previousOccurrenceId ==
+                              candidate.occurrenceId)),
+            ),
+      ),
+    );
   });
 
   @override
@@ -52,7 +68,7 @@ final class AndroidAlarmGateway implements AlarmGateway {
     _ensureInitialized();
     final success = await alarm.Alarm.set(
       alarmSettings: alarm.AlarmSettings(
-        id: NativeAlarmId.fromOccurrenceId(request.occurrenceId),
+        id: NativeAlarmId.fromOccurrenceId(request.alarmKey),
         dateTime: request.scheduledAtUtc.toLocal(),
         assetAudioPath: null,
         loopAudio: false,
@@ -66,6 +82,8 @@ final class AndroidAlarmGateway implements AlarmGateway {
         androidStaleAfter: alarm.AlarmSettings.defaultStaleAfter,
         payload: jsonEncode({
           'occurrenceId': request.occurrenceId,
+          'phase': request.phase.name,
+          'previousOccurrenceId': request.previousOccurrenceId,
           'durationMinutes': request.estimatedDuration.inMinutes,
         }),
         volumeSettings: alarm.VolumeSettings.fade(
@@ -102,6 +120,10 @@ final class AndroidAlarmGateway implements AlarmGateway {
         if (_occurrenceIdFromPayload(item.payload) case final occurrenceId?)
           ScheduledAlarmBinding(
             occurrenceId: occurrenceId,
+            phase: _phaseFromPayload(item.payload),
+            previousOccurrenceId: _previousFromPayload(item.payload),
+            title: item.notificationSettings.title,
+            body: item.notificationSettings.body,
             nativeAlarmId: item.id,
             scheduledAtUtc: item.dateTime.toUtc(),
           ),
@@ -149,6 +171,23 @@ final class AndroidAlarmGateway implements AlarmGateway {
       ),
     );
   }
+
+  Map<String, dynamic> _payload(String? payload) {
+    try {
+      final decoded = jsonDecode(payload ?? 'null');
+      return decoded is Map<String, dynamic> ? decoded : const {};
+    } on FormatException {
+      return const {};
+    }
+  }
+
+  AlarmPhase _phaseFromPayload(String? payload) =>
+      AlarmPhase.values
+          .where((v) => v.name == _payload(payload)['phase'])
+          .firstOrNull ??
+      AlarmPhase.start;
+  String? _previousFromPayload(String? payload) =>
+      _payload(payload)['previousOccurrenceId'] as String?;
 
   String? _occurrenceIdFromPayload(String? payload) {
     if (payload == null || payload.isEmpty) {

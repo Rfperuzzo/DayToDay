@@ -10,7 +10,9 @@ abstract final class DailyTaskSequence {
             left.scheduledStartUtc.compareTo(right.scheduledStartUtc),
       );
     for (final occurrence in sorted) {
-      if (!occurrence.isReminder && _isPending(occurrence.status)) {
+      if (!occurrence.isReminder &&
+          !occurrence.usesBoundaryAlarms &&
+          _isPending(occurrence.status)) {
         return occurrence;
       }
     }
@@ -26,8 +28,11 @@ abstract final class DailyTaskSequence {
             .where(
               (o) =>
                   _isPending(o.status) &&
-                  (o.isReminder
-                      ? o.acknowledgedAtUtc == null
+                  (o.isReminder || o.usesBoundaryAlarms
+                      ? o.acknowledgedAtUtc == null ||
+                            (o.usesBoundaryAlarms &&
+                                o.notifyAtEnd &&
+                                o.endAcknowledgedAtUtc == null)
                       : o.id == block?.id),
             )
             .toList()
@@ -40,6 +45,7 @@ abstract final class DailyTaskSequence {
     required ActivityOccurrence? available,
   }) =>
       !occurrence.isReminder &&
+      !occurrence.usesBoundaryAlarms &&
       _isPending(occurrence.status) &&
       occurrence.id != available?.id;
 

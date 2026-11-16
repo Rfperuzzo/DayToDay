@@ -32,8 +32,12 @@ restrições do Android e do fabricante.
 
 ## Desenvolvimento
 
+Os blocos permitem escolher início/final e avisar em cada ponta, nos dois ou em
+nenhum. Fim e início coincidentes podem gerar um único aviso de troca, sem concluir
+atividades automaticamente. Dados existentes são preservados.
+
 O kit de publicação está em [PLAYSTORE](PLAYSTORE/00_LEIA_PRIMEIRO.md): AAB de
-produção assinado na entrega local/ZIP, seis screenshots, ícone, destaque, textos,
+produção assinado na entrega local/ZIP, oito screenshots, ícone, destaque, textos,
 respostas de Console e demonstração real. A [política pública](https://rfperuzzo.github.io/DayToDay/privacidade.html)
 também pode ser lida offline em Privacidade e suporte no app. Publicação, aceite
 de formulários e ensaios de pré-lançamento ficam com o titular, conforme o checklist.

@@ -21,10 +21,18 @@ final class ActivityOccurrence {
     this.attempt = 0,
     this.kind = ActivityKind.timeBlock,
     this.acknowledgedAtUtc,
+    this.endAcknowledgedAtUtc,
+    this.notifyAtStart = true,
+    this.notifyAtEnd = false,
+    this.usesBoundaryAlarms = false,
   });
 
   final ActivityKind kind;
   final DateTime? acknowledgedAtUtc;
+  final DateTime? endAcknowledgedAtUtc;
+  final bool notifyAtStart;
+  final bool notifyAtEnd;
+  final bool usesBoundaryAlarms;
   bool get isReminder => kind == ActivityKind.reminder;
   final String id;
   final String activityId;
@@ -42,9 +50,18 @@ final class ActivityOccurrence {
     OccurrenceStatus? status,
     int? attempt,
     DateTime? acknowledgedAtUtc,
+    DateTime? endAcknowledgedAtUtc,
   }) {
     return ActivityOccurrence(
       kind: kind,
+      notifyAtStart: notifyAtStart,
+      notifyAtEnd: notifyAtEnd,
+      usesBoundaryAlarms: usesBoundaryAlarms,
+      endAcknowledgedAtUtc:
+          scheduledStartUtc != null &&
+              scheduledStartUtc != this.scheduledStartUtc
+          ? null
+          : endAcknowledgedAtUtc ?? this.endAcknowledgedAtUtc,
       acknowledgedAtUtc:
           scheduledStartUtc != null &&
               scheduledStartUtc != this.scheduledStartUtc

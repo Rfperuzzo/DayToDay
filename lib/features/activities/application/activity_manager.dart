@@ -20,11 +20,17 @@ final class ActivityEditDraft {
     required this.recurrence,
     required this.estimatedDuration,
     this.kind = ActivityKind.timeBlock,
+    this.notifyAtStart = true,
+    this.notifyAtEnd = false,
+    this.usesBoundaryAlarms = false,
     this.customWeekdays = const {DateTime.monday},
   });
 
   final Set<int> customWeekdays;
   final ActivityKind kind;
+  final bool notifyAtStart;
+  final bool notifyAtEnd;
+  final bool usesBoundaryAlarms;
   final String title;
   final int hour;
   final int minute;
@@ -105,6 +111,9 @@ final class ActivityManager {
     );
     final updated = activity.copyWith(
       kind: draft.kind,
+      notifyAtStart: draft.notifyAtStart,
+      notifyAtEnd: draft.notifyAtEnd,
+      usesBoundaryAlarms: draft.usesBoundaryAlarms,
       title: draft.title,
       recurrence: recurrence,
       estimatedDuration: draft.estimatedDuration,
@@ -273,6 +282,9 @@ final class ActivityManager {
     try {
       for (final occurrence in previousOccurrences) {
         await _alarms.cancel(occurrence.id);
+        if (occurrence.usesBoundaryAlarms) {
+          await _alarms.cancel(AlarmIdentity.endKey(occurrence.id));
+        }
       }
       await _alarmReconciler.reconcile(_preferences);
       return true;

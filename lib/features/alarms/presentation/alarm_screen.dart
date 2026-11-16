@@ -81,23 +81,27 @@ final class _AlarmRingingScreenState extends State<AlarmRingingScreen> {
                             borderRadius: BorderRadius.circular(99),
                             border: Border.all(color: Colors.white24),
                           ),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 9,
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.notifications_active_rounded,
                                   color: Colors.white,
                                   size: 19,
                                 ),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 8),
                                 Text(
-                                  'ALARME TOCANDO',
-                                  style: TextStyle(
+                                  widget.alarm.phase == AlarmPhase.transition
+                                      ? 'HORA DE TROCAR'
+                                      : widget.alarm.phase == AlarmPhase.end
+                                      ? 'FINAL DO BLOCO'
+                                      : 'ALARME TOCANDO',
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w900,
@@ -204,54 +208,71 @@ final class _AlarmRingingScreenState extends State<AlarmRingingScreen> {
                                   minimumSize: const Size(double.infinity, 56),
                                 ),
                               ),
-                              const SizedBox(height: 12),
-                              OutlinedButton.icon(
-                                onPressed: widget.isResponding
-                                    ? null
-                                    : () => widget.onRespond(
-                                        AlarmResponse.complete,
-                                      ),
-                                icon: const Icon(Icons.check_circle_rounded),
-                                label: const Text('Concluir'),
-                                style: FilledButton.styleFrom(
-                                  minimumSize: const Size(double.infinity, 58),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              OutlinedButton.icon(
-                                onPressed: widget.isResponding
-                                    ? null
-                                    : () => widget.onRespond(
-                                        AlarmResponse.nowNot,
-                                      ),
-                                icon: const Icon(Icons.auto_fix_high_rounded),
-                                label: const Text('Adiar atividade'),
-                                style: OutlinedButton.styleFrom(
-                                  minimumSize: const Size(double.infinity, 56),
-                                  foregroundColor: RotinaColors.primary,
-                                  side: const BorderSide(
-                                    color: RotinaColors.outline,
-                                  ),
-                                  shape: const StadiumBorder(),
-                                  textStyle: const TextStyle(
-                                    fontWeight: FontWeight.w800,
+                              if (widget.alarm.phase == AlarmPhase.start) ...[
+                                const SizedBox(height: 12),
+                                OutlinedButton.icon(
+                                  onPressed: widget.isResponding
+                                      ? null
+                                      : () => widget.onRespond(
+                                          AlarmResponse.complete,
+                                        ),
+                                  icon: const Icon(Icons.check_circle_rounded),
+                                  label: const Text('Concluir'),
+                                  style: FilledButton.styleFrom(
+                                    minimumSize: const Size(
+                                      double.infinity,
+                                      58,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              TextButton.icon(
-                                onPressed: widget.isResponding
-                                    ? null
-                                    : () => widget.onRespond(
-                                        AlarmResponse.skipToday,
-                                      ),
-                                icon: const Icon(Icons.event_busy_rounded),
-                                label: const Text('Pular somente hoje'),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: RotinaColors.textMuted,
-                                  minimumSize: const Size(double.infinity, 48),
+                                const SizedBox(height: 12),
+                                OutlinedButton.icon(
+                                  onPressed: widget.isResponding
+                                      ? null
+                                      : () => widget.onRespond(
+                                          AlarmResponse.nowNot,
+                                        ),
+                                  icon: const Icon(Icons.auto_fix_high_rounded),
+                                  label: const Text('Adiar atividade'),
+                                  style: OutlinedButton.styleFrom(
+                                    minimumSize: const Size(
+                                      double.infinity,
+                                      56,
+                                    ),
+                                    foregroundColor: RotinaColors.primary,
+                                    side: const BorderSide(
+                                      color: RotinaColors.outline,
+                                    ),
+                                    shape: const StadiumBorder(),
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(height: 8),
+                                TextButton.icon(
+                                  onPressed: widget.isResponding
+                                      ? null
+                                      : () => widget.onRespond(
+                                          AlarmResponse.skipToday,
+                                        ),
+                                  icon: const Icon(Icons.event_busy_rounded),
+                                  label: const Text('Pular somente hoje'),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: RotinaColors.textMuted,
+                                    minimumSize: const Size(
+                                      double.infinity,
+                                      48,
+                                    ),
+                                  ),
+                                ),
+                              ] else ...[
+                                const SizedBox(height: RotinaSpacing.md),
+                                const Text(
+                                  'Conclua as atividades separadamente na sua rotina.',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                               if (widget.isResponding) ...[
                                 const SizedBox(height: 14),
                                 const LinearProgressIndicator(
@@ -265,7 +286,11 @@ final class _AlarmRingingScreenState extends State<AlarmRingingScreen> {
                         ),
                         const SizedBox(height: 22),
                         Text(
-                          'O aviso toca uma vez. Parar alarme mantém a atividade pendente; Concluir registra que você terminou.',
+                          widget.alarm.phase == AlarmPhase.transition
+                              ? 'Parar silencia a troca. Nenhuma das atividades é concluída automaticamente.'
+                              : widget.alarm.phase == AlarmPhase.end
+                              ? 'O horário reservado terminou. A conclusão continua sendo uma escolha sua.'
+                              : 'O aviso toca uma vez. Parar alarme mantém a atividade pendente; Concluir registra que você terminou.',
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
@@ -433,8 +458,9 @@ final class AlarmResolvedScreen extends StatelessWidget {
   AlarmResponse.silence => (
     icon: Icons.notifications_off_outlined,
     heading: 'Aviso silenciado',
-    message:
-        'A atividade continua pendente. Marque como concluída quando terminar.',
+    message: result.alarmPhase == AlarmPhase.transition
+        ? 'As atividades continuam pendentes. Conclua cada uma na sua rotina quando terminar.'
+        : 'A atividade continua pendente. Marque como concluída quando terminar.',
   ),
   AlarmResponse.complete => (
     icon: Icons.check_rounded,
