@@ -121,7 +121,9 @@ final class TodayScreen extends ConsumerWidget {
     if (outcome == null || !context.mounted) {
       return;
     }
-    final message = outcome.fullyReady
+    final message = !outcome.alarmsRequested
+        ? 'Atividade salva sem avisos sonoros.'
+        : outcome.fullyReady
         ? 'Atividade salva e alarme preparado.'
         : 'Atividade salva. Revise os acessos para o alarme funcionar com força total.';
     ScaffoldMessenger.of(context).showSnackBar(

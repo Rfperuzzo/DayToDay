@@ -15,8 +15,10 @@ final class AlarmResponseResult {
     required this.occurrence,
     required this.adjustedOccurrences,
     required this.alarmsSynchronized,
+    this.alarmPhase = AlarmPhase.start,
   });
 
+  final AlarmPhase alarmPhase;
   final AlarmResponse response;
   final ActivityOccurrence occurrence;
   final List<ActivityOccurrence> adjustedOccurrences;
@@ -48,33 +50,80 @@ final class AlarmResponseService {
   Future<AlarmResponseResult> respond({
     required String occurrenceId,
     required AlarmResponse response,
+    AlarmPhase phase = AlarmPhase.start,
+    String? previousOccurrenceId,
   }) async {
     final occurrence = await _occurrences.findById(occurrenceId);
     if (occurrence == null) {
       throw StateError('A ocorrência do alarme não foi encontrada.');
     }
 
+    if (phase == AlarmPhase.transition && response != AlarmResponse.silence) {
+      throw StateError('Conclua cada atividade separadamente na rotina.');
+    }
+    if (phase == AlarmPhase.end && response == AlarmResponse.nowNot) {
+      throw StateError('Edite o horário da atividade na rotina.');
+    }
     if (response == AlarmResponse.silence) {
       final now = _clock.nowUtc();
       final pending =
           occurrence.status == OccurrenceStatus.scheduled ||
           occurrence.status == OccurrenceStatus.ringing ||
           occurrence.status == OccurrenceStatus.postponed;
-      final updated = pending && occurrence.acknowledgedAtUtc == null
-          ? occurrence.copyWith(acknowledgedAtUtc: now)
+      final updated = pending
+          ? (phase == AlarmPhase.end
+                ? occurrence.copyWith(
+                    acknowledgedAtUtc: occurrence.acknowledgedAtUtc ?? now,
+                    endAcknowledgedAtUtc:
+                        occurrence.endAcknowledgedAtUtc ?? now,
+                  )
+                : occurrence.copyWith(
+                    acknowledgedAtUtc: occurrence.acknowledgedAtUtc ?? now,
+                  ))
           : occurrence;
-      if (!identical(updated, occurrence)) {
+      if (pending) {
         await _occurrences.update(updated);
         await _events.append(
           ActivityEvent(
-            id: '${occurrence.id}:silenced',
+            id: occurrence.usesBoundaryAlarms
+                ? '${occurrence.id}:${phase.name}:silenced'
+                : '${occurrence.id}:silenced',
             occurrenceId: occurrence.id,
             type: ActivityEventType.alarmSilenced,
             occurredAtUtc: now,
           ),
         );
       }
-      await _alarms.cancel(occurrenceId);
+      // Only the requested endpoint is silenced. An initial alarm never removes
+      // the optional final alarm. Closing a final alarm also retires a stale start.
+      await _alarms.cancel(AlarmIdentity.key(occurrenceId, phase));
+      if (phase == AlarmPhase.end) await _alarms.cancel(occurrenceId);
+      if (phase == AlarmPhase.transition && previousOccurrenceId != null) {
+        final previous = await _occurrences.findById(previousOccurrenceId);
+        if (previous != null &&
+            previous.usesBoundaryAlarms &&
+            previous.scheduledEndUtc == occurrence.scheduledStartUtc &&
+            (previous.status == OccurrenceStatus.scheduled ||
+                previous.status == OccurrenceStatus.ringing ||
+                previous.status == OccurrenceStatus.postponed)) {
+          await _occurrences.update(
+            previous.copyWith(
+              acknowledgedAtUtc: previous.acknowledgedAtUtc ?? now,
+              endAcknowledgedAtUtc: previous.endAcknowledgedAtUtc ?? now,
+            ),
+          );
+          await _events.append(
+            ActivityEvent(
+              id: '${previous.id}:end:silenced',
+              occurrenceId: previous.id,
+              type: ActivityEventType.alarmSilenced,
+              occurredAtUtc: now,
+            ),
+          );
+          await _alarms.cancel(previous.id);
+          await _alarms.cancel(AlarmIdentity.endKey(previous.id));
+        }
+      }
       var synchronized = true;
       try {
         await _alarmReconciler.reconcile(_preferences);
@@ -86,12 +135,16 @@ final class AlarmResponseService {
         occurrence: updated,
         adjustedOccurrences: const [],
         alarmsSynchronized: synchronized,
+        alarmPhase: phase,
       );
     }
     if (occurrence.status == OccurrenceStatus.completed ||
         occurrence.status == OccurrenceStatus.skipped ||
         occurrence.status == OccurrenceStatus.cancelled) {
       await _alarms.cancel(occurrenceId);
+      if (occurrence.usesBoundaryAlarms) {
+        await _alarms.cancel(AlarmIdentity.endKey(occurrenceId));
+      }
       return AlarmResponseResult(
         response: response,
         occurrence: occurrence,
@@ -100,6 +153,9 @@ final class AlarmResponseService {
       );
     }
     await _alarms.cancel(occurrenceId);
+    if (occurrence.usesBoundaryAlarms) {
+      await _alarms.cancel(AlarmIdentity.endKey(occurrenceId));
+    }
     return switch (response) {
       AlarmResponse.silence => throw StateError('Handled above'),
       AlarmResponse.complete => _finish(

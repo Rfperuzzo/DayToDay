@@ -5,6 +5,7 @@ import '../../activities/domain/activity_repositories.dart';
 import '../../history/domain/activity_event.dart';
 import '../../routine_engine/application/missed_task_recovery_service.dart';
 import '../domain/alarm_gateway.dart';
+import '../infrastructure/native_alarm_id.dart';
 
 final class AlarmEventProcessor {
   AlarmEventProcessor({
@@ -46,6 +47,37 @@ final class AlarmEventProcessor {
     if (occurrence.status == OccurrenceStatus.completed ||
         occurrence.status == OccurrenceStatus.skipped ||
         occurrence.status == OccurrenceStatus.cancelled) {
+      await _alarms.acknowledge(platformEvent);
+      return;
+    }
+    if (occurrence.usesBoundaryAlarms) {
+      final isEnd =
+          NativeAlarmId.fromOccurrenceId(AlarmIdentity.endKey(occurrence.id)) ==
+          platformEvent.nativeAlarmId;
+      final acknowledged = isEnd
+          ? occurrence.endAcknowledgedAtUtc
+          : occurrence.acknowledgedAtUtc;
+      if (acknowledged != null) {
+        await _alarms.cancel(
+          isEnd ? AlarmIdentity.endKey(occurrence.id) : occurrence.id,
+        );
+      } else {
+        // Platform retries/drops concern the notice, never move an explicitly
+        // reserved interval, cancel the activity or complete it on the user's behalf.
+        await _events.append(
+          ActivityEvent(
+            id: platformEvent.key,
+            occurrenceId: occurrence.id,
+            type: platformEvent.type == AlarmPlatformEventType.moved
+                ? ActivityEventType.automaticallyRescheduled
+                : ActivityEventType.alarmDropped,
+            occurredAtUtc: platformEvent.recordedAtUtc,
+            nextStartUtc: platformEvent.type == AlarmPlatformEventType.moved
+                ? platformEvent.alarmTimeUtc
+                : null,
+          ),
+        );
+      }
       await _alarms.acknowledge(platformEvent);
       return;
     }

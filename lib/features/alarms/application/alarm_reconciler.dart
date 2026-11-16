@@ -1,6 +1,5 @@
 import '../../../core/time/clock.dart';
 import '../../../core/time/time_zone_service.dart';
-import '../../activities/domain/activity_occurrence.dart';
 import '../../activities/domain/activity_repositories.dart';
 import '../../settings/domain/user_preferences.dart';
 import '../domain/alarm_gateway.dart';
@@ -32,87 +31,143 @@ final class AlarmReconciler {
   Future<void> reconcile(UserPreferences preferences) async {
     final now = _clock.nowUtc();
     final until = now.add(Duration(days: preferences.scheduleHorizonDays));
-    final localNow = _timeZone.toLocal(now);
+    final local = _timeZone.toLocal(now);
     final dayStart = _timeZone.localComponentsToUtc(
-      DateTime(localNow.year, localNow.month, localNow.day),
+      DateTime(local.year, local.month, local.day),
     );
+    // Boundary blocks intersecting the window include a still-pending final alarm,
+    // even when their start was yesterday. The repository retains legacy semantics.
     final desired = await _occurrences.findScheduledBetween(dayStart, until);
-    desired.sort(
-      (left, right) =>
-          left.scheduledStartUtc.compareTo(right.scheduledStartUtc),
-    );
+    desired.sort((a, b) => a.scheduledStartUtc.compareTo(b.scheduledStartUtc));
     final existing = {
-      for (final item in await _alarms.scheduled()) item.occurrenceId: item,
+      for (final item in await _alarms.scheduled()) item.alarmKey: item,
     };
-    final sequential =
-        _firstOccurrenceOfEachDay(desired)
-            .where(
-              (item) =>
-                  item.acknowledgedAtUtc == null &&
-                  (!item.scheduledStartUtc.isBefore(now) ||
-                      existing.containsKey(item.id)),
-            )
-            .toList()
-          ..sort((a, b) => a.scheduledStartUtc.compareTo(b.scheduledStartUtc));
-    final limited = sequential.take(preferences.maxPendingAlarms).toList();
-    _validateNativeIds(limited.map((item) => item.id));
-
-    final desiredIds = limited.map((item) => item.id).toSet();
-
-    for (final stale in existing.keys.where(
-      (occurrenceId) => !desiredIds.contains(occurrenceId),
-    )) {
-      await _alarms.cancel(stale);
-    }
-
-    for (final occurrence in limited) {
-      // Retain an existing due/ringing alarm, but never recreate an overdue one.
-      if (occurrence.scheduledStartUtc.isBefore(now)) continue;
-      final binding = existing[occurrence.id];
-      if (binding?.scheduledAtUtc == occurrence.scheduledStartUtc) {
+    final legacyDays = <String>{};
+    final requests = <AlarmRequest>[];
+    final starts = <AlarmRequest>[];
+    final ends = <AlarmRequest>[];
+    for (final occurrence in desired) {
+      final activity = await _activities.findById(occurrence.activityId);
+      if (activity != null && !activity.isActive) continue;
+      final title = activity?.title ?? 'Atividade do DayToDay';
+      if (!occurrence.usesBoundaryAlarms || occurrence.isReminder) {
+        final localDay = _timeZone.toLocal(occurrence.scheduledStartUtc);
+        if (!occurrence.isReminder &&
+            !legacyDays.add(
+              '${localDay.year}-${localDay.month}-${localDay.day}',
+            )) {
+          continue;
+        }
+        if (occurrence.acknowledgedAtUtc != null) continue;
+        if (occurrence.scheduledStartUtc.isBefore(now) &&
+            !existing.containsKey(occurrence.id)) {
+          continue;
+        }
+        requests.add(
+          AlarmRequest(
+            occurrenceId: occurrence.id,
+            scheduledAtUtc: occurrence.scheduledStartUtc,
+            estimatedDuration: occurrence.estimatedDuration,
+            title: title,
+            body: 'Pare o aviso ou marque como feito no DayToDay.',
+          ),
+        );
         continue;
       }
-      final activity = await _activities.findById(occurrence.activityId);
-      await _alarms.schedule(
+      if (occurrence.notifyAtStart &&
+          occurrence.acknowledgedAtUtc == null &&
+          (!occurrence.scheduledStartUtc.isBefore(now) ||
+              existing.containsKey(occurrence.id))) {
+        starts.add(
+          AlarmRequest(
+            occurrenceId: occurrence.id,
+            scheduledAtUtc: occurrence.scheduledStartUtc,
+            estimatedDuration: occurrence.estimatedDuration,
+            title: title,
+            body: 'Hora de começar. Parar o aviso não conclui a atividade.',
+          ),
+        );
+      }
+      if (occurrence.notifyAtEnd &&
+          occurrence.endAcknowledgedAtUtc == null &&
+          (!occurrence.scheduledEndUtc.isBefore(now) ||
+              existing.containsKey(AlarmIdentity.endKey(occurrence.id)))) {
+        ends.add(
+          AlarmRequest(
+            occurrenceId: occurrence.id,
+            phase: AlarmPhase.end,
+            scheduledAtUtc: occurrence.scheduledEndUtc,
+            estimatedDuration: occurrence.estimatedDuration,
+            title: title,
+            body:
+                'Seu período reservado terminou. A conclusão é feita por você.',
+          ),
+        );
+      }
+    }
+    // Non-overlapping time blocks have at most one end/start pair at an instant.
+    // Only enabled, unacknowledged endpoints participate in a transition.
+    final consumedEnds = <String>{};
+    for (final start in starts) {
+      final end = ends
+          .where(
+            (e) =>
+                e.occurrenceId != start.occurrenceId &&
+                e.scheduledAtUtc == start.scheduledAtUtc &&
+                !consumedEnds.contains(e.alarmKey),
+          )
+          .firstOrNull;
+      if (end == null) {
+        requests.add(start);
+        continue;
+      }
+      consumedEnds.add(end.alarmKey);
+      requests.add(
         AlarmRequest(
-          occurrenceId: occurrence.id,
-          scheduledAtUtc: occurrence.scheduledStartUtc,
-          estimatedDuration: occurrence.estimatedDuration,
-          title: activity?.title ?? 'Atividade do DayToDay',
-          body: 'Pare o aviso ou marque como feito no DayToDay.',
+          occurrenceId: start.occurrenceId,
+          phase: AlarmPhase.transition,
+          previousOccurrenceId: end.occurrenceId,
+          scheduledAtUtc: start.scheduledAtUtc,
+          estimatedDuration: start.estimatedDuration,
+          title: '${end.title} → ${start.title}',
+          body:
+              'Hora de trocar. Termina: ${end.title}. Começa: ${start.title}.',
         ),
       );
     }
-  }
-
-  List<ActivityOccurrence> _firstOccurrenceOfEachDay(
-    List<ActivityOccurrence> occurrences,
-  ) {
-    final seenDays = <String>{};
-    return [
-      for (final occurrence in occurrences)
-        if (occurrence.isReminder ||
-            seenDays.add(_localDayKey(occurrence.scheduledStartUtc)))
-          occurrence,
-    ];
-  }
-
-  String _localDayKey(DateTime utc) {
-    final local = _timeZone.toLocal(utc);
-    return '${local.year}-${local.month}-${local.day}';
-  }
-
-  void _validateNativeIds(Iterable<String> occurrenceIds) {
+    requests.addAll(ends.where((e) => !consumedEnds.contains(e.alarmKey)));
+    requests.sort((a, b) {
+      final time = a.scheduledAtUtc.compareTo(b.scheduledAtUtc);
+      return time != 0 ? time : a.alarmKey.compareTo(b.alarmKey);
+    });
+    final limited = requests.take(preferences.maxPendingAlarms).toList();
     final seen = <int, String>{};
-    for (final occurrenceId in occurrenceIds) {
-      final nativeId = NativeAlarmId.fromOccurrenceId(occurrenceId);
-      final previous = seen[nativeId];
-      if (previous != null && previous != occurrenceId) {
-        throw StateError(
-          'Colisão de identificador de alarme entre $previous e $occurrenceId.',
-        );
+    for (final request in limited) {
+      final id = NativeAlarmId.fromOccurrenceId(request.alarmKey);
+      if (seen.containsKey(id) && seen[id] != request.alarmKey) {
+        throw StateError('Colisão de identificador de alarme.');
       }
-      seen[nativeId] = occurrenceId;
+      seen[id] = request.alarmKey;
+    }
+    final desiredKeys = limited.map((r) => r.alarmKey).toSet();
+    for (final stale in existing.keys.where(
+      (key) => !desiredKeys.contains(key),
+    )) {
+      await _alarms.cancel(stale);
+    }
+    for (final request in limited) {
+      // Never replay an overdue alarm; preserve an already-ringing/retrying one.
+      if (request.scheduledAtUtc.isBefore(now)) continue;
+      final binding = existing[request.alarmKey];
+      if (binding != null &&
+          binding.scheduledAtUtc == request.scheduledAtUtc &&
+          binding.phase == request.phase &&
+          binding.previousOccurrenceId == request.previousOccurrenceId &&
+          (binding.title == null || binding.title == request.title) &&
+          (binding.body == null || binding.body == request.body)) {
+        continue;
+      }
+      await _alarms.schedule(request);
     }
   }
 }

@@ -16,14 +16,17 @@ final class NewActivityOutcome {
   const NewActivityOutcome({
     required this.creation,
     required this.alarmCapabilities,
+    this.alarmsRequested = true,
   });
 
   final ActivityCreationResult creation;
   final AlarmCapabilities? alarmCapabilities;
+  final bool alarmsRequested;
 
   bool get fullyReady =>
-      creation.alarmsSynchronized &&
-      (alarmCapabilities?.fullyOperational ?? false);
+      !alarmsRequested ||
+      (creation.alarmsSynchronized &&
+          (alarmCapabilities?.fullyOperational ?? false));
 }
 
 final class NewActivitySheet extends StatefulWidget {
@@ -52,7 +55,11 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
   final _notesController = TextEditingController();
   late DateTime _day;
   late TimeOfDay _time;
-  var _durationMinutes = 30;
+  late TimeOfDay _endTime;
+  int _endDayOffset = 0;
+  bool _notifyAtStart = true;
+  bool _notifyAtEnd = false;
+  String? _timingError;
   bool _reserveTime = false;
   Set<int> _customWeekdays = {DateTime.monday};
   var _priority = ActivityPriority.normal;
@@ -71,6 +78,12 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
       _day = DateUtils.dateOnly(suggested);
     }
     _time = _initialTime(_day, today, suggested);
+    final endMinutes = _time.hour * 60 + _time.minute + 30;
+    _endTime = TimeOfDay(
+      hour: (endMinutes ~/ 60) % 24,
+      minute: endMinutes % 60,
+    );
+    _endDayOffset = endMinutes ~/ 1440;
   }
 
   @override
@@ -161,7 +174,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    _SectionLabel(label: 'Quando?'),
+                    _SectionLabel(label: _reserveTime ? 'Início' : 'Quando?'),
                     const SizedBox(height: 8),
                     LayoutBuilder(
                       builder: (context, constraints) {
@@ -172,7 +185,9 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                         );
                         final time = _PickerTile(
                           icon: Icons.schedule_rounded,
-                          label: _time.format(context),
+                          label: _reserveTime
+                              ? 'Início · ${_time.format(context)}'
+                              : _time.format(context),
                           onTap: _pickTime,
                         );
                         if (constraints.maxWidth < 360 &&
@@ -209,20 +224,25 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                           setState(() => _reserveTime = value),
                     ),
                     if (_reserveTime) ...[
-                      _SectionLabel(label: 'Duração'),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          for (final minutes in const [15, 30, 45, 60, 90])
-                            ChoiceChip(
-                              label: Text('$minutes min'),
-                              selected: _durationMinutes == minutes,
-                              onSelected: (_) =>
-                                  setState(() => _durationMinutes = minutes),
-                            ),
-                        ],
+                      BlockTimingFields(
+                        endTime: _endTime,
+                        endDayOffset: _endDayOffset,
+                        duration: _blockDuration,
+                        notifyAtStart: _notifyAtStart,
+                        notifyAtEnd: _notifyAtEnd,
+                        error: _timingError,
+                        onEndTimeChanged: (value) => setState(() {
+                          _endTime = value;
+                          _timingError = null;
+                        }),
+                        onNextDayChanged: (value) => setState(() {
+                          _endDayOffset = value ? 1 : 0;
+                          _timingError = null;
+                        }),
+                        onStartAlertChanged: (value) =>
+                            setState(() => _notifyAtStart = value),
+                        onEndAlertChanged: (value) =>
+                            setState(() => _notifyAtEnd = value),
                       ),
                       const SizedBox(height: 24),
                     ],
@@ -273,21 +293,20 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                         color: RotinaColors.primarySoft,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Row(
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.alarm_rounded,
                             color: RotinaColors.primary,
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'O aviso toca uma vez. Parar alarme não conclui a atividade. O Android pode exigir acessos especiais.',
-                              style: TextStyle(
-                                color: RotinaColors.text,
-                                height: 1.4,
-                              ),
+                              _hasAlarms
+                                  ? 'Cada aviso toca uma vez. Parar o aviso não conclui a atividade. O Android pode exigir acessos especiais.'
+                                  : 'Este bloco ficará na agenda sem avisos sonoros. Você pode concluí-lo pela sua rotina.',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
                         ],
@@ -306,7 +325,11 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
                             )
                           : const Icon(Icons.add_alarm_rounded),
                       label: Text(
-                        _saving ? 'Salvando…' : 'Salvar e preparar alarme',
+                        _saving
+                            ? 'Salvando…'
+                            : _hasAlarms
+                            ? 'Salvar e preparar alarme'
+                            : 'Salvar atividade',
                       ),
                       style: FilledButton.styleFrom(
                         minimumSize: const Size(double.infinity, 56),
@@ -347,27 +370,44 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
       cancelText: 'Cancelar',
       confirmText: 'Escolher',
     );
-    if (selected != null) {
-      setState(() => _day = DateUtils.dateOnly(selected));
+    if (mounted && selected != null) {
+      setState(() {
+        _day = DateUtils.dateOnly(selected);
+        _timingError = null;
+      });
     }
   }
 
   Future<void> _pickTime() async {
     final selected = await showTimePicker(
       context: context,
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+        child: child!,
+      ),
       initialTime: _time,
-      helpText: 'Escolha o horário',
+      helpText: _reserveTime ? 'Horário inicial' : 'Horário',
       cancelText: 'Cancelar',
       confirmText: 'Escolher',
     );
-    if (selected != null) {
-      setState(() => _time = selected);
+    if (mounted && selected != null) {
+      setState(() {
+        _time = selected;
+        _timingError = null;
+      });
     }
   }
 
   Future<void> _save() async {
     if (_saving) return;
     if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    if (_reserveTime && _blockDuration <= Duration.zero) {
+      setState(
+        () => _timingError =
+            'Escolha um horário final depois do início. Se necessário, marque o dia seguinte.',
+      );
       return;
     }
     final localComponents = DateTime(
@@ -388,7 +428,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
 
     setState(() => _saving = true);
     try {
-      final capabilities = await _ensureAlarmAccess();
+      final capabilities = _hasAlarms ? await _ensureAlarmAccess() : null;
       if (_recurrence == ActivityRecurrencePreset.once &&
           !scheduledAtUtc.isAfter(widget.clock.nowUtc())) {
         if (mounted) {
@@ -427,9 +467,10 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
           title: _titleController.text,
           notes: _notesController.text,
           kind: _reserveTime ? ActivityKind.timeBlock : ActivityKind.reminder,
-          estimatedDuration: _reserveTime
-              ? Duration(minutes: _durationMinutes)
-              : Duration.zero,
+          estimatedDuration: _reserveTime ? _blockDuration : Duration.zero,
+          notifyAtStart: _reserveTime ? _notifyAtStart : true,
+          notifyAtEnd: _reserveTime ? _notifyAtEnd : false,
+          usesBoundaryAlarms: _reserveTime,
           priority: _priority,
           recurrence: recurrence,
         ),
@@ -441,6 +482,7 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
           NewActivityOutcome(
             creation: creation,
             alarmCapabilities: capabilities,
+            alarmsRequested: _hasAlarms,
           ),
         );
       }
@@ -477,6 +519,16 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
   }
+
+  bool get _hasAlarms => !_reserveTime || _notifyAtStart || _notifyAtEnd;
+
+  Duration get _blockDuration => blockDurationBetween(
+    day: _day,
+    start: _time,
+    end: _endTime,
+    endDayOffset: _endDayOffset,
+    timeZone: widget.timeZone,
+  );
 
   Future<AlarmCapabilities?> _ensureAlarmAccess() async {
     AlarmCapabilities? capabilities;
@@ -517,6 +569,153 @@ final class _NewActivitySheetState extends State<NewActivitySheet> {
       return capabilities;
     }
   }
+}
+
+/// Shared presentation of an explicitly chosen block end and its alert options.
+final class BlockTimingFields extends StatelessWidget {
+  const BlockTimingFields({
+    required this.endTime,
+    required this.endDayOffset,
+    required this.duration,
+    required this.notifyAtStart,
+    required this.notifyAtEnd,
+    required this.onEndTimeChanged,
+    required this.onNextDayChanged,
+    required this.onStartAlertChanged,
+    required this.onEndAlertChanged,
+    this.error,
+    super.key,
+  });
+
+  final TimeOfDay endTime;
+  final int endDayOffset;
+  final Duration duration;
+  final bool notifyAtStart, notifyAtEnd;
+  final ValueChanged<TimeOfDay> onEndTimeChanged;
+  final ValueChanged<bool> onNextDayChanged,
+      onStartAlertChanged,
+      onEndAlertChanged;
+  final String? error;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+          key: const ValueKey('block-end-time'),
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.schedule_rounded),
+          title: const Text('Horário final'),
+          subtitle: Text(endTime.format(context)),
+          trailing: const Icon(Icons.chevron_right_rounded),
+          onTap: () async {
+            final selected = await showTimePicker(
+              context: context,
+              builder: (context, child) => MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(alwaysUse24HourFormat: true),
+                child: child!,
+              ),
+              initialTime: endTime,
+              helpText: 'Horário final',
+              cancelText: 'Cancelar',
+              confirmText: 'Escolher',
+            );
+            if (context.mounted && selected != null) onEndTimeChanged(selected);
+          },
+        ),
+        CheckboxListTile(
+          key: const ValueKey('block-next-day'),
+          contentPadding: EdgeInsets.zero,
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Text(
+            endDayOffset > 1
+                ? 'Termina $endDayOffset dias depois (duração existente)'
+                : 'Termina no dia seguinte',
+          ),
+          subtitle: endDayOffset > 1
+              ? const Text(
+                  'O intervalo original será mantido. Ao alterar o término, escolha hoje ou o dia seguinte.',
+                )
+              : null,
+          value: endDayOffset > 0,
+          onChanged: (value) => onNextDayChanged(value ?? false),
+        ),
+        Text(
+          duration > Duration.zero
+              ? 'Duração: ${_durationLabel(duration)}'
+              : 'O horário final deve ser depois do início.',
+          key: const ValueKey('block-duration-summary'),
+          style: theme.textTheme.bodyMedium,
+        ),
+        if (error != null) ...[
+          const SizedBox(height: RotinaSpacing.sm),
+          Semantics(
+            liveRegion: true,
+            child: Text(
+              error!,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.error,
+              ),
+            ),
+          ),
+        ],
+        const SizedBox(height: RotinaSpacing.md),
+        Text('Avisos do bloco', style: theme.textTheme.titleSmall),
+        SwitchListTile.adaptive(
+          key: const ValueKey('block-notify-start'),
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Avisar no início'),
+          value: notifyAtStart,
+          onChanged: onStartAlertChanged,
+        ),
+        SwitchListTile.adaptive(
+          key: const ValueKey('block-notify-end'),
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Avisar no final'),
+          value: notifyAtEnd,
+          onChanged: onEndAlertChanged,
+        ),
+        Text(
+          'Os avisos não marcam a atividade como concluída. Quando o final coincidir com o início de outro bloco com aviso, você receberá um único aviso de troca.',
+          style: theme.textTheme.bodyMedium,
+        ),
+      ],
+    );
+  }
+}
+
+Duration blockDurationBetween({
+  required DateTime day,
+  required TimeOfDay start,
+  required TimeOfDay end,
+  required int endDayOffset,
+  required TimeZoneService timeZone,
+}) => timeZone
+    .localComponentsToUtc(
+      DateTime(
+        day.year,
+        day.month,
+        day.day + endDayOffset,
+        end.hour,
+        end.minute,
+      ),
+    )
+    .difference(
+      timeZone.localComponentsToUtc(
+        DateTime(day.year, day.month, day.day, start.hour, start.minute),
+      ),
+    );
+
+String _durationLabel(Duration duration) {
+  final minutes = duration.inMinutes;
+  final hours = minutes ~/ 60;
+  final remainder = minutes % 60;
+  if (hours == 0) return '$minutes min';
+  return remainder == 0 ? '$hours h' : '$hours h $remainder min';
 }
 
 final class _SectionLabel extends StatelessWidget {

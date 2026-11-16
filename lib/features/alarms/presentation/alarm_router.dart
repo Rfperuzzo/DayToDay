@@ -94,7 +94,7 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
     final first = alarms.first;
     if (_isResponding) {
       _pendingAlarm = alarms
-          .where((item) => item.occurrenceId != _activeAlarm?.occurrenceId)
+          .where((item) => item.alarmKey != _activeAlarm?.alarmKey)
           .firstOrNull;
       return;
     }
@@ -106,7 +106,7 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
       });
       return;
     }
-    if (first.occurrenceId == _activeAlarm?.occurrenceId) {
+    if (first.alarmKey == _activeAlarm?.alarmKey) {
       return;
     }
     setState(() {
@@ -126,7 +126,12 @@ final class _AlarmRouterState extends ConsumerState<AlarmRouter> {
     try {
       final result = await ref
           .read(alarmResponseServiceProvider)
-          .respond(occurrenceId: alarm.occurrenceId, response: response);
+          .respond(
+            occurrenceId: alarm.occurrenceId,
+            response: response,
+            phase: alarm.phase,
+            previousOccurrenceId: alarm.previousOccurrenceId,
+          );
       if (!mounted) {
         return;
       }

@@ -10,6 +10,7 @@ import '../domain/activity_occurrence.dart';
 import '../domain/activity_recurrence_preset.dart';
 import '../domain/recurrence_rule.dart';
 import 'activity_recurrence_selector.dart';
+import 'new_activity_sheet.dart';
 
 enum ActivityOption { complete, postpone, edit, subtasks, cancel }
 
@@ -156,7 +157,13 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
   late final TextEditingController _titleController;
   late TimeOfDay _time;
   late ActivityRecurrencePreset _recurrence;
-  late int _durationMinutes;
+  late TimeOfDay _endTime;
+  late DateTime _localDay;
+  int _endDayOffset = 0;
+  Duration? _preservedDuration;
+  bool _notifyAtStart = true;
+  bool _notifyAtEnd = false;
+  String? _timingError;
   bool _reserveTime = false;
   Set<int> _customWeekdays = {DateTime.monday};
 
@@ -168,9 +175,21 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
     _time = TimeOfDay.fromDateTime(local);
     _recurrence = _presetFor(widget.activity.recurrence);
     _reserveTime = !widget.activity.isReminder;
-    _durationMinutes = _reserveTime
-        ? widget.activity.estimatedDuration.inMinutes
-        : 30;
+    _localDay = DateUtils.dateOnly(local);
+    _preservedDuration = _reserveTime
+        ? widget.activity.estimatedDuration
+        : const Duration(minutes: 30);
+    final end = widget.timeZone.toLocal(
+      widget.occurrence.scheduledStartUtc.add(_preservedDuration!),
+    );
+    _endTime = TimeOfDay.fromDateTime(end);
+    _endDayOffset = DateTime.utc(
+      end.year,
+      end.month,
+      end.day,
+    ).difference(DateTime.utc(local.year, local.month, local.day)).inDays;
+    _notifyAtStart = widget.activity.notifyAtStart;
+    _notifyAtEnd = widget.activity.notifyAtEnd;
     if (widget.activity.recurrence case WeeklyRecurrence weekly) {
       _customWeekdays = {...weekly.weekdays};
     }
@@ -262,7 +281,9 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
                           Icons.schedule_rounded,
                           color: RotinaColors.primary,
                         ),
-                        title: const Text('Horário'),
+                        title: Text(
+                          _reserveTime ? 'Horário de início' : 'Horário',
+                        ),
                         subtitle: Text(_time.format(context)),
                         trailing: const Icon(Icons.chevron_right_rounded),
                       ),
@@ -281,25 +302,28 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
                           setState(() => _reserveTime = value),
                     ),
                     if (_reserveTime) ...[
-                      Text(
-                        'Duração',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: RotinaColors.text,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          for (final minutes in const [15, 30, 45, 60, 90])
-                            ChoiceChip(
-                              label: Text('$minutes min'),
-                              selected: _durationMinutes == minutes,
-                              onSelected: (_) =>
-                                  setState(() => _durationMinutes = minutes),
-                            ),
-                        ],
+                      BlockTimingFields(
+                        endTime: _endTime,
+                        endDayOffset: _endDayOffset,
+                        duration: _blockDuration,
+                        notifyAtStart: _notifyAtStart,
+                        notifyAtEnd: _notifyAtEnd,
+                        error: _timingError,
+                        onEndTimeChanged: (value) => setState(() {
+                          _endTime = value;
+                          if (_endDayOffset > 1) _endDayOffset = 1;
+                          _preservedDuration = null;
+                          _timingError = null;
+                        }),
+                        onNextDayChanged: (value) => setState(() {
+                          _endDayOffset = value ? 1 : 0;
+                          _preservedDuration = null;
+                          _timingError = null;
+                        }),
+                        onStartAlertChanged: (value) =>
+                            setState(() => _notifyAtStart = value),
+                        onEndAlertChanged: (value) =>
+                            setState(() => _notifyAtEnd = value),
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -338,7 +362,7 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
                           SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'Os alarmes antigos serão substituídos automaticamente.',
+                              'As opções de aviso serão aplicadas à atividade e às próximas repetições. Parar um aviso não conclui a atividade.',
                             ),
                           ),
                         ],
@@ -379,19 +403,52 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
   Future<void> _pickTime() async {
     final selected = await showTimePicker(
       context: context,
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+        child: child!,
+      ),
       initialTime: _time,
       helpText: 'Novo horário',
       cancelText: 'Cancelar',
       confirmText: 'Escolher',
     );
     if (selected != null) {
-      setState(() => _time = selected);
+      setState(() {
+        _time = selected;
+        // A start-time edit keeps the original duration until the end is edited.
+        if (_preservedDuration case final duration?) {
+          final start = widget.timeZone.localComponentsToUtc(
+            DateTime(
+              _localDay.year,
+              _localDay.month,
+              _localDay.day,
+              selected.hour,
+              selected.minute,
+            ),
+          );
+          final end = widget.timeZone.toLocal(start.add(duration));
+          _endTime = TimeOfDay.fromDateTime(end);
+          _endDayOffset = DateTime.utc(end.year, end.month, end.day)
+              .difference(
+                DateTime.utc(_localDay.year, _localDay.month, _localDay.day),
+              )
+              .inDays;
+        }
+        _timingError = null;
+      });
     }
   }
 
   Future<void> _submit() async {
     if (_saving) return;
     if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    if (_reserveTime && _blockDuration <= Duration.zero) {
+      setState(
+        () => _timingError =
+            'Escolha um horário final depois do início. Se necessário, marque o dia seguinte.',
+      );
       return;
     }
     if (_recurrence == ActivityRecurrencePreset.once) {
@@ -423,9 +480,10 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
       recurrence: _recurrence,
       customWeekdays: _customWeekdays,
       kind: _reserveTime ? ActivityKind.timeBlock : ActivityKind.reminder,
-      estimatedDuration: _reserveTime
-          ? Duration(minutes: _durationMinutes)
-          : Duration.zero,
+      estimatedDuration: _reserveTime ? _blockDuration : Duration.zero,
+      notifyAtStart: _reserveTime ? _notifyAtStart : true,
+      notifyAtEnd: _reserveTime ? _notifyAtEnd : false,
+      usesBoundaryAlarms: _reserveTime,
     );
     final save = widget.onSave;
     if (save == null) {
@@ -459,6 +517,16 @@ final class _EditActivitySheetState extends State<EditActivitySheet> {
       if (mounted) setState(() => _saving = false);
     }
   }
+
+  Duration get _blockDuration =>
+      _preservedDuration ??
+      blockDurationBetween(
+        day: _localDay,
+        start: _time,
+        end: _endTime,
+        endDayOffset: _endDayOffset,
+        timeZone: widget.timeZone,
+      );
 }
 
 final class _OptionTile extends StatelessWidget {

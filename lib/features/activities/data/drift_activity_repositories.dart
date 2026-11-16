@@ -6,6 +6,7 @@ import '../domain/activity_occurrence.dart';
 import '../domain/activity_repositories.dart';
 import '../domain/recurrence_rule.dart';
 import '../../alarms/infrastructure/native_alarm_id.dart';
+import '../../alarms/domain/alarm_gateway.dart';
 
 final class DriftActivityRepository implements ActivityRepository {
   const DriftActivityRepository(this._database);
@@ -121,7 +122,16 @@ final class DriftOccurrenceRepository implements OccurrenceRepository {
     final query = _database.select(_database.occurrences)
       ..where((table) => table.nativeAlarmId.equals(nativeAlarmId));
     final row = await query.getSingleOrNull();
-    return row == null ? null : _occurrenceFromRow(row);
+    if (row != null) return _occurrenceFromRow(row);
+    final boundaryQuery = _database.select(_database.occurrences)
+      ..where((t) => t.usesBoundaryAlarms.equals(true));
+    for (final candidate in await boundaryQuery.get()) {
+      if (NativeAlarmId.fromOccurrenceId(AlarmIdentity.endKey(candidate.id)) ==
+          nativeAlarmId) {
+        return _occurrenceFromRow(candidate);
+      }
+    }
+    return null;
   }
 
   @override
@@ -132,7 +142,13 @@ final class DriftOccurrenceRepository implements OccurrenceRepository {
     final query = _database.select(_database.occurrences)
       ..where(
         (table) =>
-            table.scheduledStartUtc.isBiggerOrEqualValue(startUtc.toUtc()) &
+            (table.scheduledStartUtc.isBiggerOrEqualValue(startUtc.toUtc()) |
+                (table.usesBoundaryAlarms.equals(true) &
+                    const CustomExpression<int>(
+                      'scheduled_start_utc + duration_minutes * 60',
+                    ).isBiggerOrEqualValue(
+                      startUtc.toUtc().millisecondsSinceEpoch ~/ 1000,
+                    ))) &
             table.scheduledStartUtc.isSmallerThanValue(endUtc.toUtc()) &
             table.status.equals(OccurrenceStatus.scheduled.name),
       )
@@ -188,6 +204,9 @@ ActivitiesCompanion _activityCompanion(domain.Activity activity) {
     title: Value(activity.title),
     notes: Value(activity.notes),
     kind: Value(activity.kind.name),
+    notifyAtStart: Value(activity.notifyAtStart),
+    notifyAtEnd: Value(activity.notifyAtEnd),
+    usesBoundaryAlarms: Value(activity.usesBoundaryAlarms),
     durationMinutes: Value(activity.estimatedDuration.inMinutes),
     priority: Value(activity.priority.name),
     recurrenceType: Value(recurrence is OneOffRecurrence ? 'oneOff' : 'weekly'),
@@ -225,6 +244,9 @@ domain.Activity _activityFromRow(ActivityRow row) {
     title: row.title,
     notes: row.notes,
     kind: domain.ActivityKind.values.byName(row.kind),
+    notifyAtStart: row.notifyAtStart,
+    notifyAtEnd: row.notifyAtEnd,
+    usesBoundaryAlarms: row.usesBoundaryAlarms,
     estimatedDuration: Duration(minutes: row.durationMinutes),
     priority: domain.ActivityPriority.values.byName(row.priority),
     recurrence: recurrence,
@@ -245,6 +267,10 @@ OccurrencesCompanion _occurrenceCompanion(ActivityOccurrence occurrence) {
     originalStartUtc: Value(occurrence.originalStartUtc),
     scheduledStartUtc: Value(occurrence.scheduledStartUtc),
     kind: Value(occurrence.kind.name),
+    notifyAtStart: Value(occurrence.notifyAtStart),
+    notifyAtEnd: Value(occurrence.notifyAtEnd),
+    usesBoundaryAlarms: Value(occurrence.usesBoundaryAlarms),
+    endAcknowledgedAtUtc: Value(occurrence.endAcknowledgedAtUtc),
     acknowledgedAtUtc: Value(occurrence.acknowledgedAtUtc),
     durationMinutes: Value(occurrence.estimatedDuration.inMinutes),
     priority: Value(occurrence.priority.name),
@@ -260,11 +286,15 @@ ActivityOccurrence _occurrenceFromRow(OccurrenceRow row) {
     originalStartUtc: row.originalStartUtc.toUtc(),
     scheduledStartUtc: row.scheduledStartUtc.toUtc(),
     kind: domain.ActivityKind.values.byName(row.kind),
+    notifyAtStart: row.notifyAtStart,
+    notifyAtEnd: row.notifyAtEnd,
+    usesBoundaryAlarms: row.usesBoundaryAlarms,
     estimatedDuration: Duration(minutes: row.durationMinutes),
     priority: domain.ActivityPriority.values.byName(row.priority),
     status: OccurrenceStatus.values.byName(row.status),
     attempt: row.attempt,
     acknowledgedAtUtc: row.acknowledgedAtUtc?.toUtc(),
+    endAcknowledgedAtUtc: row.endAcknowledgedAtUtc?.toUtc(),
   );
 }
 

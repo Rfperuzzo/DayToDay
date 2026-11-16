@@ -5,6 +5,11 @@ param(
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = (Resolve-Path -LiteralPath $ProjectRoot).Path
 if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot 'android/gradlew.bat'))) { throw 'Informe -ProjectRoot com a pasta do projeto Flutter DayToDay.' }
+$versionMatch=[regex]::Match((Get-Content -LiteralPath (Join-Path $ProjectRoot 'pubspec.yaml') -Raw),'(?m)^version:\s*([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+)\s*$')
+if (-not $versionMatch.Success) {throw 'Versao invalida no pubspec.'}
+$versionName=$versionMatch.Groups[1].Value; $versionCode=$versionMatch.Groups[2].Value
+$prefix="DayToDay-$versionName-$versionCode"
+
 # Prefer Android Studio's bundled JDK; never change the machine-wide Java config.
 $jdk = Join-Path $env:ProgramFiles 'Android/Android Studio/jbr'
 $previousJavaHome = $env:JAVA_HOME
@@ -13,13 +18,13 @@ $init = Join-Path $PSScriptRoot 'unsigned-release.init.gradle'
 $androidRoot = Join-Path $ProjectRoot 'android'
 Push-Location -LiteralPath $androidRoot
 try {
-    $gradleArguments = @('--no-daemon', '-Pdaytoday.allowUnsigned=true', '-I', $init, ':app:bundleRelease', ':app:assembleRelease', "-Ptarget=$ProjectRoot/lib/main.dart", '-Ptarget-platform=android-arm,android-arm64,android-x64', '-Ptree-shake-icons=true')
+    $gradleArguments = @('--no-daemon', '-Pdaytoday.allowUnsigned=true', '-I', $init, ':app:bundleRelease', ':app:assembleRelease', "-Ptarget=$ProjectRoot/lib/main.dart", '-Ptarget-platform=android-arm,android-arm64,android-x64', "-Pdaytoday.versionName=$versionName", "-Pdaytoday.versionCode=$versionCode", '-Ptree-shake-icons=true')
     if (-not $PermitirDownloadDeDependencias) { $gradleArguments = @('--offline') + $gradleArguments }
     & .\gradlew.bat @gradleArguments
     if ($LASTEXITCODE -ne 0) { throw 'O build release sem assinatura falhou. Consulte o log.' }
 } finally { Pop-Location; $env:JAVA_HOME = $previousJavaHome }
 $destination = Join-Path $ProjectRoot 'PLAYSTORE/04_BUILD'
 New-Item -ItemType Directory -Path $destination -Force | Out-Null
-Copy-Item -LiteralPath (Join-Path $ProjectRoot 'build/app/outputs/bundle/release/app-release.aab') -Destination (Join-Path $destination 'DayToDay-1.0.0-1-SEM-ASSINATURA-NAO-ENVIAR.aab')
-Copy-Item -LiteralPath (Join-Path $ProjectRoot 'build/app/outputs/apk/release/app-release-unsigned.apk') -Destination (Join-Path $destination 'DayToDay-1.0.0-1-SEM-ASSINATURA-NAO-INSTALAR.apk')
+Copy-Item -LiteralPath (Join-Path $ProjectRoot 'build/app/outputs/bundle/release/app-release.aab') -Destination (Join-Path $destination "$prefix-SEM-ASSINATURA-NAO-ENVIAR.aab")
+Copy-Item -LiteralPath (Join-Path $ProjectRoot 'build/app/outputs/apk/release/app-release-unsigned.apk') -Destination (Join-Path $destination "$prefix-SEM-ASSINATURA-NAO-INSTALAR.apk")
 Write-Output 'Build sem assinatura concluido. Estes arquivos NAO estao prontos para envio ao Play Console.'

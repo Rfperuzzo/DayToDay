@@ -15,11 +15,17 @@ final class ActivityDraft {
     required this.priority,
     required this.recurrence,
     this.kind = ActivityKind.timeBlock,
+    this.notifyAtStart = true,
+    this.notifyAtEnd = false,
+    this.usesBoundaryAlarms = false,
     this.notes = '',
     this.preparationLead,
   });
 
   final ActivityKind kind;
+  final bool notifyAtStart;
+  final bool notifyAtEnd;
+  final bool usesBoundaryAlarms;
   final String title;
   final String notes;
   final Duration estimatedDuration;
@@ -62,6 +68,9 @@ final class ActivityCreator {
     final activity = Activity(
       id: 'activity-${now.microsecondsSinceEpoch}',
       kind: draft.kind,
+      notifyAtStart: draft.notifyAtStart,
+      notifyAtEnd: draft.notifyAtEnd,
+      usesBoundaryAlarms: draft.usesBoundaryAlarms,
       title: draft.title,
       notes: draft.notes,
       estimatedDuration: draft.estimatedDuration,

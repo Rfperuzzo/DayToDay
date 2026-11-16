@@ -68,14 +68,15 @@ void main() {
           ),
         );
         await tester.enterText(find.byType(TextFormField).first, 'Beber água');
-        expect(find.text('Duração'), findsNothing);
+        expect(
+          find.byKey(const ValueKey('block-duration-summary')),
+          findsNothing,
+        );
         if (reserve) {
           await tester.ensureVisible(find.text('Reservar tempo na agenda'));
           await tester.tap(find.text('Reservar tempo na agenda'));
           await tester.pumpAndSettle();
-          expect(find.text('Duração'), findsOneWidget);
-          await tester.ensureVisible(find.text('45 min'));
-          await tester.tap(find.text('45 min'));
+          expect(find.text('Duração: 30 min'), findsOneWidget);
         }
         await tester.ensureVisible(find.text('Salvar e preparar alarme'));
         await tester.tap(find.text('Salvar e preparar alarme'));
@@ -86,7 +87,7 @@ void main() {
         );
         expect(
           result?.estimatedDuration,
-          reserve ? const Duration(minutes: 45) : Duration.zero,
+          reserve ? const Duration(minutes: 30) : Duration.zero,
         );
         expect(tester.takeException(), isNull);
       },
@@ -139,9 +140,11 @@ void main() {
           ),
         ),
       );
-      final toggle = tester.widget<SwitchListTile>(find.byType(SwitchListTile));
+      final toggle = tester.widget<SwitchListTile>(
+        find.widgetWithText(SwitchListTile, 'Reservar tempo na agenda'),
+      );
       expect(toggle.value, isTrue);
-      expect(find.text('Duração'), findsOneWidget);
+      expect(find.text('Duração: 45 min'), findsOneWidget);
       await tester.ensureVisible(find.text('Salvar alterações'));
       await tester.tap(find.text('Salvar alterações'));
       await tester.pumpAndSettle();

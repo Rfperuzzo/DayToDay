@@ -36,6 +36,9 @@ final class OccurrenceActions {
       current.copyWith(status: OccurrenceStatus.completed),
     );
     await _alarms.cancel(occurrence.id);
+    if (occurrence.usesBoundaryAlarms) {
+      await _alarms.cancel(AlarmIdentity.endKey(occurrence.id));
+    }
     await _events.append(
       ActivityEvent(
         id: '${occurrence.id}:completed:${now.microsecondsSinceEpoch}',

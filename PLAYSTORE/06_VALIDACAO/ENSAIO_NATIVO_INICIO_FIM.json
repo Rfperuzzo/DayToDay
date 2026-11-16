@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "phases": [
+    "start",
+    "transition",
+    "end",
+    "end"
+  ],
+  "nativeAlarms": 4,
+  "mergedTransitionCount": 1,
+  "activityCount": 3,
+  "allActivitiesRemainPending": true,
+  "initialSilencePreservedFinal": true,
+  "allEndAcknowledgementsPersisted": true,
+  "database": "schema4 real repositories, memory only",
+  "productionUiEntrypoint": false
+}

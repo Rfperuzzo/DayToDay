@@ -10,7 +10,7 @@ import 'package:rotina_jhenifer/features/activities/domain/recurrence_rule.dart'
 import 'package:rotina_jhenifer/features/history/data/drift_activity_event_repository.dart';
 
 void main() {
-  for (final version in [1, 2]) {
+  for (final version in [1, 2, 3]) {
     test(
       'migra schema $version sem perder dados ou transformar blocos em lembretes',
       () async {
@@ -19,6 +19,11 @@ void main() {
           NativeDatabase.memory(
             setup: (db) {
               db.execute(sql);
+              if (version == 3) {
+                db.execute(
+                  "ALTER TABLE activities ADD COLUMN kind TEXT NOT NULL DEFAULT 'timeBlock'; ALTER TABLE occurrences ADD COLUMN kind TEXT NOT NULL DEFAULT 'timeBlock'; ALTER TABLE occurrences ADD COLUMN acknowledged_at_utc INTEGER; UPDATE occurrences SET acknowledged_at_utc=1794650400; PRAGMA user_version=3;",
+                );
+              }
               if (version == 1) {
                 db.execute('DROP TABLE subtasks; PRAGMA user_version=1;');
               }
@@ -38,7 +43,15 @@ void main() {
         expect(old.kind, ActivityKind.timeBlock);
         expect(old.status, OccurrenceStatus.completed);
         expect(old.attempt, 2);
-        expect(old.acknowledgedAtUtc, isNull);
+        expect(
+          old.acknowledgedAtUtc?.millisecondsSinceEpoch,
+          version == 3 ? 1794650400000 : null,
+        );
+        expect(old.endAcknowledgedAtUtc, isNull);
+        expect(old.notifyAtStart, isTrue);
+        expect(old.notifyAtEnd, isFalse);
+        expect(old.usesBoundaryAlarms, isFalse);
+        expect(activity.usesBoundaryAlarms, isFalse);
         expect(old.originalStartUtc.millisecondsSinceEpoch, 1794646800000);
         expect(old.scheduledStartUtc.millisecondsSinceEpoch, 1794650400000);
         final row = await database
@@ -68,7 +81,7 @@ void main() {
         expect(
           (await database.customSelect('PRAGMA user_version').getSingle())
               .read<int>('user_version'),
-          3,
+          4,
         );
         await activities.save(
           Activity(

@@ -1,8 +1,7 @@
 <pt-BR>
-Bem-vindo ao DayToDay!
-• Lembretes simples e reserva de tempo opcional.
-• Parar o alarme separado de concluir a atividade.
-• Repetição em dias específicos e subtarefas.
-• Atalho para lembrar em 10 minutos e filtro de pendências.
-• Painel diário, calendário e widget Android.
+Agora você escolhe os horários de início e final dos blocos.
+Ative avisos no início, no final, nos dois ou em nenhum deles.
+Avisos coincidentes de final e início se unem em uma troca de atividade.
+Silenciar não conclui atividades; seus dados e seu histórico são preservados.
+Melhorias na seleção de horários, inclusive em aparelhos com relógio de 12 horas.
 </pt-BR>

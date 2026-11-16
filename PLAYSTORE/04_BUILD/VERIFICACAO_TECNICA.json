@@ -1,8 +1,8 @@
 {
-  "date": "2026-11-15",
+  "date": "2026-11-16",
   "package": "com.senhoritajhenifer.rotina",
-  "versionName": "1.0.0",
-  "versionCode": "1",
+  "versionName": "1.1.0",
+  "versionCode": "2",
   "targetSdk": "36",
   "minSdk": "24",
   "permissions": [
@@ -86,30 +86,56 @@
   ],
   "binaries": [
     {
-      "file": "DayToDay-1.0.0-1-PRODUCAO.aab",
-      "bytes": 62976727,
-      "sha256": "57021a4c617b191d6872f042a04beb17568394196f1fc7367107694bf18557c6"
+      "file": "DayToDay-1.1.0-2-PRODUCAO.aab",
+      "bytes": 63087728,
+      "sha256": "2b4afb5051f0c934e948b3b738849dd7e847658280fcddc45fe7ad828877d6b3"
     },
     {
-      "file": "DayToDay-1.0.0-1-PRODUCAO-TESTE.apk",
-      "bytes": 64809198,
-      "sha256": "6fc41b117aeb86dd1608d462de64e2478e3a4a1d109c1064790645267d6c0d20"
+      "file": "DayToDay-1.1.0-2-PRODUCAO-TESTE.apk",
+      "bytes": 64858354,
+      "sha256": "9689e065431559735f9fd81aebb0d209e550ee1487c945331ef32bec1f1806c5"
     }
   ],
-  "app_source_commit": "cde6b592593e43eecf9a8a5e2541fb253842a317",
-  "signedReleaseAlarmFromBackgroundObserved": true,
-  "appSilenceKeepsActivityPendingObserved": true,
-  "exactAlarmDeniedAndGrantedReturnObserved": true,
-  "releaseWithoutSigningBlocked": true,
+  "app_source_commit": "d97b9331dd88051e1533f8992ab60cce78b37e26",
+  "productionEntrypoint": "lib/main.dart",
+  "schemaVersion": 4,
+  "unitAndWidgetTestsPassed": 137,
+  "nativeBoundaryProbePassed": true,
+  "nativeBoundaryPhases": [
+    "start",
+    "transition",
+    "end",
+    "end"
+  ],
+  "oldDataMigrationVersionsTested": [
+    1,
+    2,
+    3
+  ],
+  "screenCapturesArePresentationRenders": true,
+  "productionUiFullJourneyVerified": false,
   "buildSourceSha256": {
-    "android/app/build.gradle.kts": "20d5ac3ebc0030243cb0e28f50b61f393fd06208a2c86d0e1b45cbf4034035bd",
-    "android/app/src/main/AndroidManifest.xml": "4d02ebbb0fcc1a570543ead9c463c3d89d2b911d75537b75c54dec1829a4df12",
-    "android/app/src/main/kotlin/com/senhoritajhenifer/rotina/MainActivity.kt": "944ca9073f5cbdfb357ad648a7d282d85498eef51d93cfedfa7b822fc2ca595b",
-    "pubspec.yaml": "c9e09d48507d366f31961e3a7406cab797061afc756dc7497445ab7174bae8c0",
-    "pubspec.lock": "2ca7542f3825b5db3012d307f5af1a3eeba26d33886fb8a7cbfe89c8abedcedc",
-    "lib/features/privacy/presentation/privacy_screen.dart": "b34959a5434c24a8e6a83b1c85d6af5e264dd762088ba040d95271c3b7201540",
-    "lib/features/alarms/infrastructure/android_alarm_permission_gateway.dart": "f538ac11619a7d410125911170ab842861f0955414667b0a31ce9f2c494d52a9",
-    "lib/features/dashboard/presentation/today_screen.dart": "dc0dd4e6d9afe85b820e6c1169bd4d1d8e279d94bd37ed283e0ff8da4bd9eda9",
-    "assets/legal/privacy_policy.md": "9d1bc905d2df0b216cf0e4f7f4f9bb91f7677b35da939eabef6dfc42b8ca7ff2"
+    "pubspec.yaml": "d2177d75b99ee45894a85eccfe96a3d07075063aecf127827dabd913ba7d2dd5",
+    "android/app/build.gradle.kts": "a091b152d9e504605a6df8d903e247bf6fc1874ce3cb772b2f96a8274baedb89",
+    "lib/core/database/app_database.dart": "c055e25a665e900d16127d5c55a406d27dd22f1bd7430e963f7e8729dce06166",
+    "lib/core/database/app_database.g.dart": "e1c00510808cb30bb0b4b824561c5183128ed58847c550e031a70c16b9250b0a",
+    "lib/features/activities/application/activity_creator.dart": "ab694286c8b7a65ae2d470ea73051734862eccc10cf0905f2551c974a7ed7f43",
+    "lib/features/activities/application/activity_manager.dart": "fe0dd71a93d730ee922e08ba50ad17ccbc7b0f0ab0f28069334e0c9fdbd3f956",
+    "lib/features/activities/application/occurrence_generator.dart": "2ff4721200cee4196f2c6fa0e12cc78a256c41a98c32b906df7cbf8076dcd5b1",
+    "lib/features/activities/data/drift_activity_repositories.dart": "b795da218d34f9c05025f7ef76eb214dd2642e3ad22c3f0a2620857133e5a16d",
+    "lib/features/activities/domain/activity.dart": "24e5a4e45510544a068b6b6c5ed4cc1c65a9e13d501feeca1df16bb7fc710edb",
+    "lib/features/activities/domain/activity_occurrence.dart": "d007081191baedfa22d4e687a90433c6623acf41c170da650c349ad56055ecf4",
+    "lib/features/activities/presentation/activity_options_sheet.dart": "8ac64ed72d36d34c7f85e3e65e5941c1dee876e2e4b061d597f2a6058fc429b0",
+    "lib/features/activities/presentation/new_activity_sheet.dart": "03f1e6e8ca67a093ac99e5b7989d0ecc1bd92a37ed83b8a65dc3bf1d1e42bdee",
+    "lib/features/alarms/application/alarm_event_processor.dart": "6a12e2d149eefa8c947c6957e835e46a86031b6b1b367179179d1f7af8b97fa9",
+    "lib/features/alarms/application/alarm_reconciler.dart": "d1da5d58ea4a7361c8c44bb1566b74045d03621bd0f8bcacf6c3ccfe2867d06c",
+    "lib/features/alarms/application/alarm_response_service.dart": "9843ef7a54581ffae1b4e727fa7952ab122ebadc7b2a39238b1e2e72abf9fd2a",
+    "lib/features/alarms/domain/alarm_gateway.dart": "4aeadaea78df4c3c2367c15a41f145ee130e80ebe2e3d7b910b8fade9d7bd63d",
+    "lib/features/alarms/infrastructure/android_alarm_gateway.dart": "651d9f7f6c75b85f791e5728e3a1d922fbc3e582dc2a2e3163b889753674bf36",
+    "lib/features/alarms/presentation/alarm_router.dart": "871ae325903efb8b100aa4081bca86a38f2e1d55c91ecff34fef8796d67d69c2",
+    "lib/features/alarms/presentation/alarm_screen.dart": "e0a3a05a3eeb3d313b2a4066c011b9b546a7b9029ed01a7c81ff43ff3ba934c9",
+    "lib/features/dashboard/application/daily_task_sequence.dart": "002e2011e9d7e0d11f8e944e6cc2c97e6390a3449b37c169c58c673ed1904814",
+    "lib/features/dashboard/application/occurrence_actions.dart": "5bf1f6958116a56cb6b74bc3be2bc100d1f5089119be278d40876e9462347492",
+    "lib/features/dashboard/presentation/today_screen.dart": "7cf594a4aab5a36f60717b85337056a5da721fde4bf043c306a3008fe391a7d0"
   }
 }
